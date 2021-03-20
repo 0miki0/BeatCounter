@@ -200,153 +200,12 @@ namespace BeatCounter
             // INFINITASプレイ時の処理
             if (InfinitasPlayTips.Checked == true)
             {
-                if (_s_rel_old != _s_rel_now)
-                {
-                    bool nowRight = false;
-                    if (_s_rel_old < _s_rel_now)
-                    {
-                        nowRight = true;
-                        if ((_s_rel_now - _s_rel_old) > (1000 - _s_rel_now + _s_rel_old))
-                        {
-                            nowRight = false;
-                        }
-                    }
-                    else if (_s_rel_old > _s_rel_now)
-                    {
-
-                        nowRight = false;
-                        if ((_s_rel_old - _s_rel_now) > ((_s_rel_now + 1000) - _s_rel_old))
-                        {
-                            nowRight = true;
-                        }
-                    }
-
-                    if (isActive && !(isRight == nowRight))
-                    {
-                        // 皿を逆回転させた時の処理。
-                        if (isRight)
-                        {
-                            keybd_event(LEFT_SHIFT, 0, 2u, (UIntPtr)0uL);
-                            keybd_event(LEFT_CTRL, 0, 0u, (UIntPtr)0uL);
-
-                            Console.WriteLine("1");
-                            _todaynum++;
-                            _s_downnum++;
-                            S_Down.Text = _s_downnum.ToString();
-                            S_Down.BackColor = Color.LightPink;
-                            S_Up.BackColor = KeyBackColor;
-                        }
-                        else
-                        {
-                            keybd_event(LEFT_CTRL, 0, 2u, (UIntPtr)0uL);
-                            keybd_event(LEFT_SHIFT, 0, 0u, (UIntPtr)0uL);
-
-                            Console.WriteLine("2");
-                            _todaynum++;
-                            _s_upnum++;
-                            S_Up.Text = _s_upnum.ToString();
-                            S_Up.BackColor = Color.LightPink;
-                            S_Down.BackColor = KeyBackColor;
-                        }
-
-                        isRight = nowRight;
-                        Console.WriteLine("Change");
-
-                    }
-                    else if (!isActive)
-                    {
-                        // 皿を回していない状態から回し始めた時の処理。
-                        if (nowRight)
-                        {
-                            keybd_event(LEFT_SHIFT, 0, 0u, (UIntPtr)0uL);
-                            Console.WriteLine("3");
-                            _todaynum++;
-                            _s_upnum++;
-                            S_Up.Text = _s_upnum.ToString();
-                            S_Up.BackColor = Color.LightPink;
-                            S_Down.BackColor = KeyBackColor;
-                        }
-                        else
-                        {
-                            keybd_event(LEFT_CTRL, 0, 0u, (UIntPtr)0uL);
-                            Console.WriteLine("4");
-                            _todaynum++;
-                            _s_downnum++;
-                            S_Down.Text = _s_downnum.ToString();
-                            S_Down.BackColor = Color.LightPink;
-                            S_Up.BackColor = KeyBackColor;
-                        }
-
-                        isActive = true;
-
-                        isRight = nowRight;
-                    }
-
-                    // カウンタ, 位置の初期化
-                    counter = 0;
-                    _s_rel_old = _s_rel_now;
-                }
-
-                // スクラッチを回した時にどれだけカウントされるかの判定。デフォルト：5000。
-                if (counter > kando.Set_Kando && isActive)
-                {
-                    if (isRight)
-                    {
-                        keybd_event(LEFT_SHIFT, 0, 2u, (UIntPtr)0uL);
-                    }
-                    else
-                    {
-                        keybd_event(LEFT_CTRL, 0, 2u, (UIntPtr)0uL);
-                    }
-
-                    isActive = false;
-                    counter = 0;
-                    S_Down.BackColor = KeyBackColor;
-                    S_Up.BackColor = KeyBackColor;
-                }
-
-                if (counter == ulong.MaxValue)
-                {
-                    counter = 0;
-                }
-
-                counter++;
+                InfinitasMode();
             }
             // BMSプレイ時の処理
             else if (BmsPlayTips.Checked == true)
             {
-                // 皿が動作しているか。皿が同じ方向に回り続けている場合はカウントしない。
-                if (_s_rel_now != _s_rel_old)
-                {
-                    Debug.Print(jState.X.ToString());
-
-                    // 現在軸の位置がMAX値の場合。
-                    if (_s_rel_now == _rangeMax)
-                    {
-                        Debug.Print("入力キー：↑");
-                        _todaynum++;
-                        _s_upnum++;
-                        S_Up.Text = _s_upnum.ToString();
-                        S_Up.BackColor = Color.LightPink;
-                        S_Down.BackColor = KeyBackColor;
-                    }
-                    // 現在軸の位置がMIN値の場合。
-                    else if (_s_rel_now == _rangeMin)
-                    {
-                        Debug.Print("入力キー：↓");
-                        _todaynum++;
-                        _s_downnum++;
-                        S_Down.Text = _s_downnum.ToString();
-                        S_Down.BackColor = Color.LightPink;
-                        S_Up.BackColor = KeyBackColor;
-                    }
-                }
-                // 中央に軸が存在する場合(動いていない場合)
-                else if (_s_rel_now == _rangeMax / 2)
-                {
-                    S_Up.BackColor = KeyBackColor;
-                    S_Down.BackColor = KeyBackColor;
-                }
+                BMSMode();
             }
 
             #region Key判定
@@ -507,6 +366,209 @@ namespace BeatCounter
             }
         }
 
+        public void TodayInit()
+        {
+            int InitInt = 0;
+            S_Up.Text = InitInt.ToString();
+            S_Down.Text = InitInt.ToString();
+            Key1.Text = InitInt.ToString();
+            Key2.Text = InitInt.ToString();
+            Key3.Text = InitInt.ToString();
+            Key4.Text = InitInt.ToString();
+            Key5.Text = InitInt.ToString();
+            Key6.Text = InitInt.ToString();
+            Key7.Text = InitInt.ToString();
+            Key7.Text = InitInt.ToString();
+            TodayKeys.Text = InitInt.ToString();
+            KeyBackColor = Key1.BackColor;
+
+            _s_upnum = InitInt;
+            _s_downnum = InitInt;
+            _key1num = InitInt;
+            _key2num = InitInt;
+            _key3num = InitInt;
+            _key4num = InitInt;
+            _key5num = InitInt;
+            _key6num = InitInt;
+            _key7num = InitInt;
+            _todaynum = InitInt;
+        }
+
+        public void AlldayInit()
+        {
+            int InitInt = 0;
+            S_Up.Text = InitInt.ToString();
+            S_Down.Text = InitInt.ToString();
+            Key1.Text = InitInt.ToString();
+            Key2.Text = InitInt.ToString();
+            Key3.Text = InitInt.ToString();
+            Key4.Text = InitInt.ToString();
+            Key5.Text = InitInt.ToString();
+            Key6.Text = InitInt.ToString();
+            Key7.Text = InitInt.ToString();
+            TodayKeys.Text = InitInt.ToString();
+
+            _s_upnum = InitInt;
+            _s_downnum = InitInt;
+            _key1num = InitInt;
+            _key2num = InitInt;
+            _key3num = InitInt;
+            _key4num = InitInt;
+            _key5num = InitInt;
+            _key6num = InitInt;
+            _key7num = InitInt;
+        }
+
+        public void InfinitasMode()
+        {
+            if (_s_rel_old != _s_rel_now)
+            {
+                bool nowRight = false;
+                if (_s_rel_old < _s_rel_now)
+                {
+                    nowRight = true;
+                    if ((_s_rel_now - _s_rel_old) > (1000 - _s_rel_now + _s_rel_old))
+                    {
+                        nowRight = false;
+                    }
+                }
+                else if (_s_rel_old > _s_rel_now)
+                {
+
+                    nowRight = false;
+                    if ((_s_rel_old - _s_rel_now) > ((_s_rel_now + 1000) - _s_rel_old))
+                    {
+                        nowRight = true;
+                    }
+                }
+
+                if (isActive && !(isRight == nowRight))
+                {
+                    // 皿を逆回転させた時の処理。
+                    if (isRight)
+                    {
+                        keybd_event(LEFT_SHIFT, 0, 2u, (UIntPtr)0uL);
+                        keybd_event(LEFT_CTRL, 0, 0u, (UIntPtr)0uL);
+
+                        Console.WriteLine("1");
+                        _todaynum++;
+                        _s_downnum++;
+                        S_Down.Text = _s_downnum.ToString();
+                        S_Down.BackColor = Color.LightPink;
+                        S_Up.BackColor = KeyBackColor;
+                    }
+                    else
+                    {
+                        keybd_event(LEFT_CTRL, 0, 2u, (UIntPtr)0uL);
+                        keybd_event(LEFT_SHIFT, 0, 0u, (UIntPtr)0uL);
+
+                        Console.WriteLine("2");
+                        _todaynum++;
+                        _s_upnum++;
+                        S_Up.Text = _s_upnum.ToString();
+                        S_Up.BackColor = Color.LightPink;
+                        S_Down.BackColor = KeyBackColor;
+                    }
+
+                    isRight = nowRight;
+                    Console.WriteLine("Change");
+
+                }
+                else if (!isActive)
+                {
+                    // 皿を回していない状態から回し始めた時の処理。
+                    if (nowRight)
+                    {
+                        keybd_event(LEFT_SHIFT, 0, 0u, (UIntPtr)0uL);
+                        Console.WriteLine("3");
+                        _todaynum++;
+                        _s_upnum++;
+                        S_Up.Text = _s_upnum.ToString();
+                        S_Up.BackColor = Color.LightPink;
+                        S_Down.BackColor = KeyBackColor;
+                    }
+                    else
+                    {
+                        keybd_event(LEFT_CTRL, 0, 0u, (UIntPtr)0uL);
+                        Console.WriteLine("4");
+                        _todaynum++;
+                        _s_downnum++;
+                        S_Down.Text = _s_downnum.ToString();
+                        S_Down.BackColor = Color.LightPink;
+                        S_Up.BackColor = KeyBackColor;
+                    }
+
+                    isActive = true;
+
+                    isRight = nowRight;
+                }
+
+                // カウンタ, 位置の初期化
+                counter = 0;
+                _s_rel_old = _s_rel_now;
+            }
+
+            // スクラッチを回した時にどれだけカウントされるかの判定。デフォルト：5000。
+            if (counter > kando.Set_Kando && isActive)
+            {
+                if (isRight)
+                {
+                    keybd_event(LEFT_SHIFT, 0, 2u, (UIntPtr)0uL);
+                }
+                else
+                {
+                    keybd_event(LEFT_CTRL, 0, 2u, (UIntPtr)0uL);
+                }
+
+                isActive = false;
+                counter = 0;
+                S_Down.BackColor = KeyBackColor;
+                S_Up.BackColor = KeyBackColor;
+            }
+
+            if (counter == ulong.MaxValue)
+            {
+                counter = 0;
+            }
+
+            counter++;
+        }
+
+        public void BMSMode()
+        {
+            // 皿が動作しているか。皿が同じ方向に回り続けている場合はカウントしない。
+            if (_s_rel_now != _s_rel_old)
+            {
+                // 現在軸の位置がMAX値の場合。
+                if (_s_rel_now == _rangeMax)
+                {
+                    Debug.Print("入力キー：↑");
+                    _todaynum++;
+                    _s_upnum++;
+                    S_Up.Text = _s_upnum.ToString();
+                    S_Up.BackColor = Color.LightPink;
+                    S_Down.BackColor = KeyBackColor;
+                }
+                // 現在軸の位置がMIN値の場合。
+                else if (_s_rel_now == _rangeMin)
+                {
+                    Debug.Print("入力キー：↓");
+                    _todaynum++;
+                    _s_downnum++;
+                    S_Down.Text = _s_downnum.ToString();
+                    S_Down.BackColor = Color.LightPink;
+                    S_Up.BackColor = KeyBackColor;
+                }
+            }
+            // 中央に軸が存在する場合(動いていない場合)
+            else if (_s_rel_now == _rangeMax / 2)
+            {
+                S_Up.BackColor = KeyBackColor;
+                S_Down.BackColor = KeyBackColor;
+            }
+        }
+
+        #region Actions
         private void phoenixToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
@@ -577,60 +639,7 @@ namespace BeatCounter
             Config conf = new Config();
             conf.Show();
         }
-
-
-        public void TodayInit()
-        {
-            int InitInt = 0;
-            S_Up.Text = InitInt.ToString();
-            S_Down.Text = InitInt.ToString();
-            Key1.Text = InitInt.ToString();
-            Key2.Text = InitInt.ToString();
-            Key3.Text = InitInt.ToString();
-            Key4.Text = InitInt.ToString();
-            Key5.Text = InitInt.ToString();
-            Key6.Text = InitInt.ToString();
-            Key7.Text = InitInt.ToString();
-            Key7.Text = InitInt.ToString();
-            TodayKeys.Text = InitInt.ToString();
-            KeyBackColor = Key1.BackColor;
-
-            _s_upnum = InitInt;
-            _s_downnum = InitInt;
-            _key1num = InitInt;
-            _key2num = InitInt;
-            _key3num = InitInt;
-            _key4num = InitInt;
-            _key5num = InitInt;
-            _key6num = InitInt;
-            _key7num = InitInt;
-            _todaynum = InitInt;
-        }
-
-        public void AlldayInit()
-        {
-            int InitInt = 0;
-            S_Up.Text = InitInt.ToString();
-            S_Down.Text = InitInt.ToString();
-            Key1.Text = InitInt.ToString();
-            Key2.Text = InitInt.ToString();
-            Key3.Text = InitInt.ToString();
-            Key4.Text = InitInt.ToString();
-            Key5.Text = InitInt.ToString();
-            Key6.Text = InitInt.ToString();
-            Key7.Text = InitInt.ToString();
-            TodayKeys.Text = InitInt.ToString();
-
-            _s_upnum = InitInt;
-            _s_downnum = InitInt;
-            _key1num = InitInt;
-            _key2num = InitInt;
-            _key3num = InitInt;
-            _key4num = InitInt;
-            _key5num = InitInt;
-            _key6num = InitInt;
-            _key7num = InitInt;
-        }
+        #endregion
 
         [DllImport("user32.dll")]
         public static extern uint keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
