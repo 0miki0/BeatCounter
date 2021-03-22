@@ -1,5 +1,6 @@
 ﻿using SharpDX.DirectInput;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Runtime.InteropServices;
@@ -22,7 +23,8 @@ namespace BeatCounter
         private int _key6num;
         private int _key7num;
         private int _todaynum;
-        //private int _alldaynum;
+        private int _alldaynum;
+        private int _alldaydefault;
 
         private ulong counter = 1;
 
@@ -47,7 +49,9 @@ namespace BeatCounter
         private bool onceAction1 = false;
         private bool onceAction2 = false;
 
-        private Color KeyBackColor;
+        private bool KeyChangeMode = false;
+
+        private Color KeyBackColor = Color.LightYellow;
 
         public BeatCounter()
         {
@@ -172,6 +176,12 @@ namespace BeatCounter
         /// </summary>
         public void UpdateForPad()
         {
+            // 数値変更モードの時は処理しない。
+            if(KeyChangeMode)
+            {
+                return;
+            }
+
             // 初期化されていない場合、処理を終了させる。
             if (_joy == null) { return; }
 
@@ -216,6 +226,9 @@ namespace BeatCounter
                 // 今日分の叩いた数を加算する。
                 _todaynum++;
 
+                // 全期間合計を加算する。
+                _alldaynum++;
+
                 // 1鍵を叩いた数を加算する。
                 _key1num++;
 
@@ -245,6 +258,7 @@ namespace BeatCounter
             {
                 Debug.Print("入力キー：2");
                 _todaynum++;
+                _alldaynum++;
                 _key2num++;
                 Key2.Text = _key2num.ToString();
                 Key2.BackColor = Color.LightPink;
@@ -265,6 +279,7 @@ namespace BeatCounter
             {
                 Debug.Print("入力キー：3");
                 _todaynum++;
+                _alldaynum++;
                 _key3num++;
                 Key3.Text = _key3num.ToString();
                 Key3.BackColor = Color.LightPink;
@@ -284,6 +299,7 @@ namespace BeatCounter
             {
                 Debug.Print("入力キー：4");
                 _todaynum++;
+                _alldaynum++;
                 _key4num++;
                 Key4.Text = _key4num.ToString();
                 Key4.BackColor = Color.LightPink;
@@ -303,6 +319,7 @@ namespace BeatCounter
             {
                 Debug.Print("入力キー：5");
                 _todaynum++;
+                _alldaynum++;
                 _key5num++;
                 Key5.Text = _key5num.ToString();
                 Key5.BackColor = Color.LightPink;
@@ -322,6 +339,7 @@ namespace BeatCounter
             {
                 Debug.Print("入力キー：6");
                 _todaynum++;
+                _alldaynum++;
                 _key6num++;
                 Key6.Text = _key6num.ToString();
                 Key6.BackColor = Color.LightPink;
@@ -341,6 +359,7 @@ namespace BeatCounter
             {
                 Debug.Print("入力キー：7");
                 _todaynum++;
+                _alldaynum++;
                 _key7num++;
                 Key7.Text = _key7num.ToString();
                 Key7.BackColor = Color.LightPink;
@@ -357,6 +376,7 @@ namespace BeatCounter
             #endregion
 
             TodayKeys.Text = _todaynum.ToString();
+            AllDayKeys.Text = _alldaynum.ToString();
 
             if (onceAction2 == false)
             {
@@ -369,6 +389,18 @@ namespace BeatCounter
         public void TodayInit()
         {
             int InitInt = 0;
+            T_S_Up.Text = InitInt.ToString();
+            T_S_Down.Text = InitInt.ToString();
+            T_Key1.Text = InitInt.ToString();
+            T_Key2.Text = InitInt.ToString();
+            T_Key3.Text = InitInt.ToString();
+            T_Key4.Text = InitInt.ToString();
+            T_Key5.Text = InitInt.ToString();
+            T_Key6.Text = InitInt.ToString();
+            T_Key7.Text = InitInt.ToString();
+            T_TodayKeys.Text = InitInt.ToString();
+            T_AllDayKeys.Text = Properties.Settings.Default.SaveAllDayKey.ToString();
+
             S_Up.Text = InitInt.ToString();
             S_Down.Text = InitInt.ToString();
             Key1.Text = InitInt.ToString();
@@ -378,9 +410,8 @@ namespace BeatCounter
             Key5.Text = InitInt.ToString();
             Key6.Text = InitInt.ToString();
             Key7.Text = InitInt.ToString();
-            Key7.Text = InitInt.ToString();
             TodayKeys.Text = InitInt.ToString();
-            KeyBackColor = Key1.BackColor;
+            AllDayKeys.Text = Properties.Settings.Default.SaveAllDayKey.ToString();
 
             _s_upnum = InitInt;
             _s_downnum = InitInt;
@@ -392,11 +423,24 @@ namespace BeatCounter
             _key6num = InitInt;
             _key7num = InitInt;
             _todaynum = InitInt;
+            _alldaynum = Properties.Settings.Default.SaveAllDayKey;
         }
 
         public void AlldayInit()
         {
             int InitInt = 0;
+            T_S_Up.Text = InitInt.ToString();
+            T_S_Down.Text = InitInt.ToString();
+            T_Key1.Text = InitInt.ToString();
+            T_Key2.Text = InitInt.ToString();
+            T_Key3.Text = InitInt.ToString();
+            T_Key4.Text = InitInt.ToString();
+            T_Key5.Text = InitInt.ToString();
+            T_Key6.Text = InitInt.ToString();
+            T_Key7.Text = InitInt.ToString();
+            T_TodayKeys.Text = InitInt.ToString();
+            T_AllDayKeys.Text = InitInt.ToString();
+
             S_Up.Text = InitInt.ToString();
             S_Down.Text = InitInt.ToString();
             Key1.Text = InitInt.ToString();
@@ -407,6 +451,7 @@ namespace BeatCounter
             Key6.Text = InitInt.ToString();
             Key7.Text = InitInt.ToString();
             TodayKeys.Text = InitInt.ToString();
+            AllDayKeys.Text = InitInt.ToString();
 
             _s_upnum = InitInt;
             _s_downnum = InitInt;
@@ -417,6 +462,8 @@ namespace BeatCounter
             _key5num = InitInt;
             _key6num = InitInt;
             _key7num = InitInt;
+            _todaynum = InitInt;
+            _alldaynum = InitInt;
         }
 
         public void InfinitasMode()
@@ -452,6 +499,7 @@ namespace BeatCounter
 
                         Console.WriteLine("1");
                         _todaynum++;
+                        _alldaynum++;
                         _s_downnum++;
                         S_Down.Text = _s_downnum.ToString();
                         S_Down.BackColor = Color.LightPink;
@@ -464,6 +512,7 @@ namespace BeatCounter
 
                         Console.WriteLine("2");
                         _todaynum++;
+                        _alldaynum++;
                         _s_upnum++;
                         S_Up.Text = _s_upnum.ToString();
                         S_Up.BackColor = Color.LightPink;
@@ -482,6 +531,7 @@ namespace BeatCounter
                         keybd_event(LEFT_SHIFT, 0, 0u, (UIntPtr)0uL);
                         Console.WriteLine("3");
                         _todaynum++;
+                        _alldaynum++;
                         _s_upnum++;
                         S_Up.Text = _s_upnum.ToString();
                         S_Up.BackColor = Color.LightPink;
@@ -492,6 +542,7 @@ namespace BeatCounter
                         keybd_event(LEFT_CTRL, 0, 0u, (UIntPtr)0uL);
                         Console.WriteLine("4");
                         _todaynum++;
+                        _alldaynum++;
                         _s_downnum++;
                         S_Down.Text = _s_downnum.ToString();
                         S_Down.BackColor = Color.LightPink;
@@ -544,6 +595,7 @@ namespace BeatCounter
                 {
                     Debug.Print("入力キー：↑");
                     _todaynum++;
+                    _alldaynum++;
                     _s_upnum++;
                     S_Up.Text = _s_upnum.ToString();
                     S_Up.BackColor = Color.LightPink;
@@ -554,6 +606,7 @@ namespace BeatCounter
                 {
                     Debug.Print("入力キー：↓");
                     _todaynum++;
+                    _alldaynum++;
                     _s_downnum++;
                     S_Down.Text = _s_downnum.ToString();
                     S_Down.BackColor = Color.LightPink;
@@ -574,11 +627,6 @@ namespace BeatCounter
 
         }
 
-        private void 閉じるToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
         private void リセットToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
@@ -597,9 +645,9 @@ namespace BeatCounter
         private void 今日の回数ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DialogResult dialog = MessageBox.Show(
-                "今回の叩数を消去します。" +
+                "今回の合計および各回数を消去します。" +
                 "よろしいですか？",
-                "今回の叩数の消去",
+                "今回の合計の消去",
                 MessageBoxButtons.YesNo);
 
             if (dialog == DialogResult.Yes)
@@ -611,9 +659,9 @@ namespace BeatCounter
         private void 全期間回数ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DialogResult dialog = MessageBox.Show(
-                "全期間の叩数を消去します。" +
+                "全ての回数を消去します。" +
                 "よろしいですか？",
-                "全期間の叩数の消去",
+                "全期間合計の消去",
                 MessageBoxButtons.YesNo);
 
             if (dialog == DialogResult.Yes)
@@ -646,5 +694,150 @@ namespace BeatCounter
 
         private static byte LEFT_SHIFT = 0xA0;
         private static byte LEFT_CTRL = 0xA2;
+
+        private void TodayShortTips_Click(object sender, EventArgs e)
+        {
+            TodayInit();
+        }
+
+        private void コンフィグToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void カウントの変更ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // 変数の初期化
+            List<TextBox> T_Keys = new List<TextBox>() { T_Key1, T_Key2, T_Key3, T_Key4, T_Key5, T_Key6, T_Key7, T_S_Up, T_S_Down, T_TodayKeys, T_AllDayKeys };
+            List<Label> Keys = new List<Label>() { Key1, Key2, Key3, Key4, Key5, Key6, Key7, S_Up, S_Down, TodayKeys, AllDayKeys };
+
+            int count = 0;
+
+            CountChangeTips.Checked = !CountChangeTips.Checked;
+
+            if (CountChangeTips.Checked)
+            {
+                // 数値変更モードの切り替え(ボタンの入力チェック処理を行わないようにする。)
+                KeyChangeMode = !KeyChangeMode;
+
+                // Labelを画面から非表示にする。
+                foreach(Label Lab in Keys)
+                {
+                    Lab.Visible = false;
+                }
+
+                foreach (TextBox Key in T_Keys)
+                {
+                    // 現在値を渡す。
+                    Key.Text = Keys[count].Text;
+
+                    // TextBoxを画面に表示する。
+                    Key.Visible = true;
+                    // TextBoxを入力可能状態にする。
+                    Key.ReadOnly = false;
+                    count++;
+                }
+            }
+            else
+            {
+                foreach (TextBox Key in T_Keys)
+                {
+                    // 入力されたものが数値であるかチェックする。
+                    var check = int.TryParse(Key.Text, out int i);
+
+                    // 数値以外が入力されている場合エラーを返す。
+                    if (!check)
+                    {
+                        DialogResult dialog = MessageBox.Show(
+                            "テキストボックスには数値を" +
+                            "入力してください。",
+                            "エラー",
+                            MessageBoxButtons.OK);
+
+                        // 編集モードのチェック状態を維持する。
+                        CountChangeTips.Checked = true;
+                        KeyChangeMode = true;
+
+                        // 途中の場合でも全てのテキストボックスのプロパティを戻す為の処理。
+                        foreach (TextBox key_2 in T_Keys)
+                        {
+                            Key.ReadOnly = false;
+                            Key.Visible = true;
+                        }
+
+                        return;
+                    }
+
+                    Key.Text = i.ToString();
+                    switch(count)
+                    {
+                        case 0:
+                            Key1.Text = i.ToString();
+                            _key1num = i;
+                            break;
+                        case 1:
+                            Key2.Text = i.ToString();
+                            _key2num = i;
+                            break;
+                        case 2:
+                            Key3.Text = i.ToString();
+                            _key3num = i;
+                            break;
+                        case 3:
+                            Key4.Text = i.ToString();
+                            _key4num = i;
+                            break;
+                        case 4:
+                            Key5.Text = i.ToString();
+                            _key5num = i;
+                            break;
+                        case 5:
+                            Key6.Text = i.ToString();
+                            _key6num = i;
+                            break;
+                        case 6:
+                            Key7.Text = i.ToString();
+                            _key7num = i;
+                            break;
+                        case 7:
+                            S_Up.Text = i.ToString();
+                            _s_upnum = i;
+                            break;
+                        case 8:
+                            S_Down.Text = i.ToString();
+                            _s_downnum = i;
+                            break;
+                        case 9:
+                            TodayKeys.Text = i.ToString();
+                            _todaynum = i;
+                            break;
+                        case 10:
+                            AllDayKeys.Text = i.ToString();
+                            _alldaynum = i;
+                            break;
+                        default:
+                            break;
+                    }
+                    count++;
+                }
+                foreach (Label Lab in Keys)
+                {
+                    Lab.Visible = true;
+                }
+                foreach(TextBox Key in T_Keys)
+                {
+                    Key.ReadOnly = true;
+                    Key.Visible = false;
+                }
+                KeyChangeMode = false;
+            }
+        }
+
+        private void BeatCounter_Close(object sender, FormClosingEventArgs e)
+        {
+            // 全期間の合計値を保存する。
+            Properties.Settings.Default.SaveAllDayKey = _alldaynum;
+            Properties.Settings.Default.Save();
+        }
     }
 }
