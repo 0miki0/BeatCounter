@@ -15,7 +15,7 @@ namespace BeatCounter
         public Config()
         {
             InitializeComponent();
-            Text_Kando.Text = kando.Set_Kando.ToString();
+            Text_Kando.Text = Properties.Settings.Default.Kando.ToString();
         }
 
         private void S_Kando_Click(object sender, EventArgs e)
@@ -30,8 +30,13 @@ namespace BeatCounter
 
         private void OK_Button_Click(object sender, EventArgs e)
         {
+            // 入力された値を数値に変換する。
             var chk = int.TryParse(Text_Kando.Text, out int i);
+
+            // 格納する変数の型に変換する。
             ulong j = (ulong)i;
+
+            // 数値以外の場合、エラーメッセージを表示する。
             if(chk == false)
             {
                 DialogResult dialog = MessageBox.Show(
@@ -42,14 +47,17 @@ namespace BeatCounter
             }
             else
             {
-                kando.Set_Kando = j;
+                // 変数を格納。
+                Properties.Settings.Default.Kando = j;
+                Properties.Settings.Default.Save();
+
                 this.Close();
             }
         }
 
         private void Def_Button_Click(object sender, EventArgs e)
         {
-            Text_Kando.Text = kando.Set_Kando.ToString();
+            Text_Kando.Text = Properties.Settings.Default.Kando.ToString();
         }
     }
 }

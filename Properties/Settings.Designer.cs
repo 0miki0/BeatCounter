@@ -34,5 +34,17 @@ namespace BeatCounter.Properties {
                 this["SaveAllDayKey"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5000")]
+        public ulong Kando {
+            get {
+                return ((ulong)(this["Kando"]));
+            }
+            set {
+                this["Kando"] = value;
+            }
+        }
     }
 }

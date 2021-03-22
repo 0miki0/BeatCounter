@@ -10,6 +10,13 @@ namespace BeatCounter
 {
     public partial class BeatCounter : Form, IDisposable
     {
+        #region private
+        [DllImport("user32.dll")]
+        public static extern uint keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
+
+        private static byte LEFT_SHIFT = 0xA0;
+        private static byte LEFT_CTRL = 0xA2;
+
         private Joystick _joy;
         private int _s_upnum;
         private int _s_downnum;
@@ -52,12 +59,16 @@ namespace BeatCounter
         private bool KeyChangeMode = false;
 
         private Color KeyBackColor = Color.LightYellow;
+        #endregion
 
+        /// <summary>
+        /// Formの処理
+        /// </summary>
         public BeatCounter()
         {
             InitializeComponent();
 
-            // 今日分の変数を初期化
+            // 起動時の変数を初期化
             TodayInit();
 
             // 最大化を無効に
@@ -69,11 +80,13 @@ namespace BeatCounter
         /// </summary>
         public void Exec()
         {
+            // DirectXデバイスの初期化処理
             Initialize();
 
             // フォームの生成
             Show();
-            // フォームが作成されている間は、ループし続ける
+
+            // フォームが作成されている間、実行する。
             while (Created)
             {
                 MainLoop();
@@ -560,7 +573,7 @@ namespace BeatCounter
             }
 
             // スクラッチを回した時にどれだけカウントされるかの判定。デフォルト：5000。
-            if (counter > kando.Set_Kando && isActive)
+            if (counter > Properties.Settings.Default.Kando && isActive)
             {
                 if (isRight)
                 {
@@ -670,30 +683,39 @@ namespace BeatCounter
             }
         }
 
+        /// <summary>
+        /// INFINITASモードを選択した場合。
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void InfinitasPlayTips_Click(object sender, EventArgs e)
         {
             InfinitasPlayTips.Checked = true;
             BmsPlayTips.Checked = false;
         }
 
+        /// <summary>
+        /// BMSモードを選択した場合。
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BmsPlayTips_Click(object sender, EventArgs e)
         {
             InfinitasPlayTips.Checked = false;
             BmsPlayTips.Checked = true;
         }
 
+        /// <summary>
+        /// 感度設定
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void 感度ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Config conf = new Config();
             conf.Show();
         }
         #endregion
-
-        [DllImport("user32.dll")]
-        public static extern uint keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
-
-        private static byte LEFT_SHIFT = 0xA0;
-        private static byte LEFT_CTRL = 0xA2;
 
         private void TodayShortTips_Click(object sender, EventArgs e)
         {
@@ -708,13 +730,24 @@ namespace BeatCounter
         private void カウントの変更ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // 変数の初期化
-            List<TextBox> T_Keys = new List<TextBox>() { T_Key1, T_Key2, T_Key3, T_Key4, T_Key5, T_Key6, T_Key7, T_S_Up, T_S_Down, T_TodayKeys, T_AllDayKeys };
-            List<Label> Keys = new List<Label>() { Key1, Key2, Key3, Key4, Key5, Key6, Key7, S_Up, S_Down, TodayKeys, AllDayKeys };
-
+            List<TextBox> T_Keys = new List<TextBox>() { 
+                T_Key1, T_Key2, T_Key3, 
+                T_Key4, T_Key5, T_Key6, 
+                T_Key7, T_S_Up, T_S_Down, 
+                T_TodayKeys, T_AllDayKeys 
+            };
+            List<Label> Keys = new List<Label>() { 
+                Key1, Key2, Key3, 
+                Key4, Key5, Key6, 
+                Key7, S_Up, S_Down, 
+                TodayKeys, AllDayKeys
+            };
             int count = 0;
 
+            // チェック状態の切り替え
             CountChangeTips.Checked = !CountChangeTips.Checked;
 
+            // カウンタの変更にチェックが入った場合。
             if (CountChangeTips.Checked)
             {
                 // 数値変更モードの切り替え(ボタンの入力チェック処理を行わないようにする。)
@@ -740,9 +773,10 @@ namespace BeatCounter
             }
             else
             {
+                // チェックが外された場合。
                 foreach (TextBox Key in T_Keys)
                 {
-                    // 入力されたものが数値であるかチェックする。
+                    // TextBoxに入力された値が数値であるかチェックする。
                     var check = int.TryParse(Key.Text, out int i);
 
                     // 数値以外が入力されている場合エラーを返す。
@@ -768,6 +802,7 @@ namespace BeatCounter
                         return;
                     }
 
+                    // 同じ鍵盤, 皿, 合計の対応するLabelと変数にTextBoxの値を挿入する。
                     Key.Text = i.ToString();
                     switch(count)
                     {
@@ -820,15 +855,21 @@ namespace BeatCounter
                     }
                     count++;
                 }
+
+                // 各LabelのVisibleをTrueにする。
                 foreach (Label Lab in Keys)
                 {
                     Lab.Visible = true;
                 }
+
+                // 各TextBoxのVisibleをFalseにする。(＋ReadOnly状態にする)
                 foreach(TextBox Key in T_Keys)
                 {
-                    Key.ReadOnly = true;
                     Key.Visible = false;
+                    Key.ReadOnly = true;
                 }
+
+                // 数値変更モードの切り替え(ボタンの入力チェック処理を行うようにする。)
                 KeyChangeMode = false;
             }
         }
