@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace BeatCounter
@@ -18,16 +11,11 @@ namespace BeatCounter
             Text_Kando.Text = Properties.Settings.Default.Kando.ToString();
         }
 
-        private void S_Kando_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
+        /// <summary>
+        /// OKボタン押下時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OK_Button_Click(object sender, EventArgs e)
         {
             // 入力された値を数値に変換する。
@@ -55,6 +43,11 @@ namespace BeatCounter
             }
         }
 
+        /// <summary>
+        /// defaultボタン押下時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Def_Button_Click(object sender, EventArgs e)
         {
             Text_Kando.Text = Properties.Settings.Default.Kando.ToString();

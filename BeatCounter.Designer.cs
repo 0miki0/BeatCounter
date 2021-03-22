@@ -75,20 +75,20 @@ namespace BeatCounter
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Font = new System.Drawing.Font("游ゴシック", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label9.Location = new System.Drawing.Point(299, 46);
+            this.label9.Font = new System.Drawing.Font("源ノ角ゴシック Bold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label9.Location = new System.Drawing.Point(311, 42);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(77, 17);
+            this.label9.Size = new System.Drawing.Size(60, 22);
             this.label9.TabIndex = 7;
-            this.label9.Text = "全期間合計:";
+            this.label9.Text = "総合計:";
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("游ゴシック", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label8.Location = new System.Drawing.Point(107, 46);
+            this.label8.Font = new System.Drawing.Font("源ノ角ゴシック Bold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label8.Location = new System.Drawing.Point(89, 42);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(77, 17);
+            this.label8.Size = new System.Drawing.Size(90, 22);
             this.label8.TabIndex = 7;
             this.label8.Text = "今回の合計:";
             // 
@@ -156,7 +156,7 @@ namespace BeatCounter
             this.DaoTips.CheckState = System.Windows.Forms.CheckState.Checked;
             this.DaoTips.Font = new System.Drawing.Font("源ノ角ゴシック Regular", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.DaoTips.Name = "DaoTips";
-            this.DaoTips.Size = new System.Drawing.Size(180, 22);
+            this.DaoTips.Size = new System.Drawing.Size(133, 22);
             this.DaoTips.Text = "DAO";
             this.DaoTips.Click += new System.EventHandler(this.DaoTips_Click);
             // 
@@ -165,9 +165,9 @@ namespace BeatCounter
             this.PS2ConTips.Enabled = false;
             this.PS2ConTips.Font = new System.Drawing.Font("源ノ角ゴシック Regular", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.PS2ConTips.Name = "PS2ConTips";
-            this.PS2ConTips.Size = new System.Drawing.Size(180, 22);
+            this.PS2ConTips.Size = new System.Drawing.Size(133, 22);
             this.PS2ConTips.Text = "PS2専コン";
-            this.PS2ConTips.Click += new System.EventHandler(this.PhoenixTips_Click);
+            this.PS2ConTips.Click += new System.EventHandler(this.PS2ConTips_Click);
             // 
             // コンフィグToolStripMenuItem
             // 
@@ -177,21 +177,20 @@ namespace BeatCounter
             this.コンフィグToolStripMenuItem.Name = "コンフィグToolStripMenuItem";
             this.コンフィグToolStripMenuItem.Size = new System.Drawing.Size(60, 20);
             this.コンフィグToolStripMenuItem.Text = "コンフィグ";
-            this.コンフィグToolStripMenuItem.Click += new System.EventHandler(this.コンフィグToolStripMenuItem_Click);
             // 
             // SChangeTips
             // 
             this.SChangeTips.Name = "SChangeTips";
             this.SChangeTips.Size = new System.Drawing.Size(143, 22);
             this.SChangeTips.Text = "皿の感度";
-            this.SChangeTips.Click += new System.EventHandler(this.感度ToolStripMenuItem_Click);
+            this.SChangeTips.Click += new System.EventHandler(this.SChangeTips_Click);
             // 
             // CountChangeTips
             // 
             this.CountChangeTips.Name = "CountChangeTips";
             this.CountChangeTips.Size = new System.Drawing.Size(143, 22);
             this.CountChangeTips.Text = "カウントの変更";
-            this.CountChangeTips.Click += new System.EventHandler(this.カウントの変更ToolStripMenuItem_Click);
+            this.CountChangeTips.Click += new System.EventHandler(this.CountChangeTips_Click);
             // 
             // ResetTips
             // 
@@ -203,7 +202,6 @@ namespace BeatCounter
             this.ResetTips.ShowShortcutKeys = false;
             this.ResetTips.Size = new System.Drawing.Size(53, 20);
             this.ResetTips.Text = "リセット";
-            this.ResetTips.Click += new System.EventHandler(this.リセットToolStripMenuItem_Click);
             // 
             // TodayClearTips
             // 
@@ -211,7 +209,7 @@ namespace BeatCounter
             this.TodayClearTips.Name = "TodayClearTips";
             this.TodayClearTips.Size = new System.Drawing.Size(148, 22);
             this.TodayClearTips.Text = "今回分";
-            this.TodayClearTips.Click += new System.EventHandler(this.今日の回数ToolStripMenuItem_Click);
+            this.TodayClearTips.Click += new System.EventHandler(this.TodayClearTips_Click);
             // 
             // AlldayClearTips
             // 
@@ -219,7 +217,7 @@ namespace BeatCounter
             this.AlldayClearTips.Name = "AlldayClearTips";
             this.AlldayClearTips.Size = new System.Drawing.Size(148, 22);
             this.AlldayClearTips.Text = "全期間";
-            this.AlldayClearTips.Click += new System.EventHandler(this.全期間回数ToolStripMenuItem_Click);
+            this.AlldayClearTips.Click += new System.EventHandler(this.AlldayClearTips_Click);
             // 
             // TodayShortTips
             // 

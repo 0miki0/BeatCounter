@@ -38,13 +38,12 @@ namespace BeatCounter
             // S_Kando
             // 
             this.S_Kando.AutoSize = true;
-            this.S_Kando.Font = new System.Drawing.Font("源ノ角ゴシック Bold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.S_Kando.Location = new System.Drawing.Point(50, 40);
+            this.S_Kando.Font = new System.Drawing.Font("源ノ角ゴシック Bold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.S_Kando.Location = new System.Drawing.Point(46, 40);
             this.S_Kando.Name = "S_Kando";
-            this.S_Kando.Size = new System.Drawing.Size(61, 19);
+            this.S_Kando.Size = new System.Drawing.Size(75, 22);
             this.S_Kando.TabIndex = 0;
-            this.S_Kando.Text = "皿の感度";
-            this.S_Kando.Click += new System.EventHandler(this.S_Kando_Click);
+            this.S_Kando.Text = "皿の感度:";
             // 
             // Text_Kando
             // 
@@ -54,7 +53,6 @@ namespace BeatCounter
             this.Text_Kando.Size = new System.Drawing.Size(100, 25);
             this.Text_Kando.TabIndex = 1;
             this.Text_Kando.Text = "900";
-            this.Text_Kando.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // OK_Button
             // 

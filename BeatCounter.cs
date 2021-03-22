@@ -1,14 +1,8 @@
-﻿/*
- * 参考処理
- * http://csdegame.net/sharpdx/dx_input_pad.html
- * 
- */
-using SharpDX.DirectInput;
+﻿using SharpDX.DirectInput;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace BeatCounter
@@ -92,8 +86,7 @@ namespace BeatCounter
                 // イベントがある場合は処理する
                 Application.DoEvents();
 
-                // CPUがフル稼働しないようにFPSの制限をかける
-                // ※簡易的に、おおよそ秒間60フレーム程度に制限
+                // CPUがフル稼働しないようにFPSの制限をかける。(簡易的に、おおよそ秒間60フレーム程度に制限)
                 //Thread.Sleep(16);
             }
         }
@@ -110,9 +103,9 @@ namespace BeatCounter
                 // 使用するゲームパッドのID
                 var joystickGuid = Guid.Empty;
 
-                // ゲームパッドからゲームパッドを取得する(専コンや虹コンはこっち？)
                 if(PS2ConTips.Checked)
                 {
+                    // ゲームパッドからコントローラを取得する。(専コンや虹コンはこっち？)
                     if (joystickGuid == Guid.Empty)
                     {
                         foreach (DeviceInstance device in dinput.GetDevices(DeviceType.Gamepad, DeviceEnumerationFlags.AllDevices))
@@ -121,7 +114,8 @@ namespace BeatCounter
                             break;
                         }
                     }
-                    // ジョイスティックからゲームパッドを取得する
+
+                    // ジョイスティックからコントローラを取得する。
                     //if (joystickGuid == Guid.Empty)
                     //{
                     //    foreach (DeviceInstance device in dinput.GetDevices(DeviceType.Joystick, DeviceEnumerationFlags.AllDevices))
@@ -133,7 +127,7 @@ namespace BeatCounter
                 }
                 else if(DaoTips.Checked)
                 {
-                    // ジョイスティックからゲームパッドを取得する(DAOコン)
+                    // ジョイスティックからコントローラを取得する。(DAOコン)
                     if (joystickGuid == Guid.Empty)
                     {
                         foreach (DeviceInstance device in dinput.GetDevices(DeviceType.Joystick, DeviceEnumerationFlags.AllDevices))
@@ -403,6 +397,7 @@ namespace BeatCounter
             }
             #endregion
 
+            // 今回の合計と総合計を押された分だけ加算。
             TodayKeys.Text = _todaynum.ToString();
             AllDayKeys.Text = _alldaynum.ToString();
 
@@ -414,6 +409,7 @@ namespace BeatCounter
             }
         }
 
+        // 今回分の初期化処理(起動時の変数を初期化する処理でもある)
         public void TodayInit()
         {
             int InitInt = 0;
@@ -454,46 +450,21 @@ namespace BeatCounter
             _alldaynum = Properties.Settings.Default.SaveAllDayKey;
         }
 
+        // 総合計の初期化処理。
         public void AlldayInit()
         {
             int InitInt = 0;
-            T_S_Up.Text = InitInt.ToString();
-            T_S_Down.Text = InitInt.ToString();
-            T_Key1.Text = InitInt.ToString();
-            T_Key2.Text = InitInt.ToString();
-            T_Key3.Text = InitInt.ToString();
-            T_Key4.Text = InitInt.ToString();
-            T_Key5.Text = InitInt.ToString();
-            T_Key6.Text = InitInt.ToString();
-            T_Key7.Text = InitInt.ToString();
-            T_TodayKeys.Text = InitInt.ToString();
+
+            TodayInit();
+
             T_AllDayKeys.Text = InitInt.ToString();
-
-            S_Up.Text = InitInt.ToString();
-            S_Down.Text = InitInt.ToString();
-            Key1.Text = InitInt.ToString();
-            Key2.Text = InitInt.ToString();
-            Key3.Text = InitInt.ToString();
-            Key4.Text = InitInt.ToString();
-            Key5.Text = InitInt.ToString();
-            Key6.Text = InitInt.ToString();
-            Key7.Text = InitInt.ToString();
-            TodayKeys.Text = InitInt.ToString();
             AllDayKeys.Text = InitInt.ToString();
-
-            _s_upnum = InitInt;
-            _s_downnum = InitInt;
-            _key1num = InitInt;
-            _key2num = InitInt;
-            _key3num = InitInt;
-            _key4num = InitInt;
-            _key5num = InitInt;
-            _key6num = InitInt;
-            _key7num = InitInt;
-            _todaynum = InitInt;
             _alldaynum = InitInt;
         }
 
+        /// <summary>
+        /// ゲームモードがINFINITAS時の処理
+        /// </summary>
         public void InfinitasMode()
         {
             if (_s_rel_old != _s_rel_now)
@@ -596,6 +567,9 @@ namespace BeatCounter
             counter++;
         }
 
+        /// <summary>
+        /// ゲームモードがBMS時の処理
+        /// </summary>
         public void BMSMode()
         {
             // 皿が動作しているか。皿が同じ方向に回り続けている場合はカウントしない。
@@ -633,27 +607,22 @@ namespace BeatCounter
         }
 
         #region Actions
-        private void phoenixToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void リセットToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
+        /// <summary>
+        /// アプリケーションロード時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BeatCounter_Load(object sender, EventArgs e)
         {
 
         }
 
-        private void eventLog1_EntryWritten(object sender, EntryWrittenEventArgs e)
-        {
-
-        }
-
-        private void 今日の回数ToolStripMenuItem_Click(object sender, EventArgs e)
+        /// <summary>
+        /// 今回の合計の削除を押下した時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TodayClearTips_Click(object sender, EventArgs e)
         {
             DialogResult dialog = MessageBox.Show(
                 "今回の合計および各回数を消去します。" +
@@ -667,7 +636,12 @@ namespace BeatCounter
             }
         }
 
-        private void 全期間回数ToolStripMenuItem_Click(object sender, EventArgs e)
+        /// <summary>
+        /// 総合計を削除を押下した時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void AlldayClearTips_Click(object sender, EventArgs e)
         {
             DialogResult dialog = MessageBox.Show(
                 "全ての回数を消去します。" +
@@ -704,28 +678,32 @@ namespace BeatCounter
         }
 
         /// <summary>
-        /// 感度設定
+        /// 皿感度の設定
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void 感度ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SChangeTips_Click(object sender, EventArgs e)
         {
             Config conf = new Config();
             conf.Show();
         }
-        #endregion
 
+        /// <summary>
+        /// Shift＋Deleteキーを押下した時、警告無しに今日のカウントを初期化する処理。
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void TodayShortTips_Click(object sender, EventArgs e)
         {
             TodayInit();
         }
 
-        private void コンフィグToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void カウントの変更ToolStripMenuItem_Click(object sender, EventArgs e)
+        /// <summary>
+        /// カウンタの変更を押下した時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CountChangeTips_Click(object sender, EventArgs e)
         {
             // 変数の初期化
             List<TextBox> T_Keys = new List<TextBox>() { 
@@ -872,6 +850,11 @@ namespace BeatCounter
             }
         }
 
+        /// <summary>
+        /// アプリケーションを閉じる時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BeatCounter_Close(object sender, FormClosingEventArgs e)
         {
             // 全期間の合計値を保存する。
@@ -879,6 +862,11 @@ namespace BeatCounter
             Properties.Settings.Default.Save();
         }
 
+        /// <summary>
+        /// コントローラがDAOの時
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void DaoTips_Click(object sender, EventArgs e)
         {
             DaoTips.Checked = true;
@@ -886,12 +874,17 @@ namespace BeatCounter
             Initialize();
         }
 
-        private void PhoenixTips_Click(object sender, EventArgs e)
+        /// <summary>
+        /// コントローラがPS2専コンの時
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PS2ConTips_Click(object sender, EventArgs e)
         {
             DaoTips.Checked = false;
             PS2ConTips.Checked = true;
             Initialize();
         }
-
+        #endregion
     }
 }
