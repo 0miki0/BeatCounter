@@ -38,7 +38,7 @@ namespace BeatCounter
             this.BmsPlayTips = new System.Windows.Forms.ToolStripMenuItem();
             this.ControllerTips = new System.Windows.Forms.ToolStripMenuItem();
             this.DaoTips = new System.Windows.Forms.ToolStripMenuItem();
-            this.PhoenixTips = new System.Windows.Forms.ToolStripMenuItem();
+            this.PS2ConTips = new System.Windows.Forms.ToolStripMenuItem();
             this.コンフィグToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SChangeTips = new System.Windows.Forms.ToolStripMenuItem();
             this.CountChangeTips = new System.Windows.Forms.ToolStripMenuItem();
@@ -130,14 +130,14 @@ namespace BeatCounter
             this.InfinitasPlayTips.Checked = true;
             this.InfinitasPlayTips.CheckState = System.Windows.Forms.CheckState.Checked;
             this.InfinitasPlayTips.Name = "InfinitasPlayTips";
-            this.InfinitasPlayTips.Size = new System.Drawing.Size(180, 22);
+            this.InfinitasPlayTips.Size = new System.Drawing.Size(127, 22);
             this.InfinitasPlayTips.Text = "INFINITAS";
             this.InfinitasPlayTips.Click += new System.EventHandler(this.InfinitasPlayTips_Click);
             // 
             // BmsPlayTips
             // 
             this.BmsPlayTips.Name = "BmsPlayTips";
-            this.BmsPlayTips.Size = new System.Drawing.Size(180, 22);
+            this.BmsPlayTips.Size = new System.Drawing.Size(127, 22);
             this.BmsPlayTips.Text = "BMS";
             this.BmsPlayTips.Click += new System.EventHandler(this.BmsPlayTips_Click);
             // 
@@ -145,8 +145,7 @@ namespace BeatCounter
             // 
             this.ControllerTips.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.DaoTips,
-            this.PhoenixTips});
-            this.ControllerTips.Enabled = false;
+            this.PS2ConTips});
             this.ControllerTips.Name = "ControllerTips";
             this.ControllerTips.Size = new System.Drawing.Size(77, 20);
             this.ControllerTips.Text = "コントローラー";
@@ -159,13 +158,16 @@ namespace BeatCounter
             this.DaoTips.Name = "DaoTips";
             this.DaoTips.Size = new System.Drawing.Size(180, 22);
             this.DaoTips.Text = "DAO";
+            this.DaoTips.Click += new System.EventHandler(this.DaoTips_Click);
             // 
-            // PhoenixTips
+            // PS2ConTips
             // 
-            this.PhoenixTips.Font = new System.Drawing.Font("源ノ角ゴシック Regular", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.PhoenixTips.Name = "PhoenixTips";
-            this.PhoenixTips.Size = new System.Drawing.Size(180, 22);
-            this.PhoenixTips.Text = "Phoenix";
+            this.PS2ConTips.Enabled = false;
+            this.PS2ConTips.Font = new System.Drawing.Font("源ノ角ゴシック Regular", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.PS2ConTips.Name = "PS2ConTips";
+            this.PS2ConTips.Size = new System.Drawing.Size(180, 22);
+            this.PS2ConTips.Text = "PS2専コン";
+            this.PS2ConTips.Click += new System.EventHandler(this.PhoenixTips_Click);
             // 
             // コンフィグToolStripMenuItem
             // 
@@ -180,14 +182,14 @@ namespace BeatCounter
             // SChangeTips
             // 
             this.SChangeTips.Name = "SChangeTips";
-            this.SChangeTips.Size = new System.Drawing.Size(180, 22);
+            this.SChangeTips.Size = new System.Drawing.Size(143, 22);
             this.SChangeTips.Text = "皿の感度";
             this.SChangeTips.Click += new System.EventHandler(this.感度ToolStripMenuItem_Click);
             // 
             // CountChangeTips
             // 
             this.CountChangeTips.Name = "CountChangeTips";
-            this.CountChangeTips.Size = new System.Drawing.Size(180, 22);
+            this.CountChangeTips.Size = new System.Drawing.Size(143, 22);
             this.CountChangeTips.Text = "カウントの変更";
             this.CountChangeTips.Click += new System.EventHandler(this.カウントの変更ToolStripMenuItem_Click);
             // 
@@ -207,7 +209,7 @@ namespace BeatCounter
             // 
             this.TodayClearTips.Font = new System.Drawing.Font("源ノ角ゴシック Regular", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.TodayClearTips.Name = "TodayClearTips";
-            this.TodayClearTips.Size = new System.Drawing.Size(180, 22);
+            this.TodayClearTips.Size = new System.Drawing.Size(148, 22);
             this.TodayClearTips.Text = "今回分";
             this.TodayClearTips.Click += new System.EventHandler(this.今日の回数ToolStripMenuItem_Click);
             // 
@@ -215,7 +217,7 @@ namespace BeatCounter
             // 
             this.AlldayClearTips.Font = new System.Drawing.Font("源ノ角ゴシック Regular", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.AlldayClearTips.Name = "AlldayClearTips";
-            this.AlldayClearTips.Size = new System.Drawing.Size(180, 22);
+            this.AlldayClearTips.Size = new System.Drawing.Size(148, 22);
             this.AlldayClearTips.Text = "全期間";
             this.AlldayClearTips.Click += new System.EventHandler(this.全期間回数ToolStripMenuItem_Click);
             // 
@@ -223,7 +225,7 @@ namespace BeatCounter
             // 
             this.TodayShortTips.Name = "TodayShortTips";
             this.TodayShortTips.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Shift | System.Windows.Forms.Keys.Delete)));
-            this.TodayShortTips.Size = new System.Drawing.Size(180, 22);
+            this.TodayShortTips.Size = new System.Drawing.Size(148, 22);
             this.TodayShortTips.Text = "今S";
             this.TodayShortTips.Visible = false;
             this.TodayShortTips.Click += new System.EventHandler(this.TodayShortTips_Click);
@@ -701,7 +703,7 @@ namespace BeatCounter
         private System.Windows.Forms.ToolStripMenuItem BmsPlayTips;
         private System.Windows.Forms.ToolStripMenuItem ControllerTips;
         private System.Windows.Forms.ToolStripMenuItem DaoTips;
-        private System.Windows.Forms.ToolStripMenuItem PhoenixTips;
+        private System.Windows.Forms.ToolStripMenuItem PS2ConTips;
         private System.Windows.Forms.ToolStripMenuItem コンフィグToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem SChangeTips;
         private System.Windows.Forms.ToolStripMenuItem ResetTips;

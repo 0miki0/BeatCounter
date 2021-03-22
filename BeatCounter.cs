@@ -1,4 +1,9 @@
-﻿using SharpDX.DirectInput;
+﻿/*
+ * 参考処理
+ * http://csdegame.net/sharpdx/dx_input_pad.html
+ * 
+ */
+using SharpDX.DirectInput;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,12 +16,6 @@ namespace BeatCounter
     public partial class BeatCounter : Form, IDisposable
     {
         #region private
-        [DllImport("user32.dll")]
-        public static extern uint keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
-
-        private static byte LEFT_SHIFT = 0xA0;
-        private static byte LEFT_CTRL = 0xA2;
-
         private Joystick _joy;
         private int _s_upnum;
         private int _s_downnum;
@@ -31,7 +30,6 @@ namespace BeatCounter
         private int _key7num;
         private int _todaynum;
         private int _alldaynum;
-        private int _alldaydefault;
 
         private ulong counter = 1;
 
@@ -111,25 +109,42 @@ namespace BeatCounter
             {
                 // 使用するゲームパッドのID
                 var joystickGuid = Guid.Empty;
-                // ゲームパッドからゲームパッドを取得する
-                //if (joystickGuid == Guid.Empty)
-                //{
-                //    foreach (DeviceInstance device in dinput.GetDevices(DeviceType.Gamepad, DeviceEnumerationFlags.AllDevices))
-                //    {
-                //        joystickGuid = device.InstanceGuid;
-                //        break;
-                //    }
-                //}
-                // ジョイスティックからゲームパッドを取得する
-                if (joystickGuid == Guid.Empty)
+
+                // ゲームパッドからゲームパッドを取得する(専コンや虹コンはこっち？)
+                if(PS2ConTips.Checked)
                 {
-                    foreach (DeviceInstance device in dinput.GetDevices(DeviceType.Joystick, DeviceEnumerationFlags.AllDevices))
+                    if (joystickGuid == Guid.Empty)
                     {
-                        joystickGuid = device.InstanceGuid;
-                        break;
+                        foreach (DeviceInstance device in dinput.GetDevices(DeviceType.Gamepad, DeviceEnumerationFlags.AllDevices))
+                        {
+                            joystickGuid = device.InstanceGuid;
+                            break;
+                        }
+                    }
+                    // ジョイスティックからゲームパッドを取得する
+                    //if (joystickGuid == Guid.Empty)
+                    //{
+                    //    foreach (DeviceInstance device in dinput.GetDevices(DeviceType.Joystick, DeviceEnumerationFlags.AllDevices))
+                    //    {
+                    //        joystickGuid = device.InstanceGuid;
+                    //        break;
+                    //    }
+                    //}
+                }
+                else if(DaoTips.Checked)
+                {
+                    // ジョイスティックからゲームパッドを取得する(DAOコン)
+                    if (joystickGuid == Guid.Empty)
+                    {
+                        foreach (DeviceInstance device in dinput.GetDevices(DeviceType.Joystick, DeviceEnumerationFlags.AllDevices))
+                        {
+                            joystickGuid = device.InstanceGuid;
+                            break;
+                        }
                     }
                 }
-                // 見つかった場合
+
+                // コントローラーが見つかった場合
                 if (joystickGuid != Guid.Empty)
                 {
                     // パッド入力周りの初期化
@@ -507,9 +522,6 @@ namespace BeatCounter
                     // 皿を逆回転させた時の処理。
                     if (isRight)
                     {
-                        keybd_event(LEFT_SHIFT, 0, 2u, (UIntPtr)0uL);
-                        keybd_event(LEFT_CTRL, 0, 0u, (UIntPtr)0uL);
-
                         Console.WriteLine("1");
                         _todaynum++;
                         _alldaynum++;
@@ -520,9 +532,6 @@ namespace BeatCounter
                     }
                     else
                     {
-                        keybd_event(LEFT_CTRL, 0, 2u, (UIntPtr)0uL);
-                        keybd_event(LEFT_SHIFT, 0, 0u, (UIntPtr)0uL);
-
                         Console.WriteLine("2");
                         _todaynum++;
                         _alldaynum++;
@@ -541,7 +550,6 @@ namespace BeatCounter
                     // 皿を回していない状態から回し始めた時の処理。
                     if (nowRight)
                     {
-                        keybd_event(LEFT_SHIFT, 0, 0u, (UIntPtr)0uL);
                         Console.WriteLine("3");
                         _todaynum++;
                         _alldaynum++;
@@ -552,7 +560,6 @@ namespace BeatCounter
                     }
                     else
                     {
-                        keybd_event(LEFT_CTRL, 0, 0u, (UIntPtr)0uL);
                         Console.WriteLine("4");
                         _todaynum++;
                         _alldaynum++;
@@ -572,18 +579,9 @@ namespace BeatCounter
                 _s_rel_old = _s_rel_now;
             }
 
-            // スクラッチを回した時にどれだけカウントされるかの判定。デフォルト：5000。
+            // スクラッチを回した時にもう回していない扱いになるかの判定。デフォルト：5000。
             if (counter > Properties.Settings.Default.Kando && isActive)
             {
-                if (isRight)
-                {
-                    keybd_event(LEFT_SHIFT, 0, 2u, (UIntPtr)0uL);
-                }
-                else
-                {
-                    keybd_event(LEFT_CTRL, 0, 2u, (UIntPtr)0uL);
-                }
-
                 isActive = false;
                 counter = 0;
                 S_Down.BackColor = KeyBackColor;
@@ -880,5 +878,20 @@ namespace BeatCounter
             Properties.Settings.Default.SaveAllDayKey = _alldaynum;
             Properties.Settings.Default.Save();
         }
+
+        private void DaoTips_Click(object sender, EventArgs e)
+        {
+            DaoTips.Checked = true;
+            PS2ConTips.Checked = false;
+            Initialize();
+        }
+
+        private void PhoenixTips_Click(object sender, EventArgs e)
+        {
+            DaoTips.Checked = false;
+            PS2ConTips.Checked = true;
+            Initialize();
+        }
+
     }
 }
