@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace BeatCounter
@@ -9,6 +10,12 @@ namespace BeatCounter
         {
             InitializeComponent();
             Text_Kando.Text = Properties.Settings.Default.Kando.ToString();
+
+            if(Properties.Settings.Default.BackColor == 1)
+            {
+                this.BackColor = Color.FromArgb(64, 64, 64);
+                S_Kando.ForeColor = SystemColors.Control;
+            }
         }
 
         /// <summary>

@@ -29,19 +29,25 @@ namespace BeatCounter
         /// </summary>
         private void InitializeComponent()
         {
-            this.label9 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.L_AlldayKeys = new System.Windows.Forms.Label();
+            this.L_TodayKeys = new System.Windows.Forms.Label();
+            this.L_S_Up = new System.Windows.Forms.Label();
+            this.L_S_Down = new System.Windows.Forms.Label();
             this.PlayGameTips = new System.Windows.Forms.ToolStripMenuItem();
             this.InfinitasPlayTips = new System.Windows.Forms.ToolStripMenuItem();
             this.BmsPlayTips = new System.Windows.Forms.ToolStripMenuItem();
             this.ControllerTips = new System.Windows.Forms.ToolStripMenuItem();
             this.DaoTips = new System.Windows.Forms.ToolStripMenuItem();
             this.PS2ConTips = new System.Windows.Forms.ToolStripMenuItem();
+            this.CustomTips = new System.Windows.Forms.ToolStripMenuItem();
             this.コンフィグToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SChangeTips = new System.Windows.Forms.ToolStripMenuItem();
             this.CountChangeTips = new System.Windows.Forms.ToolStripMenuItem();
+            this.BackColorTips = new System.Windows.Forms.ToolStripMenuItem();
+            this.WhiteTips = new System.Windows.Forms.ToolStripMenuItem();
+            this.BlackTips = new System.Windows.Forms.ToolStripMenuItem();
+            this.ClearWTips = new System.Windows.Forms.ToolStripMenuItem();
+            this.CustomKeyConfigTips = new System.Windows.Forms.ToolStripMenuItem();
             this.ResetTips = new System.Windows.Forms.ToolStripMenuItem();
             this.TodayClearTips = new System.Windows.Forms.ToolStripMenuItem();
             this.AlldayClearTips = new System.Windows.Forms.ToolStripMenuItem();
@@ -69,52 +75,53 @@ namespace BeatCounter
             this.Key6 = new System.Windows.Forms.Label();
             this.AllDayKeys = new System.Windows.Forms.Label();
             this.Key7 = new System.Windows.Forms.Label();
+            this.BeatmaniaProConTips = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // label9
+            // L_AlldayKeys
             // 
-            this.label9.AutoSize = true;
-            this.label9.Font = new System.Drawing.Font("源ノ角ゴシック Bold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label9.Location = new System.Drawing.Point(311, 42);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(60, 22);
-            this.label9.TabIndex = 7;
-            this.label9.Text = "総合計:";
+            this.L_AlldayKeys.AutoSize = true;
+            this.L_AlldayKeys.Font = new System.Drawing.Font("源ノ角ゴシック Medium", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.L_AlldayKeys.Location = new System.Drawing.Point(255, 41);
+            this.L_AlldayKeys.Name = "L_AlldayKeys";
+            this.L_AlldayKeys.Size = new System.Drawing.Size(69, 24);
+            this.L_AlldayKeys.TabIndex = 7;
+            this.L_AlldayKeys.Text = "TOTAL :";
             // 
-            // label8
+            // L_TodayKeys
             // 
-            this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("源ノ角ゴシック Bold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label8.Location = new System.Drawing.Point(89, 42);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(90, 22);
-            this.label8.TabIndex = 7;
-            this.label8.Text = "今回の合計:";
+            this.L_TodayKeys.AutoSize = true;
+            this.L_TodayKeys.Font = new System.Drawing.Font("源ノ角ゴシック Medium", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.L_TodayKeys.Location = new System.Drawing.Point(60, 41);
+            this.L_TodayKeys.Name = "L_TodayKeys";
+            this.L_TodayKeys.Size = new System.Drawing.Size(72, 24);
+            this.L_TodayKeys.TabIndex = 7;
+            this.L_TodayKeys.Text = "TODAY :";
             // 
-            // label1
+            // L_S_Up
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("源ノ角ゴシック Heavy", 8.999999F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label1.Location = new System.Drawing.Point(9, 84);
-            this.label1.Margin = new System.Windows.Forms.Padding(0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(20, 18);
-            this.label1.TabIndex = 33;
-            this.label1.Text = "↑";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.L_S_Up.AutoSize = true;
+            this.L_S_Up.Font = new System.Drawing.Font("源ノ角ゴシック Heavy", 8.999999F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.L_S_Up.Location = new System.Drawing.Point(9, 84);
+            this.L_S_Up.Margin = new System.Windows.Forms.Padding(0);
+            this.L_S_Up.Name = "L_S_Up";
+            this.L_S_Up.Size = new System.Drawing.Size(20, 18);
+            this.L_S_Up.TabIndex = 33;
+            this.L_S_Up.Text = "↑";
+            this.L_S_Up.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // label2
+            // L_S_Down
             // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("源ノ角ゴシック Heavy", 8.999999F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label2.Location = new System.Drawing.Point(9, 115);
-            this.label2.Margin = new System.Windows.Forms.Padding(0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(20, 18);
-            this.label2.TabIndex = 34;
-            this.label2.Text = "↓";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.L_S_Down.AutoSize = true;
+            this.L_S_Down.Font = new System.Drawing.Font("源ノ角ゴシック Heavy", 8.999999F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.L_S_Down.Location = new System.Drawing.Point(9, 115);
+            this.L_S_Down.Margin = new System.Windows.Forms.Padding(0);
+            this.L_S_Down.Name = "L_S_Down";
+            this.L_S_Down.Size = new System.Drawing.Size(20, 18);
+            this.L_S_Down.TabIndex = 34;
+            this.L_S_Down.Text = "↓";
+            this.L_S_Down.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // PlayGameTips
             // 
@@ -145,7 +152,9 @@ namespace BeatCounter
             // 
             this.ControllerTips.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.DaoTips,
-            this.PS2ConTips});
+            this.PS2ConTips,
+            this.BeatmaniaProConTips,
+            this.CustomTips});
             this.ControllerTips.Name = "ControllerTips";
             this.ControllerTips.Size = new System.Drawing.Size(77, 20);
             this.ControllerTips.Text = "コントローラー";
@@ -156,24 +165,37 @@ namespace BeatCounter
             this.DaoTips.CheckState = System.Windows.Forms.CheckState.Checked;
             this.DaoTips.Font = new System.Drawing.Font("源ノ角ゴシック Regular", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.DaoTips.Name = "DaoTips";
-            this.DaoTips.Size = new System.Drawing.Size(133, 22);
+            this.DaoTips.ShowShortcutKeys = false;
+            this.DaoTips.Size = new System.Drawing.Size(180, 22);
             this.DaoTips.Text = "DAO";
             this.DaoTips.Click += new System.EventHandler(this.DaoTips_Click);
             // 
             // PS2ConTips
             // 
-            this.PS2ConTips.Enabled = false;
             this.PS2ConTips.Font = new System.Drawing.Font("源ノ角ゴシック Regular", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.PS2ConTips.Name = "PS2ConTips";
-            this.PS2ConTips.Size = new System.Drawing.Size(133, 22);
+            this.PS2ConTips.ShowShortcutKeys = false;
+            this.PS2ConTips.Size = new System.Drawing.Size(180, 22);
             this.PS2ConTips.Text = "PS2専コン";
             this.PS2ConTips.Click += new System.EventHandler(this.PS2ConTips_Click);
+            // 
+            // CustomTips
+            // 
+            this.CustomTips.Enabled = false;
+            this.CustomTips.Name = "CustomTips";
+            this.CustomTips.ShowShortcutKeys = false;
+            this.CustomTips.Size = new System.Drawing.Size(180, 22);
+            this.CustomTips.Text = "カスタム";
+            this.CustomTips.Visible = false;
+            this.CustomTips.Click += new System.EventHandler(this.CustomTips_Click);
             // 
             // コンフィグToolStripMenuItem
             // 
             this.コンフィグToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.SChangeTips,
-            this.CountChangeTips});
+            this.CountChangeTips,
+            this.BackColorTips,
+            this.CustomKeyConfigTips});
             this.コンフィグToolStripMenuItem.Name = "コンフィグToolStripMenuItem";
             this.コンフィグToolStripMenuItem.Size = new System.Drawing.Size(60, 20);
             this.コンフィグToolStripMenuItem.Text = "コンフィグ";
@@ -181,16 +203,55 @@ namespace BeatCounter
             // SChangeTips
             // 
             this.SChangeTips.Name = "SChangeTips";
-            this.SChangeTips.Size = new System.Drawing.Size(143, 22);
+            this.SChangeTips.Size = new System.Drawing.Size(151, 22);
             this.SChangeTips.Text = "皿の感度";
             this.SChangeTips.Click += new System.EventHandler(this.SChangeTips_Click);
             // 
             // CountChangeTips
             // 
             this.CountChangeTips.Name = "CountChangeTips";
-            this.CountChangeTips.Size = new System.Drawing.Size(143, 22);
-            this.CountChangeTips.Text = "カウントの変更";
+            this.CountChangeTips.Size = new System.Drawing.Size(151, 22);
+            this.CountChangeTips.Text = "カウントの編集";
             this.CountChangeTips.Click += new System.EventHandler(this.CountChangeTips_Click);
+            // 
+            // BackColorTips
+            // 
+            this.BackColorTips.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.WhiteTips,
+            this.BlackTips,
+            this.ClearWTips});
+            this.BackColorTips.Name = "BackColorTips";
+            this.BackColorTips.Size = new System.Drawing.Size(151, 22);
+            this.BackColorTips.Text = "背景色";
+            // 
+            // WhiteTips
+            // 
+            this.WhiteTips.Name = "WhiteTips";
+            this.WhiteTips.Size = new System.Drawing.Size(98, 22);
+            this.WhiteTips.Text = "白";
+            this.WhiteTips.Click += new System.EventHandler(this.WhiteTips_Click);
+            // 
+            // BlackTips
+            // 
+            this.BlackTips.Name = "BlackTips";
+            this.BlackTips.Size = new System.Drawing.Size(98, 22);
+            this.BlackTips.Text = "黒";
+            this.BlackTips.Click += new System.EventHandler(this.BlackTips_Click);
+            // 
+            // ClearWTips
+            // 
+            this.ClearWTips.Name = "ClearWTips";
+            this.ClearWTips.Size = new System.Drawing.Size(98, 22);
+            this.ClearWTips.Text = "透明";
+            this.ClearWTips.Click += new System.EventHandler(this.ClearWTips_Click);
+            // 
+            // CustomKeyConfigTips
+            // 
+            this.CustomKeyConfigTips.Enabled = false;
+            this.CustomKeyConfigTips.Name = "CustomKeyConfigTips";
+            this.CustomKeyConfigTips.Size = new System.Drawing.Size(151, 22);
+            this.CustomKeyConfigTips.Text = "カスタムキー編集";
+            this.CustomKeyConfigTips.Visible = false;
             // 
             // ResetTips
             // 
@@ -208,7 +269,7 @@ namespace BeatCounter
             this.TodayClearTips.Font = new System.Drawing.Font("源ノ角ゴシック Regular", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.TodayClearTips.Name = "TodayClearTips";
             this.TodayClearTips.Size = new System.Drawing.Size(148, 22);
-            this.TodayClearTips.Text = "今回分";
+            this.TodayClearTips.Text = "TODAY";
             this.TodayClearTips.Click += new System.EventHandler(this.TodayClearTips_Click);
             // 
             // AlldayClearTips
@@ -216,14 +277,14 @@ namespace BeatCounter
             this.AlldayClearTips.Font = new System.Drawing.Font("源ノ角ゴシック Regular", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.AlldayClearTips.Name = "AlldayClearTips";
             this.AlldayClearTips.Size = new System.Drawing.Size(148, 22);
-            this.AlldayClearTips.Text = "全期間";
+            this.AlldayClearTips.Text = "TOTAL";
             this.AlldayClearTips.Click += new System.EventHandler(this.AlldayClearTips_Click);
             // 
             // TodayShortTips
             // 
             this.TodayShortTips.Name = "TodayShortTips";
             this.TodayShortTips.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Shift | System.Windows.Forms.Keys.Delete)));
-            this.TodayShortTips.Size = new System.Drawing.Size(148, 22);
+            this.TodayShortTips.Size = new System.Drawing.Size(180, 22);
             this.TodayShortTips.Text = "今S";
             this.TodayShortTips.Visible = false;
             this.TodayShortTips.Click += new System.EventHandler(this.TodayShortTips_Click);
@@ -466,7 +527,7 @@ namespace BeatCounter
             this.T_TodayKeys.Font = new System.Drawing.Font("源ノ角ゴシック Bold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.T_TodayKeys.HideSelection = false;
             this.T_TodayKeys.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.T_TodayKeys.Location = new System.Drawing.Point(182, 40);
+            this.T_TodayKeys.Location = new System.Drawing.Point(133, 40);
             this.T_TodayKeys.Margin = new System.Windows.Forms.Padding(0);
             this.T_TodayKeys.MaxLength = 8;
             this.T_TodayKeys.Multiline = true;
@@ -490,14 +551,14 @@ namespace BeatCounter
             this.T_AllDayKeys.Font = new System.Drawing.Font("源ノ角ゴシック Bold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.T_AllDayKeys.HideSelection = false;
             this.T_AllDayKeys.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.T_AllDayKeys.Location = new System.Drawing.Point(374, 40);
+            this.T_AllDayKeys.Location = new System.Drawing.Point(327, 40);
             this.T_AllDayKeys.Margin = new System.Windows.Forms.Padding(0);
-            this.T_AllDayKeys.MaxLength = 8;
+            this.T_AllDayKeys.MaxLength = 12;
             this.T_AllDayKeys.Multiline = true;
             this.T_AllDayKeys.Name = "T_AllDayKeys";
             this.T_AllDayKeys.ReadOnly = true;
             this.T_AllDayKeys.ShortcutsEnabled = false;
-            this.T_AllDayKeys.Size = new System.Drawing.Size(90, 25);
+            this.T_AllDayKeys.Size = new System.Drawing.Size(137, 25);
             this.T_AllDayKeys.TabIndex = 20;
             this.T_AllDayKeys.Text = "99999999";
             this.T_AllDayKeys.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -510,11 +571,11 @@ namespace BeatCounter
             this.TodayKeys.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.TodayKeys.CausesValidation = false;
             this.TodayKeys.Font = new System.Drawing.Font("源ノ角ゴシック Bold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.TodayKeys.Location = new System.Drawing.Point(182, 40);
+            this.TodayKeys.Location = new System.Drawing.Point(133, 40);
             this.TodayKeys.Name = "TodayKeys";
             this.TodayKeys.Size = new System.Drawing.Size(90, 25);
             this.TodayKeys.TabIndex = 40;
-            this.TodayKeys.Text = "label3";
+            this.TodayKeys.Text = "0";
             this.TodayKeys.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // S_Up
@@ -527,7 +588,7 @@ namespace BeatCounter
             this.S_Up.Name = "S_Up";
             this.S_Up.Size = new System.Drawing.Size(90, 25);
             this.S_Up.TabIndex = 31;
-            this.S_Up.Text = "label4";
+            this.S_Up.Text = "0";
             this.S_Up.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // S_Down
@@ -540,7 +601,7 @@ namespace BeatCounter
             this.S_Down.Name = "S_Down";
             this.S_Down.Size = new System.Drawing.Size(90, 25);
             this.S_Down.TabIndex = 32;
-            this.S_Down.Text = "label5";
+            this.S_Down.Text = "0";
             this.S_Down.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // Key1
@@ -553,7 +614,7 @@ namespace BeatCounter
             this.Key1.Name = "Key1";
             this.Key1.Size = new System.Drawing.Size(90, 25);
             this.Key1.TabIndex = 33;
-            this.Key1.Text = "label6";
+            this.Key1.Text = "0";
             this.Key1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // Key2
@@ -566,7 +627,7 @@ namespace BeatCounter
             this.Key2.Name = "Key2";
             this.Key2.Size = new System.Drawing.Size(90, 25);
             this.Key2.TabIndex = 34;
-            this.Key2.Text = "label7";
+            this.Key2.Text = "0";
             this.Key2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // Key3
@@ -579,7 +640,7 @@ namespace BeatCounter
             this.Key3.Name = "Key3";
             this.Key3.Size = new System.Drawing.Size(90, 25);
             this.Key3.TabIndex = 35;
-            this.Key3.Text = "label10";
+            this.Key3.Text = "0";
             this.Key3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // Key5
@@ -592,7 +653,7 @@ namespace BeatCounter
             this.Key5.Name = "Key5";
             this.Key5.Size = new System.Drawing.Size(90, 25);
             this.Key5.TabIndex = 37;
-            this.Key5.Text = "label11";
+            this.Key5.Text = "0";
             this.Key5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // Key4
@@ -605,7 +666,7 @@ namespace BeatCounter
             this.Key4.Name = "Key4";
             this.Key4.Size = new System.Drawing.Size(90, 25);
             this.Key4.TabIndex = 36;
-            this.Key4.Text = "label12";
+            this.Key4.Text = "0";
             this.Key4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // Key6
@@ -618,7 +679,7 @@ namespace BeatCounter
             this.Key6.Name = "Key6";
             this.Key6.Size = new System.Drawing.Size(90, 25);
             this.Key6.TabIndex = 38;
-            this.Key6.Text = "label13";
+            this.Key6.Text = "0";
             this.Key6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // AllDayKeys
@@ -627,11 +688,11 @@ namespace BeatCounter
             this.AllDayKeys.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.AllDayKeys.CausesValidation = false;
             this.AllDayKeys.Font = new System.Drawing.Font("源ノ角ゴシック Bold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.AllDayKeys.Location = new System.Drawing.Point(374, 40);
+            this.AllDayKeys.Location = new System.Drawing.Point(327, 40);
             this.AllDayKeys.Name = "AllDayKeys";
-            this.AllDayKeys.Size = new System.Drawing.Size(90, 25);
+            this.AllDayKeys.Size = new System.Drawing.Size(137, 25);
             this.AllDayKeys.TabIndex = 41;
-            this.AllDayKeys.Text = "label14";
+            this.AllDayKeys.Text = "0";
             this.AllDayKeys.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // Key7
@@ -644,13 +705,22 @@ namespace BeatCounter
             this.Key7.Name = "Key7";
             this.Key7.Size = new System.Drawing.Size(90, 25);
             this.Key7.TabIndex = 39;
-            this.Key7.Text = "label15";
+            this.Key7.Text = "0";
             this.Key7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // BeatmaniaProConTips
+            // 
+            this.BeatmaniaProConTips.Enabled = false;
+            this.BeatmaniaProConTips.Name = "BeatmaniaProConTips";
+            this.BeatmaniaProConTips.Size = new System.Drawing.Size(180, 22);
+            this.BeatmaniaProConTips.Text = "Beatmania プロコン";
+            this.BeatmaniaProConTips.Click += new System.EventHandler(this.BeatmaniaProConTips_Click);
             // 
             // BeatCounter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(524, 161);
             this.Controls.Add(this.Key7);
             this.Controls.Add(this.AllDayKeys);
@@ -674,12 +744,14 @@ namespace BeatCounter
             this.Controls.Add(this.T_Key1);
             this.Controls.Add(this.T_S_Down);
             this.Controls.Add(this.T_S_Up);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.label9);
-            this.Controls.Add(this.label8);
+            this.Controls.Add(this.L_S_Down);
+            this.Controls.Add(this.L_S_Up);
+            this.Controls.Add(this.L_AlldayKeys);
+            this.Controls.Add(this.L_TodayKeys);
             this.Controls.Add(this.menuStrip1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MainMenuStrip = this.menuStrip1;
+            this.MaximizeBox = false;
             this.Name = "BeatCounter";
             this.Text = "Beat Counter";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.BeatCounter_Close);
@@ -692,10 +764,10 @@ namespace BeatCounter
         }
 
         #endregion
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label L_AlldayKeys;
+        private System.Windows.Forms.Label L_TodayKeys;
+        private System.Windows.Forms.Label L_S_Down;
+        private System.Windows.Forms.Label L_S_Up;
         private System.Windows.Forms.ToolStripMenuItem PlayGameTips;
         private System.Windows.Forms.ToolStripMenuItem InfinitasPlayTips;
         private System.Windows.Forms.ToolStripMenuItem BmsPlayTips;
@@ -732,6 +804,13 @@ namespace BeatCounter
         private System.Windows.Forms.Label Key6;
         private System.Windows.Forms.Label AllDayKeys;
         private System.Windows.Forms.Label Key7;
+        private System.Windows.Forms.ToolStripMenuItem BackColorTips;
+        private System.Windows.Forms.ToolStripMenuItem WhiteTips;
+        private System.Windows.Forms.ToolStripMenuItem BlackTips;
+        private System.Windows.Forms.ToolStripMenuItem ClearWTips;
+        private System.Windows.Forms.ToolStripMenuItem CustomTips;
+        private System.Windows.Forms.ToolStripMenuItem CustomKeyConfigTips;
+        private System.Windows.Forms.ToolStripMenuItem BeatmaniaProConTips;
     }
 }
 

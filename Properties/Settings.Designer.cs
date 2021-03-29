@@ -46,5 +46,149 @@ namespace BeatCounter.Properties {
                 this["Kando"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int BackColor {
+            get {
+                return ((int)(this["BackColor"]));
+            }
+            set {
+                this["BackColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int Controller {
+            get {
+                return ((int)(this["Controller"]));
+            }
+            set {
+                this["Controller"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int PlayMode {
+            get {
+                return ((int)(this["PlayMode"]));
+            }
+            set {
+                this["PlayMode"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("14")]
+        public int C_S_Up {
+            get {
+                return ((int)(this["C_S_Up"]));
+            }
+            set {
+                this["C_S_Up"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("15")]
+        public int C_S_Down {
+            get {
+                return ((int)(this["C_S_Down"]));
+            }
+            set {
+                this["C_S_Down"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        public int C_Key1 {
+            get {
+                return ((int)(this["C_Key1"]));
+            }
+            set {
+                this["C_Key1"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("6")]
+        public int C_Key2 {
+            get {
+                return ((int)(this["C_Key2"]));
+            }
+            set {
+                this["C_Key2"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public int C_Key3 {
+            get {
+                return ((int)(this["C_Key3"]));
+            }
+            set {
+                this["C_Key3"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("7")]
+        public int C_Key4 {
+            get {
+                return ((int)(this["C_Key4"]));
+            }
+            set {
+                this["C_Key4"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int C_Key5 {
+            get {
+                return ((int)(this["C_Key5"]));
+            }
+            set {
+                this["C_Key5"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("4")]
+        public int C_Key6 {
+            get {
+                return ((int)(this["C_Key6"]));
+            }
+            set {
+                this["C_Key6"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("12")]
+        public int C_Key7 {
+            get {
+                return ((int)(this["C_Key7"]));
+            }
+            set {
+                this["C_Key7"] = value;
+            }
+        }
     }
 }
