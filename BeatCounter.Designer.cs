@@ -39,6 +39,7 @@ namespace BeatCounter
             this.ControllerTips = new System.Windows.Forms.ToolStripMenuItem();
             this.DaoTips = new System.Windows.Forms.ToolStripMenuItem();
             this.PS2ConTips = new System.Windows.Forms.ToolStripMenuItem();
+            this.BeatmaniaProConTips = new System.Windows.Forms.ToolStripMenuItem();
             this.CustomTips = new System.Windows.Forms.ToolStripMenuItem();
             this.コンフィグToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SChangeTips = new System.Windows.Forms.ToolStripMenuItem();
@@ -75,7 +76,6 @@ namespace BeatCounter
             this.Key6 = new System.Windows.Forms.Label();
             this.AllDayKeys = new System.Windows.Forms.Label();
             this.Key7 = new System.Windows.Forms.Label();
-            this.BeatmaniaProConTips = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -179,14 +179,20 @@ namespace BeatCounter
             this.PS2ConTips.Text = "PS2専コン";
             this.PS2ConTips.Click += new System.EventHandler(this.PS2ConTips_Click);
             // 
+            // BeatmaniaProConTips
+            // 
+            this.BeatmaniaProConTips.Enabled = false;
+            this.BeatmaniaProConTips.Name = "BeatmaniaProConTips";
+            this.BeatmaniaProConTips.Size = new System.Drawing.Size(180, 22);
+            this.BeatmaniaProConTips.Text = "Beatmania プロコン";
+            this.BeatmaniaProConTips.Click += new System.EventHandler(this.BeatmaniaProConTips_Click);
+            // 
             // CustomTips
             // 
-            this.CustomTips.Enabled = false;
             this.CustomTips.Name = "CustomTips";
             this.CustomTips.ShowShortcutKeys = false;
             this.CustomTips.Size = new System.Drawing.Size(180, 22);
             this.CustomTips.Text = "カスタム";
-            this.CustomTips.Visible = false;
             this.CustomTips.Click += new System.EventHandler(this.CustomTips_Click);
             // 
             // コンフィグToolStripMenuItem
@@ -284,7 +290,7 @@ namespace BeatCounter
             // 
             this.TodayShortTips.Name = "TodayShortTips";
             this.TodayShortTips.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Shift | System.Windows.Forms.Keys.Delete)));
-            this.TodayShortTips.Size = new System.Drawing.Size(180, 22);
+            this.TodayShortTips.Size = new System.Drawing.Size(148, 22);
             this.TodayShortTips.Text = "今S";
             this.TodayShortTips.Visible = false;
             this.TodayShortTips.Click += new System.EventHandler(this.TodayShortTips_Click);
@@ -707,14 +713,6 @@ namespace BeatCounter
             this.Key7.TabIndex = 39;
             this.Key7.Text = "0";
             this.Key7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // BeatmaniaProConTips
-            // 
-            this.BeatmaniaProConTips.Enabled = false;
-            this.BeatmaniaProConTips.Name = "BeatmaniaProConTips";
-            this.BeatmaniaProConTips.Size = new System.Drawing.Size(180, 22);
-            this.BeatmaniaProConTips.Text = "Beatmania プロコン";
-            this.BeatmaniaProConTips.Click += new System.EventHandler(this.BeatmaniaProConTips_Click);
             // 
             // BeatCounter
             // 

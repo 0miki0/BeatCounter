@@ -166,18 +166,18 @@ namespace BeatCounter
             _s_rel_old_y = _s_rel_now_y;
             _s_rel_now_y = jState.Y;
 
-            Debug.WriteLine(_s_rel_now_y);
-
             // INFINITASプレイ時の皿の処理
             if (InfinitasPlayTips.Checked == true)
             {
-                InfinitasMode();
+                InfinitasMode(jState);
             }
             // BMSプレイ時の皿の処理
             else if (BmsPlayTips.Checked == true)
             {
-                BMSMode();
+                BMSMode(jState);
             }
+
+            var a = jState.PointOfViewControllers;
 
             #region Key判定
             if (DaoTips.Checked)
@@ -489,546 +489,836 @@ namespace BeatCounter
             }
             else if (CustomTips.Checked)
             {
-                //    // 十字キー入力とボタン入力で処理を分ける必要がある？要修正？
-                //    // Key1 判定 (1鍵が押されたとき且つ、押しっぱなしになってない判定の場合)
-                //    if (Properties.Settings.Default.C_Key1 < 12)
-                //    {
-                //        // 保存された設定を元に押されたキーが該当するキーであることを判別する。
-                //        if (jState.Buttons[Properties.Settings.Default.C_Key1] && _joy1b == false)
-                //        {
-                //            Debug.Print("入力キー：1");
-                //            _todaynum++;
-                //            _alldaynum++;
-                //            _key1num++;
-                //            Key1.Text = _key1num.ToString();
-                //            Key1.BackColor = Color.LightPink;
-                //            _joy1b = true;
-                //        }
-                //        else
-                //        {
-                //            if (jState.Buttons[Properties.Settings.Default.C_Key1] == false)
-                //            {
-                //                // 押しっぱなし判定を解除
-                //                _joy1b = false;
+                // 十字キー入力とボタン入力で処理を分ける必要がある？要修正？
+                // Key1 判定 (1鍵が押されたとき且つ、押しっぱなしになってない判定の場合)
+                if (Properties.Settings.Default.C_Key1 < 20)
+                {
+                    // 保存された設定を元に押されたキーが該当するキーであることを判別する。
+                    if (jState.Buttons[Properties.Settings.Default.C_Key1] && _joy1b == false)
+                    {
+                        Debug.Print("入力キー：1");
+                        _todaynum++;
+                        _alldaynum++;
+                        _key1num++;
+                        Key1.Text = _key1num.ToString();
+                        Key1.BackColor = Color.LightPink;
+                        _joy1b = true;
+                    }
+                    else
+                    {
+                        if (jState.Buttons[Properties.Settings.Default.C_Key1] == false)
+                        {
+                            // 押しっぱなし判定を解除
+                            _joy1b = false;
 
-                //                // 背景色を戻す。
-                //                Key1.BackColor = _keyBackColor;
-                //            }
-                //        }
-                //    }
-                //    else if (Properties.Settings.Default.C_Key1 >= 12)
-                //    {
-                //        // 十字キー入力「左」の場合。
-                //        if (Properties.Settings.Default.C_Key1 == 12)
-                //        {
-                //            _Gateb = true;
-                //            InsertLeft(_joy1b);
-                //        }
-                //        // 十字キー入力「右」の場合。
-                //        else if (Properties.Settings.Default.C_Key1 == 13)
-                //        {
-                //            _Gateb = true;
-                //            InsertRight(_joy1b);
-                //        }
-                //        // 十字キー入力「上」の場合。
-                //        else if (Properties.Settings.Default.C_Key1 == 14)
-                //        {
-                //            _Gateb = true;
-                //            InsertUp(_joy1b);
-                //        }
-                //        // 十字キー入力「下」の場合。
-                //        else if (Properties.Settings.Default.C_Key1 == 15)
-                //        {
-                //            _Gateb = true;
-                //            InsertDown(_joy1b);
-                //        }
+                            // 背景色を戻す。
+                            Key1.BackColor = _keyBackColor;
+                        }
+                    }
+                }
+                else if (Properties.Settings.Default.C_Key1 >= 50)
+                {
+                    // 軸入力の場合の処理
+                    if (Properties.Settings.Default.C_Key1 == 50)
+                    {
+                        // 左の場合
+                        if (_s_rel_now_x == 0 && _joy1b == false)
+                        {
+                            Debug.Print("入力キー：1");
+                            _todaynum++;
+                            _alldaynum++;
+                            _key1num++;
+                            Key1.Text = _key1num.ToString();
+                            Key1.BackColor = Color.LightPink;
+                            _joy1b = true;
+                        }
+                        else
+                        {
+                            if (_s_rel_now_x != 0)
+                            {
+                                _joy1b = false;
+                                Key1.BackColor = _keyBackColor;
+                            }
+                        }
+                    }
+                    // 十字キー入力「右」の場合。
+                    else if (Properties.Settings.Default.C_Key1 == 51)
+                    {
+                        // 左の場合
+                        if (_s_rel_now_x == 1000 && _joy1b == false)
+                        {
+                            Debug.Print("入力キー：1");
+                            _todaynum++;
+                            _alldaynum++;
+                            _key1num++;
+                            Key1.Text = _key1num.ToString();
+                            Key1.BackColor = Color.LightPink;
+                            _joy1b = true;
+                        }
+                        else
+                        {
+                            if (_s_rel_now_x != 1000)
+                            {
+                                _joy1b = false;
+                                Key1.BackColor = _keyBackColor;
+                            }
+                        }
+                    }
+                    // 十字キー入力「上」の場合。
+                    else if (Properties.Settings.Default.C_Key1 == 52)
+                    {
+                        // 左の場合
+                        if (_s_rel_now_y == 1000 && _joy1b == false)
+                        {
+                            Debug.Print("入力キー：1");
+                            _todaynum++;
+                            _alldaynum++;
+                            _key1num++;
+                            Key1.Text = _key1num.ToString();
+                            Key1.BackColor = Color.LightPink;
+                            _joy1b = true;
+                        }
+                        else
+                        {
+                            if (_s_rel_now_y != 1000)
+                            {
+                                _joy1b = false;
+                                Key1.BackColor = _keyBackColor;
+                            }
+                        }
+                    }
+                    // 十字キー入力「下」の場合。
+                    else if (Properties.Settings.Default.C_Key1 == 53)
+                    {
+                        // 左の場合
+                        if (_s_rel_now_y == 0 && _joy1b == false)
+                        {
+                            Debug.Print("入力キー：1");
+                            _todaynum++;
+                            _alldaynum++;
+                            _key1num++;
+                            Key1.Text = _key1num.ToString();
+                            Key1.BackColor = Color.LightPink;
+                            _joy1b = true;
+                        }
+                        else
+                        {
+                            if (_s_rel_now_y != 0)
+                            {
+                                _joy1b = false;
+                                Key1.BackColor = _keyBackColor;
+                            }
+                        }
+                    }
+                }
 
-                //        // 渡された変数のT/Fを元に、処理を続行する。
-                //        if (_joyCb == true && _joy1b == false)
-                //        {
-                //            _key1num++;
-                //            Key1.Text = _key1num.ToString();
-                //            Key1.BackColor = Color.LightPink;
-                //            _joy1b = true;
-                //        }
-                //        else if (_joyCb == false && _joy1b == false)
-                //        {
-                //            _joy1b = false;
-                //            Key1.BackColor = _keyBackColor;
-                //        }
-                //    }
+                // Key2 判定
+                if (Properties.Settings.Default.C_Key2 < 20)
+                {
+                    if (jState.Buttons[Properties.Settings.Default.C_Key2] && _joy2b == false)
+                    {
+                        Debug.Print("入力キー：2");
+                        _todaynum++;
+                        _alldaynum++;
+                        _key2num++;
+                        Key2.Text = _key2num.ToString();
+                        Key2.BackColor = Color.LightPink;
+                        _joy2b = true;
+                    }
+                    else
+                    {
+                        if (jState.Buttons[Properties.Settings.Default.C_Key2] == false)
+                        {
+                            _joy2b = false;
+                            Key2.BackColor = _keyBackColor;
+                        }
+                    }
+                }
+                else if (Properties.Settings.Default.C_Key2 >= 50)
+                {
+                    // 軸入力の場合の処理
+                    if (Properties.Settings.Default.C_Key2 == 50)
+                    {
+                        // 左の場合
+                        if (_s_rel_now_x == 0 && _joy2b == false)
+                        {
+                            Debug.Print("入力キー：2");
+                            _todaynum++;
+                            _alldaynum++;
+                            _key2num++;
+                            Key2.Text = _key2num.ToString();
+                            Key2.BackColor = Color.LightPink;
+                            _joy2b = true;
+                        }
+                        else
+                        {
+                            if (_s_rel_now_x != 0)
+                            {
+                                _joy2b = false;
+                                Key2.BackColor = _keyBackColor;
+                            }
+                        }
+                    }
+                    // 十字キー入力「右」の場合。
+                    else if (Properties.Settings.Default.C_Key2 == 51)
+                    {
+                        // 左の場合
+                        if (_s_rel_now_x == 1000 && _joy2b == false)
+                        {
+                            Debug.Print("入力キー：2");
+                            _todaynum++;
+                            _alldaynum++;
+                            _key2num++;
+                            Key2.Text = _key2num.ToString();
+                            Key2.BackColor = Color.LightPink;
+                            _joy2b = true;
+                        }
+                        else
+                        {
+                            if (_s_rel_now_x != 1000)
+                            {
+                                _joy2b = false;
+                                Key2.BackColor = _keyBackColor;
+                            }
+                        }
+                    }
+                    // 十字キー入力「上」の場合。
+                    else if (Properties.Settings.Default.C_Key2 == 52)
+                    {
+                        // 左の場合
+                        if (_s_rel_now_y == 1000 && _joy2b == false)
+                        {
+                            Debug.Print("入力キー：2");
+                            _todaynum++;
+                            _alldaynum++;
+                            _key2num++;
+                            Key2.Text = _key2num.ToString();
+                            Key2.BackColor = Color.LightPink;
+                            _joy2b = true;
+                        }
+                        else
+                        {
+                            if (_s_rel_now_y != 1000)
+                            {
+                                _joy2b = false;
+                                Key1.BackColor = _keyBackColor;
+                            }
+                        }
+                    }
+                    // 十字キー入力「下」の場合。
+                    else if (Properties.Settings.Default.C_Key2 == 53)
+                    {
+                        // 左の場合
+                        if (_s_rel_now_y == 0 && _joy2b == false)
+                        {
+                            Debug.Print("入力キー：2");
+                            _todaynum++;
+                            _alldaynum++;
+                            _key2num++;
+                            Key2.Text = _key2num.ToString();
+                            Key2.BackColor = Color.LightPink;
+                            _joy2b = true;
+                        }
+                        else
+                        {
+                            if (_s_rel_now_y != 0)
+                            {
+                                _joy2b = false;
+                                Key2.BackColor = _keyBackColor;
+                            }
+                        }
+                    }
+                }
 
-                //    // Key2 判定
-                //    if (Properties.Settings.Default.C_Key2 < 12)
-                //    {
-                //        if (jState.Buttons[Properties.Settings.Default.C_Key2] && _joy2b == false)
-                //        {
-                //            Debug.Print("入力キー：2");
-                //            _todaynum++;
-                //            _alldaynum++;
-                //            _key2num++;
-                //            Key2.Text = _key2num.ToString();
-                //            Key2.BackColor = Color.LightPink;
-                //            _joy2b = true;
-                //        }
-                //        else
-                //        {
-                //            if (jState.Buttons[Properties.Settings.Default.C_Key2] == false)
-                //            {
-                //                _joy2b = false;
-                //                Key2.BackColor = _keyBackColor;
-                //            }
-                //        }
-                //    }
-                //    else if (Properties.Settings.Default.C_Key2 >= 12)
-                //    {
-                //        if (Properties.Settings.Default.C_Key2 == 12)
-                //        {
-                //            _Gateb = true;
-                //            InsertLeft(_joy2b);
-                //        }
-                //        else if (Properties.Settings.Default.C_Key2 == 13)
-                //        {
-                //            _Gateb = true;
-                //            InsertRight(_joy2b);
-                //        }
-                //        else if (Properties.Settings.Default.C_Key2 == 14)
-                //        {
-                //            _Gateb = true;
-                //            InsertUp(_joy2b);
-                //        }
-                //        else if (Properties.Settings.Default.C_Key2 == 15)
-                //        {
-                //            _Gateb = true;
-                //            InsertDown(_joy2b);
-                //        }
+                // Key3 判定
+                if (Properties.Settings.Default.C_Key3 < 20)
+                {
+                    if (jState.Buttons[Properties.Settings.Default.C_Key3] && _joy3b == false)
+                    {
+                        Debug.Print("入力キー：3");
+                        _todaynum++;
+                        _alldaynum++;
+                        _key3num++;
+                        Key3.Text = _key3num.ToString();
+                        Key3.BackColor = Color.LightPink;
+                        _joy3b = true;
+                    }
+                    else
+                    {
+                        if (jState.Buttons[Properties.Settings.Default.C_Key3] == false)
+                        {
+                            _joy3b = false;
+                            Key3.BackColor = _keyBackColor;
+                        }
+                    }
+                }
+                else if (Properties.Settings.Default.C_Key3 >= 50)
+                {
+                    // 軸入力の場合の処理
+                    if (Properties.Settings.Default.C_Key3 == 50)
+                    {
+                        // 左の場合
+                        if (_s_rel_now_x == 0 && _joy3b == false)
+                        {
+                            Debug.Print("入力キー：3");
+                            _todaynum++;
+                            _alldaynum++;
+                            _key3num++;
+                            Key3.Text = _key3num.ToString();
+                            Key3.BackColor = Color.LightPink;
+                            _joy3b = true;
+                        }
+                        else
+                        {
+                            if (_s_rel_now_x != 0)
+                            {
+                                _joy3b = false;
+                                Key3.BackColor = _keyBackColor;
+                            }
+                        }
+                    }
+                    // 十字キー入力「右」の場合。
+                    else if (Properties.Settings.Default.C_Key3 == 51)
+                    {
+                        // 左の場合
+                        if (_s_rel_now_x == 1000 && _joy3b == false)
+                        {
+                            Debug.Print("入力キー：3");
+                            _todaynum++;
+                            _alldaynum++;
+                            _key3num++;
+                            Key3.Text = _key3num.ToString();
+                            Key3.BackColor = Color.LightPink;
+                            _joy3b = true;
+                        }
+                        else
+                        {
+                            if (_s_rel_now_x != 1000)
+                            {
+                                _joy3b = false;
+                                Key3.BackColor = _keyBackColor;
+                            }
+                        }
+                    }
+                    // 十字キー入力「上」の場合。
+                    else if (Properties.Settings.Default.C_Key3 == 52)
+                    {
+                        // 左の場合
+                        if (_s_rel_now_y == 1000 && _joy3b == false)
+                        {
+                            Debug.Print("入力キー：3");
+                            _todaynum++;
+                            _alldaynum++;
+                            _key3num++;
+                            Key3.Text = _key3num.ToString();
+                            Key3.BackColor = Color.LightPink;
+                            _joy3b = true;
+                        }
+                        else
+                        {
+                            if (_s_rel_now_y != 1000)
+                            {
+                                _joy3b = false;
+                                Key3.BackColor = _keyBackColor;
+                            }
+                        }
+                    }
+                    // 十字キー入力「下」の場合。
+                    else if (Properties.Settings.Default.C_Key3 == 53)
+                    {
+                        // 左の場合
+                        if (_s_rel_now_y == 0 && _joy3b == false)
+                        {
+                            Debug.Print("入力キー：3");
+                            _todaynum++;
+                            _alldaynum++;
+                            _key3num++;
+                            Key3.Text = _key3num.ToString();
+                            Key3.BackColor = Color.LightPink;
+                            _joy3b = true;
+                        }
+                        else
+                        {
+                            if (_s_rel_now_y != 0)
+                            {
+                                _joy3b = false;
+                                Key3.BackColor = _keyBackColor;
+                            }
+                        }
+                    }
+                }
 
-                //        if (_joyCb == true && _joy2b == false)
-                //        {
-                //            _key2num++;
-                //            Key2.Text = _key2num.ToString();
-                //            Key2.BackColor = Color.LightPink;
-                //            _joy2b = true;
-                //        }
-                //        else if (_joyCb == false && _joy2b == true)
-                //        {
-                //            _joy2b = false;
-                //            Key2.BackColor = _keyBackColor;
-                //        }
-                //    }
+                // Key4 判定
+                if (Properties.Settings.Default.C_Key4 < 20)
+                {
+                    if (jState.Buttons[Properties.Settings.Default.C_Key4] && _joy4b == false)
+                    {
+                        Debug.Print("入力キー：4");
+                        _todaynum++;
+                        _alldaynum++;
+                        _key4num++;
+                        Key4.Text = _key4num.ToString();
+                        Key4.BackColor = Color.LightPink;
+                        _joy4b = true;
+                    }
+                    else
+                    {
+                        if (jState.Buttons[Properties.Settings.Default.C_Key4] == false)
+                        {
+                            _joy4b = false;
+                            Key4.BackColor = _keyBackColor;
+                        }
+                    }
+                }
+                else if (Properties.Settings.Default.C_Key4 >= 50)
+                {
+                    // 軸入力の場合の処理
+                    if (Properties.Settings.Default.C_Key4 == 50)
+                    {
+                        // 左の場合
+                        if (_s_rel_now_x == 0 && _joy4b == false)
+                        {
+                            Debug.Print("入力キー：4");
+                            _todaynum++;
+                            _alldaynum++;
+                            _key4num++;
+                            Key4.Text = _key4num.ToString();
+                            Key4.BackColor = Color.LightPink;
+                            _joy4b = true;
+                        }
+                        else
+                        {
+                            if (_s_rel_now_x != 0)
+                            {
+                                _joy4b = false;
+                                Key4.BackColor = _keyBackColor;
+                            }
+                        }
+                    }
+                    // 十字キー入力「右」の場合。
+                    else if (Properties.Settings.Default.C_Key4 == 51)
+                    {
+                        // 左の場合
+                        if (_s_rel_now_x == 1000 && _joy4b == false)
+                        {
+                            Debug.Print("入力キー：4");
+                            _todaynum++;
+                            _alldaynum++;
+                            _key4num++;
+                            Key4.Text = _key4num.ToString();
+                            Key4.BackColor = Color.LightPink;
+                            _joy4b = true;
+                        }
+                        else
+                        {
+                            if (_s_rel_now_x != 1000)
+                            {
+                                _joy4b = false;
+                                Key4.BackColor = _keyBackColor;
+                            }
+                        }
+                    }
+                    // 十字キー入力「上」の場合。
+                    else if (Properties.Settings.Default.C_Key4 == 52)
+                    {
+                        // 左の場合
+                        if (_s_rel_now_y == 1000 && _joy4b == false)
+                        {
+                            Debug.Print("入力キー：4");
+                            _todaynum++;
+                            _alldaynum++;
+                            _key4num++;
+                            Key4.Text = _key4num.ToString();
+                            Key4.BackColor = Color.LightPink;
+                            _joy4b = true;
+                        }
+                        else
+                        {
+                            if (_s_rel_now_y != 1000)
+                            {
+                                _joy4b = false;
+                                Key4.BackColor = _keyBackColor;
+                            }
+                        }
+                    }
+                    // 十字キー入力「下」の場合。
+                    else if (Properties.Settings.Default.C_Key4 == 53)
+                    {
+                        // 左の場合
+                        if (_s_rel_now_y == 0 && _joy4b == false)
+                        {
+                            Debug.Print("入力キー：4");
+                            _todaynum++;
+                            _alldaynum++;
+                            _key4num++;
+                            Key4.Text = _key4num.ToString();
+                            Key4.BackColor = Color.LightPink;
+                            _joy4b = true;
+                        }
+                        else
+                        {
+                            if (_s_rel_now_y != 0)
+                            {
+                                _joy4b = false;
+                                Key4.BackColor = _keyBackColor;
+                            }
+                        }
+                    }
+                }
 
-                //    // Key3 判定
-                //    if (Properties.Settings.Default.C_Key3 < 12)
-                //    {
-                //        if (jState.Buttons[Properties.Settings.Default.C_Key3] && _joy3b == false)
-                //        {
-                //            Debug.Print("入力キー：3");
-                //            _todaynum++;
-                //            _alldaynum++;
-                //            _key3num++;
-                //            Key3.Text = _key3num.ToString();
-                //            Key3.BackColor = Color.LightPink;
-                //            _joy3b = true;
-                //        }
-                //        else
-                //        {
-                //            if (jState.Buttons[Properties.Settings.Default.C_Key3] == false)
-                //            {
-                //                _joy3b = false;
-                //                Key3.BackColor = _keyBackColor;
-                //            }
-                //        }
-                //    }
-                //    else if (Properties.Settings.Default.C_Key3 >= 12)
-                //    {
-                //        if (Properties.Settings.Default.C_Key3 == 12)
-                //        {
-                //            _Gateb = true;
-                //            InsertLeft(_joy3b);
-                //        }
-                //        else if (Properties.Settings.Default.C_Key3 == 13)
-                //        {
-                //            _Gateb = true;
-                //            InsertRight(_joy3b);
-                //        }
-                //        else if (Properties.Settings.Default.C_Key3 == 14)
-                //        {
-                //            _Gateb = true;
-                //            InsertUp(_joy3b);
-                //        }
-                //        else if (Properties.Settings.Default.C_Key3 == 15)
-                //        {
-                //            _Gateb = true;
-                //            InsertDown(_joy3b);
-                //        }
+                // Key5 判定
+                if (Properties.Settings.Default.C_Key5 < 20)
+                {
+                    if (jState.Buttons[Properties.Settings.Default.C_Key5] && _joy5b == false)
+                    {
+                        Debug.Print("入力キー：5");
+                        _todaynum++;
+                        _alldaynum++;
+                        _key5num++;
+                        Key5.Text = _key5num.ToString();
+                        Key5.BackColor = Color.LightPink;
+                        _joy5b = true;
+                    }
+                    else
+                    {
+                        if (jState.Buttons[Properties.Settings.Default.C_Key5] == false)
+                        {
+                            _joy5b = false;
+                            Key5.BackColor = _keyBackColor;
+                        }
+                    }
+                }
+                else if (Properties.Settings.Default.C_Key5 >= 50)
+                {
+                    // 軸入力の場合の処理
+                    if (Properties.Settings.Default.C_Key5 == 50)
+                    {
+                        // 左の場合
+                        if (_s_rel_now_x == 0 && _joy5b == false)
+                        {
+                            Debug.Print("入力キー：5");
+                            _todaynum++;
+                            _alldaynum++;
+                            _key5num++;
+                            Key5.Text = _key5num.ToString();
+                            Key5.BackColor = Color.LightPink;
+                            _joy5b = true;
+                        }
+                        else
+                        {
+                            if (_s_rel_now_x != 0)
+                            {
+                                _joy5b = false;
+                                Key5.BackColor = _keyBackColor;
+                            }
+                        }
+                    }
+                    // 十字キー入力「右」の場合。
+                    else if (Properties.Settings.Default.C_Key5 == 51)
+                    {
+                        // 左の場合
+                        if (_s_rel_now_x == 1000 && _joy5b == false)
+                        {
+                            Debug.Print("入力キー：5");
+                            _todaynum++;
+                            _alldaynum++;
+                            _key5num++;
+                            Key5.Text = _key5num.ToString();
+                            Key5.BackColor = Color.LightPink;
+                            _joy5b = true;
+                        }
+                        else
+                        {
+                            if (_s_rel_now_x != 1000)
+                            {
+                                _joy5b = false;
+                                Key5.BackColor = _keyBackColor;
+                            }
+                        }
+                    }
+                    // 十字キー入力「上」の場合。
+                    else if (Properties.Settings.Default.C_Key5 == 52)
+                    {
+                        // 左の場合
+                        if (_s_rel_now_y == 1000 && _joy5b == false)
+                        {
+                            Debug.Print("入力キー：5");
+                            _todaynum++;
+                            _alldaynum++;
+                            _key5num++;
+                            Key5.Text = _key5num.ToString();
+                            Key5.BackColor = Color.LightPink;
+                            _joy5b = true;
+                        }
+                        else
+                        {
+                            if (_s_rel_now_y != 1000)
+                            {
+                                _joy5b = false;
+                                Key5.BackColor = _keyBackColor;
+                            }
+                        }
+                    }
+                    // 十字キー入力「下」の場合。
+                    else if (Properties.Settings.Default.C_Key5 == 53)
+                    {
+                        // 左の場合
+                        if (_s_rel_now_y == 0 && _joy5b == false)
+                        {
+                            Debug.Print("入力キー：5");
+                            _todaynum++;
+                            _alldaynum++;
+                            _key5num++;
+                            Key5.Text = _key5num.ToString();
+                            Key5.BackColor = Color.LightPink;
+                            _joy5b = true;
+                        }
+                        else
+                        {
+                            if (_s_rel_now_y != 0)
+                            {
+                                _joy5b = false;
+                                Key5.BackColor = _keyBackColor;
+                            }
+                        }
+                    }
+                }
 
-                //        if (_joyCb == true && _joy3b == false)
-                //        {
-                //            _key3num++;
-                //            Key3.Text = _key3num.ToString();
-                //            Key3.BackColor = Color.LightPink;
-                //            _joy3b = true;
-                //        }
-                //        else if (_joyCb == false && _joy3b == true)
-                //        {
-                //            _joy3b = false;
-                //            Key3.BackColor = _keyBackColor;
-                //        }
-                //    }
+                // Key6 判定
+                if (Properties.Settings.Default.C_Key6 < 20)
+                {
+                    if (jState.Buttons[Properties.Settings.Default.C_Key6] && _joy6b == false)
+                    {
+                        Debug.Print("入力キー：6");
+                        _todaynum++;
+                        _alldaynum++;
+                        _key6num++;
+                        Key6.Text = _key6num.ToString();
+                        Key6.BackColor = Color.LightPink;
+                        _joy6b = true;
+                    }
+                    else
+                    {
+                        if (jState.Buttons[Properties.Settings.Default.C_Key6] == false)
+                        {
+                            _joy6b = false;
+                            Key6.BackColor = _keyBackColor;
+                        }
+                    }
+                }
+                else if (Properties.Settings.Default.C_Key6 >= 50)
+                {
+                    // 軸入力の場合の処理
+                    if (Properties.Settings.Default.C_Key6 == 50)
+                    {
+                        // 左の場合
+                        if (_s_rel_now_x == 0 && _joy6b == false)
+                        {
+                            Debug.Print("入力キー：6");
+                            _todaynum++;
+                            _alldaynum++;
+                            _key6num++;
+                            Key6.Text = _key6num.ToString();
+                            Key6.BackColor = Color.LightPink;
+                            _joy6b = true;
+                        }
+                        else
+                        {
+                            if (_s_rel_now_x != 0)
+                            {
+                                _joy6b = false;
+                                Key6.BackColor = _keyBackColor;
+                            }
+                        }
+                    }
+                    // 十字キー入力「右」の場合。
+                    else if (Properties.Settings.Default.C_Key6 == 51)
+                    {
+                        // 左の場合
+                        if (_s_rel_now_x == 1000 && _joy6b == false)
+                        {
+                            Debug.Print("入力キー：6");
+                            _todaynum++;
+                            _alldaynum++;
+                            _key6num++;
+                            Key6.Text = _key6num.ToString();
+                            Key6.BackColor = Color.LightPink;
+                            _joy6b = true;
+                        }
+                        else
+                        {
+                            if (_s_rel_now_x != 1000)
+                            {
+                                _joy6b = false;
+                                Key6.BackColor = _keyBackColor;
+                            }
+                        }
+                    }
+                    // 十字キー入力「上」の場合。
+                    else if (Properties.Settings.Default.C_Key6 == 52)
+                    {
+                        // 左の場合
+                        if (_s_rel_now_y == 1000 && _joy6b == false)
+                        {
+                            Debug.Print("入力キー：6");
+                            _todaynum++;
+                            _alldaynum++;
+                            _key6num++;
+                            Key6.Text = _key6num.ToString();
+                            Key6.BackColor = Color.LightPink;
+                            _joy6b = true;
+                        }
+                        else
+                        {
+                            if (_s_rel_now_y != 1000)
+                            {
+                                _joy6b = false;
+                                Key6.BackColor = _keyBackColor;
+                            }
+                        }
+                    }
+                    // 十字キー入力「下」の場合。
+                    else if (Properties.Settings.Default.C_Key6 == 53)
+                    {
+                        // 左の場合
+                        if (_s_rel_now_y == 0 && _joy6b == false)
+                        {
+                            Debug.Print("入力キー：6");
+                            _todaynum++;
+                            _alldaynum++;
+                            _key6num++;
+                            Key6.Text = _key6num.ToString();
+                            Key6.BackColor = Color.LightPink;
+                            _joy6b = true;
+                        }
+                        else
+                        {
+                            if (_s_rel_now_y != 0)
+                            {
+                                _joy6b = false;
+                                Key6.BackColor = _keyBackColor;
+                            }
+                        }
+                    }
+                }
 
-                //    // Key4 判定
-                //    if (Properties.Settings.Default.C_Key4 < 12)
-                //    {
-                //        if (jState.Buttons[Properties.Settings.Default.C_Key4] && _joy4b == false)
-                //        {
-                //            Debug.Print("入力キー：4");
-                //            _todaynum++;
-                //            _alldaynum++;
-                //            _key4num++;
-                //            Key4.Text = _key4num.ToString();
-                //            Key4.BackColor = Color.LightPink;
-                //            _joy4b = true;
-                //        }
-                //        else
-                //        {
-                //            if (jState.Buttons[Properties.Settings.Default.C_Key4] == false)
-                //            {
-                //                _joy4b = false;
-                //                Key4.BackColor = _keyBackColor;
-                //            }
-                //        }
-                //    }
-                //    else if (Properties.Settings.Default.C_Key4 >= 12)
-                //    {
-                //        if (Properties.Settings.Default.C_Key4 == 12)
-                //        {
-                //            _Gateb = true;
-                //            InsertLeft(_joy4b);
-                //        }
-                //        else if (Properties.Settings.Default.C_Key4 == 13)
-                //        {
-                //            _Gateb = true;
-                //            InsertRight(_joy4b);
-                //        }
-                //        else if (Properties.Settings.Default.C_Key4 == 14)
-                //        {
-                //            _Gateb = true;
-                //            InsertUp(_joy4b);
-                //        }
-                //        else if (Properties.Settings.Default.C_Key4 == 15)
-                //        {
-                //            _Gateb = true;
-                //            InsertDown(_joy4b);
-                //        }
-
-                //        if (_joyCb == true && _joy4b == false)
-                //        {
-                //            _key4num++;
-                //            Key4.Text = _key4num.ToString();
-                //            Key4.BackColor = Color.LightPink;
-                //            _joy4b = true;
-                //        }
-                //        else if (_joyCb == false && _joy4b == true)
-                //        {
-                //            _joy4b = false;
-                //            Key4.BackColor = _keyBackColor;
-                //        }
-                //    }
-
-                //    // Key5 判定
-                //    if (Properties.Settings.Default.C_Key5 < 12)
-                //    {
-                //        if (jState.Buttons[Properties.Settings.Default.C_Key5] && _joy5b == false)
-                //        {
-                //            Debug.Print("入力キー：5");
-                //            _todaynum++;
-                //            _alldaynum++;
-                //            _key5num++;
-                //            Key5.Text = _key5num.ToString();
-                //            Key5.BackColor = Color.LightPink;
-                //            _joy5b = true;
-                //        }
-                //        else
-                //        {
-                //            if (jState.Buttons[Properties.Settings.Default.C_Key5] == false)
-                //            {
-                //                _joy5b = false;
-                //                Key5.BackColor = _keyBackColor;
-                //            }
-                //        }
-                //    }
-                //    else if (Properties.Settings.Default.C_Key5 >= 12)
-                //    {
-                //        if (Properties.Settings.Default.C_Key5 == 12)
-                //        {
-                //            _Gateb = true;
-                //            InsertLeft(_joy5b);
-                //        }
-                //        else if (Properties.Settings.Default.C_Key5 == 13)
-                //        {
-                //            _Gateb = true;
-                //            InsertRight(_joy5b);
-                //        }
-                //        else if (Properties.Settings.Default.C_Key5 == 14)
-                //        {
-                //            _Gateb = true;
-                //            InsertUp(_joy5b);
-                //        }
-                //        else if (Properties.Settings.Default.C_Key5 == 15)
-                //        {
-                //            _Gateb = true;
-                //            InsertDown(_joy5b);
-                //        }
-
-                //        if (_joyCb == true && _joy5b == false)
-                //        {
-                //            _key5num++;
-                //            Key5.Text = _key5num.ToString();
-                //            Key5.BackColor = Color.LightPink;
-                //            _joy5b = true;
-                //        }
-                //        else if (_joyCb == false && _joy5b == true)
-                //        {
-                //            _joy5b = false;
-                //            Key5.BackColor = _keyBackColor;
-                //        }
-                //    }
-
-                //    // Key6 判定
-                //    if (Properties.Settings.Default.C_Key6 < 12)
-                //    {
-                //        if (jState.Buttons[Properties.Settings.Default.C_Key6] && _joy6b == false)
-                //        {
-                //            Debug.Print("入力キー：6");
-                //            _todaynum++;
-                //            _alldaynum++;
-                //            _key6num++;
-                //            Key6.Text = _key6num.ToString();
-                //            Key6.BackColor = Color.LightPink;
-                //            _joy6b = true;
-                //        }
-                //        else
-                //        {
-                //            if (jState.Buttons[Properties.Settings.Default.C_Key6] == false)
-                //            {
-                //                _joy6b = false;
-                //                Key6.BackColor = _keyBackColor;
-                //            }
-                //        }
-                //    }
-                //    else if (Properties.Settings.Default.C_Key6 >= 12)
-                //    {
-                //        if (Properties.Settings.Default.C_Key6 == 12)
-                //        {
-                //            _Gateb = true;
-                //            InsertLeft(_joy6b);
-                //        }
-                //        else if (Properties.Settings.Default.C_Key6 == 13)
-                //        {
-                //            _Gateb = true;
-                //            InsertRight(_joy6b);
-                //        }
-                //        else if (Properties.Settings.Default.C_Key6 == 14)
-                //        {
-                //            _Gateb = true;
-                //            InsertUp(_joy6b);
-                //        }
-                //        else if (Properties.Settings.Default.C_Key6 == 15)
-                //        {
-                //            _Gateb = true;
-                //            InsertDown(_joy6b);
-                //        }
-
-                //        if (_joyCb == true && _joy6b == false)
-                //        {
-                //            _key6num++;
-                //            Key6.Text = _key6num.ToString();
-                //            Key6.BackColor = Color.LightPink;
-                //            _joy6b = true;
-                //        }
-                //        else if (_joyCb == false && _joy6b == true)
-                //        {
-                //            _joy6b = false;
-                //            Key6.BackColor = _keyBackColor;
-                //        }
-                //    }
-
-                //    // Key7 判定
-                //    if (Properties.Settings.Default.C_Key7 < 12)
-                //    {
-                //        if (jState.Buttons[Properties.Settings.Default.C_Key7] && _joy7b == false)
-                //        {
-                //            Debug.Print("入力キー：7");
-                //            _todaynum++;
-                //            _alldaynum++;
-                //            _key7num++;
-                //            Key7.Text = _key7num.ToString();
-                //            Key7.BackColor = Color.LightPink;
-                //            _joy7b = true;
-                //        }
-                //        else
-                //        {
-                //            if (jState.Buttons[Properties.Settings.Default.C_Key7] == false)
-                //            {
-                //                _joy7b = false;
-                //                Key7.BackColor = _keyBackColor;
-                //            }
-                //        }
-                //    }
-                //    else if (Properties.Settings.Default.C_Key7 >= 12)
-                //    {
-                //        if (Properties.Settings.Default.C_Key7 == 12)
-                //        {
-                //            _Gateb = true;
-                //            InsertLeft(_joy7b);
-                //        }
-                //        else if (Properties.Settings.Default.C_Key7 == 13)
-                //        {
-                //            _Gateb = true;
-                //            InsertRight(_joy7b);
-                //        }
-                //        else if (Properties.Settings.Default.C_Key7 == 14)
-                //        {
-                //            _Gateb = true;
-                //            InsertUp(_joy7b);
-                //        }
-                //        else if (Properties.Settings.Default.C_Key7 == 15)
-                //        {
-                //            _Gateb = true;
-                //            InsertDown(_joy7b);
-                //        }
-
-                //        if (_joyCb == true && _joy7b == false)
-                //        {
-                //            _key7num++;
-                //            Key7.Text = _key7num.ToString();
-                //            Key7.BackColor = Color.LightPink;
-                //            _joy7b = true;
-                //        }
-                //        else if(_joyCb == false)
-                //        {
-                //            _joy7b = false;
-                //            Key7.BackColor = _keyBackColor;
-                //        }
-                //    }
-
-                //    // S_UP 判定
-                //    if (Properties.Settings.Default.C_S_Up < 12)
-                //    {
-                //        if (jState.Buttons[Properties.Settings.Default.C_S_Up] && _joyUp == false)
-                //        {
-                //            Debug.Print("入力キー：↑");
-                //            _todaynum++;
-                //            _alldaynum++;
-                //            _s_upnum++;
-                //            S_Up.Text = _s_upnum.ToString();
-                //            S_Up.BackColor = Color.LightPink;
-                //            _joyUp = true;
-                //        }
-                //        else
-                //        {
-                //            if (jState.Buttons[Properties.Settings.Default.C_S_Up] == false)
-                //            {
-                //                _joyUp = false;
-                //                S_Up.BackColor = _keyBackColor;
-                //            }
-                //        }
-                //    }
-                //    else if (Properties.Settings.Default.C_S_Up >= 12)
-                //    {
-                //        if (Properties.Settings.Default.C_S_Up == 12)
-                //        {
-                //            _Gateb = true;
-                //            InsertLeft(_joyUp);
-                //        }
-                //        else if (Properties.Settings.Default.C_S_Up == 13)
-                //        {
-                //            _Gateb = true;
-                //            InsertRight(_joyUp);
-                //        }
-                //        else if (Properties.Settings.Default.C_S_Up == 14)
-                //        {
-                //            _Gateb = true;
-                //            InsertUp(_joyUp);
-                //        }
-                //        else if (Properties.Settings.Default.C_S_Up == 15)
-                //        {
-                //            _Gateb = true;
-                //            InsertDown(_joyUp);
-                //        }
-
-                //        if (_joyCb == true && _joyUp == false)
-                //        {
-                //            _s_upnum++;
-                //            S_Up.Text = _s_upnum.ToString();
-                //            S_Up.BackColor = Color.LightPink;
-                //            _joyUp = true;
-                //        }
-                //        else if (_joyCb == false && _joyUp == true)
-                //        {
-                //            _joyUp = false;
-                //            S_Up.BackColor = _keyBackColor;
-                //        }
-                //    }
-
-                //    // S_DOWN 判定
-                //    if (Properties.Settings.Default.C_S_Down < 12)
-                //    {
-                //        if (jState.Buttons[Properties.Settings.Default.C_S_Down] && _joyDown == false)
-                //        {
-                //            Debug.Print("入力キー：↑");
-                //            _todaynum++;
-                //            _alldaynum++;
-                //            _s_downnum++;
-                //            S_Down.Text = _s_downnum.ToString();
-                //            S_Down.BackColor = Color.LightPink;
-                //            _joyDown = true;
-                //        }
-                //        else
-                //        {
-                //            if (jState.Buttons[Properties.Settings.Default.C_S_Down] == false)
-                //            {
-                //                _joyDown = false;
-                //                S_Down.BackColor = _keyBackColor;
-                //            }
-                //        }
-                //    }
-                //    else if (Properties.Settings.Default.C_S_Down >= 12)
-                //    {
-                //        if (Properties.Settings.Default.C_S_Down == 12)
-                //        {
-                //            _Gateb = true;
-                //            InsertLeft(_joyDown);
-                //        }
-                //        else if (Properties.Settings.Default.C_S_Down == 13)
-                //        {
-                //            _Gateb = true;
-                //            InsertRight(_joyDown);
-                //        }
-                //        else if (Properties.Settings.Default.C_S_Down == 14)
-                //        {
-                //            _Gateb = true;
-                //            InsertUp(_joyDown);
-                //        }
-                //        else if (Properties.Settings.Default.C_S_Down == 15)
-                //        {
-                //            _Gateb = true;
-                //            InsertDown(_joyDown);
-                //        }
-
-                //        if (_joyCb == true && _joyDown == false)
-                //        {
-                //            _s_downnum++;
-                //            S_Down.Text = _s_downnum.ToString();
-                //            S_Down.BackColor = Color.LightPink;
-                //            _joyDown = true;
-                //        }
-                //        else if (_joyCb == false && _joyDown == true)
-                //        {
-                //            _joyDown = false;
-                //            S_Down.BackColor = _keyBackColor;
-                //        }
-                //    }
+                // Key7 判定
+                if (Properties.Settings.Default.C_Key7 < 20)
+                {
+                    if (jState.Buttons[Properties.Settings.Default.C_Key7] && _joy7b == false)
+                    {
+                        Debug.Print("入力キー：7");
+                        _todaynum++;
+                        _alldaynum++;
+                        _key7num++;
+                        Key7.Text = _key7num.ToString();
+                        Key7.BackColor = Color.LightPink;
+                        _joy7b = true;
+                    }
+                    else
+                    {
+                        if (jState.Buttons[Properties.Settings.Default.C_Key7] == false)
+                        {
+                            _joy7b = false;
+                            Key7.BackColor = _keyBackColor;
+                        }
+                    }
+                }
+                else if (Properties.Settings.Default.C_Key7 >= 50)
+                {
+                    // 軸入力の場合の処理
+                    if (Properties.Settings.Default.C_Key7 == 50)
+                    {
+                        // 左の場合
+                        if (_s_rel_now_x == 0 && _joy7b == false)
+                        {
+                            Debug.Print("入力キー：7");
+                            _todaynum++;
+                            _alldaynum++;
+                            _key7num++;
+                            Key7.Text = _key7num.ToString();
+                            Key7.BackColor = Color.LightPink;
+                            _joy7b = true;
+                        }
+                        else
+                        {
+                            if (_s_rel_now_x != 0)
+                            {
+                                _joy7b = false;
+                                Key7.BackColor = _keyBackColor;
+                            }
+                        }
+                    }
+                    // 十字キー入力「右」の場合。
+                    else if (Properties.Settings.Default.C_Key7 == 51)
+                    {
+                        // 左の場合
+                        if (_s_rel_now_x == 1000 && _joy7b == false)
+                        {
+                            Debug.Print("入力キー：7");
+                            _todaynum++;
+                            _alldaynum++;
+                            _key7num++;
+                            Key7.Text = _key7num.ToString();
+                            Key7.BackColor = Color.LightPink;
+                            _joy7b = true;
+                        }
+                        else
+                        {
+                            if (_s_rel_now_x != 1000)
+                            {
+                                _joy7b = false;
+                                Key7.BackColor = _keyBackColor;
+                            }
+                        }
+                    }
+                    // 十字キー入力「上」の場合。
+                    else if (Properties.Settings.Default.C_Key7 == 52)
+                    {
+                        // 左の場合
+                        if (_s_rel_now_y == 1000 && _joy7b == false)
+                        {
+                            Debug.Print("入力キー：7");
+                            _todaynum++;
+                            _alldaynum++;
+                            _key7num++;
+                            Key7.Text = _key7num.ToString();
+                            Key7.BackColor = Color.LightPink;
+                            _joy7b = true;
+                        }
+                        else
+                        {
+                            if (_s_rel_now_y != 1000)
+                            {
+                                _joy7b = false;
+                                Key7.BackColor = _keyBackColor;
+                            }
+                        }
+                    }
+                    // 十字キー入力「下」の場合。
+                    else if (Properties.Settings.Default.C_Key7 == 53)
+                    {
+                        // 左の場合
+                        if (_s_rel_now_y == 0 && _joy7b == false)
+                        {
+                            Debug.Print("入力キー：7");
+                            _todaynum++;
+                            _alldaynum++;
+                            _key7num++;
+                            Key7.Text = _key7num.ToString();
+                            Key7.BackColor = Color.LightPink;
+                            _joy7b = true;
+                        }
+                        else
+                        {
+                            if (_s_rel_now_y != 0)
+                            {
+                                _joy7b = false;
+                                Key7.BackColor = _keyBackColor;
+                            }
+                        }
+                    }
+                }
             }
             #endregion
 
@@ -1086,6 +1376,28 @@ namespace BeatCounter
                 else if (DaoTips.Checked)
                 {
                     // ジョイスティックからコントローラを取得する。(DAOコン)
+                    if (joystickGuid == Guid.Empty)
+                    {
+                        foreach (DeviceInstance device in dinput.GetDevices(DeviceType.Joystick, DeviceEnumerationFlags.AllDevices))
+                        {
+                            joystickGuid = device.InstanceGuid;
+                            break;
+                        }
+                    }
+                }
+                else if (CustomTips.Checked)
+                {
+                    // ゲームパッドからコントローラを取得する。(専コンや虹コンはこっち？)
+                    if (joystickGuid == Guid.Empty)
+                    {
+                        foreach (DeviceInstance device in dinput.GetDevices(DeviceType.Gamepad, DeviceEnumerationFlags.AllDevices))
+                        {
+                            joystickGuid = device.InstanceGuid;
+                            break;
+                        }
+                    }
+
+                    // ジョイスティックからコントローラを取得する。
                     if (joystickGuid == Guid.Empty)
                     {
                         foreach (DeviceInstance device in dinput.GetDevices(DeviceType.Joystick, DeviceEnumerationFlags.AllDevices))
@@ -1315,7 +1627,7 @@ namespace BeatCounter
         /// <summary>
         /// ゲームモードがINFINITAS時の処理
         /// </summary>
-        public void InfinitasMode()
+        public void InfinitasMode(JoystickState jState)
         {
             if (DaoTips.Checked)
             {
@@ -1424,17 +1736,21 @@ namespace BeatCounter
                 // 現在のコントローラが専コンの場合の処理
                 PS2ConSCCheck();
             }
-            else if(BeatmaniaProConTips.Checked)
+            else if (BeatmaniaProConTips.Checked)
             {
                 // 現在のコントローラがプロコンの場合の処理
                 ProConSCCheck();
+            }
+            else if (CustomTips.Checked)
+            {
+                CustomSCCheck(jState);
             }
         }
 
         /// <summary>
         /// ゲームモードがBMS時の処理
         /// </summary>
-        public void BMSMode()
+        public void BMSMode(JoystickState jState)
         {
             if (DaoTips.Checked)
             {
@@ -1474,6 +1790,15 @@ namespace BeatCounter
             else if (PS2ConTips.Checked)
             {
                 PS2ConSCCheck();
+            }
+            else if (BeatmaniaProConTips.Checked)
+            {
+                // 現在のコントローラがプロコンの場合の処理
+                ProConSCCheck();
+            }
+            else if (CustomTips.Checked)
+            {
+                CustomSCCheck(jState);
             }
         }
 
@@ -1522,6 +1847,299 @@ namespace BeatCounter
         public void ProConSCCheck()
         {
 
+        }
+
+        /// <summary>
+        /// カスタム設定時の皿入力処理
+        /// </summary>
+        public void CustomSCCheck(JoystickState jState)
+        {
+            // S_UP 判定
+            if (Properties.Settings.Default.C_S_Up < 20)
+            {
+                if (jState.Buttons[Properties.Settings.Default.C_S_Up] && _joyUp == false)
+                {
+                    Debug.Print("入力キー：↑");
+                    _todaynum++;
+                    _alldaynum++;
+                    _s_upnum++;
+                    S_Up.Text = _s_upnum.ToString();
+                    S_Up.BackColor = Color.LightPink;
+                    _joyUp = true;
+                }
+                else
+                {
+                    if (jState.Buttons[Properties.Settings.Default.C_S_Up] == false)
+                    {
+                        _joyUp = false;
+                        S_Up.BackColor = _keyBackColor;
+                    }
+                }
+            }
+            else if (Properties.Settings.Default.C_S_Up >= 50 && Properties.Settings.Default.C_S_Up < 80)
+            {
+                // 軸入力の場合の処理
+                if (Properties.Settings.Default.C_S_Up == 50)
+                {
+                    if (_s_rel_old_x != _s_rel_now_x)
+                    {
+                        // 左の場合
+                        if (_s_rel_now_x == _rangeMin && _joyUp == false)
+                        {
+                            Debug.Print("入力キー：7");
+                            _todaynum++;
+                            _alldaynum++;
+                            _s_upnum++;
+                            S_Up.Text = _s_upnum.ToString();
+                            S_Up.BackColor = Color.LightPink;
+                            _joyUp = true;
+                        }
+                        else
+                        {
+                            if (_s_rel_now_x != _rangeMin)
+                            {
+                                _joyUp = false;
+                                S_Up.BackColor = _keyBackColor;
+                            }
+                        }
+                    }
+                }
+                // 十字キー入力「右」の場合。
+                else if (Properties.Settings.Default.C_S_Up == 51)
+                {
+                    if (_s_rel_old_x != _s_rel_now_x)
+                    {
+                        // 右の場合
+                        if (_s_rel_now_x == _rangeMax && _joyUp == false)
+                        {
+                            Debug.Print("入力キー：7");
+                            _todaynum++;
+                            _alldaynum++;
+                            _s_upnum++;
+                            S_Up.Text = _s_upnum.ToString();
+                            S_Up.BackColor = Color.LightPink;
+                            _joyUp = true;
+                        }
+                        else
+                        {
+                            if (_s_rel_now_x != _rangeMax)
+                            {
+                                _joyUp = false;
+                                S_Up.BackColor = _keyBackColor;
+                            }
+                        }
+                    }
+                }
+                // 十字キー入力「上」の場合。
+                else if (Properties.Settings.Default.C_S_Up == 52)
+                {
+                    if (_s_rel_old_y != _s_rel_now_y)
+                    {
+                        // 上の場合
+                        if (_s_rel_now_y == _rangeMin && _joyUp == false)
+                        {
+                            Debug.Print("入力キー：7");
+                            _todaynum++;
+                            _alldaynum++;
+                            _s_upnum++;
+                            S_Up.Text = _s_upnum.ToString();
+                            S_Up.BackColor = Color.LightPink;
+                            _joyUp = true;
+                        }
+                        else
+                        {
+                            if (_s_rel_now_y != _rangeMin)
+                            {
+                                _joyUp = false;
+                                S_Up.BackColor = _keyBackColor;
+                            }
+                        }
+                    }
+                }
+                // 十字キー入力「下」の場合。
+                else if (Properties.Settings.Default.C_S_Up == 53)
+                {
+                    if (_s_rel_old_y != _s_rel_now_y)
+                    {
+                        // 左の場合
+                        if (_s_rel_now_y == _rangeMax && _joyUp == false)
+                        {
+                            Debug.Print("入力キー：7");
+                            _todaynum++;
+                            _alldaynum++;
+                            _s_upnum++;
+                            S_Up.Text = _s_upnum.ToString();
+                            S_Up.BackColor = Color.LightPink;
+                            _joyUp = true;
+                        }
+                        else
+                        {
+                            if (_s_rel_now_y != _rangeMax)
+                            {
+                                _joyUp = false;
+                                S_Up.BackColor = _keyBackColor;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // S_DOWN 判定
+            if (Properties.Settings.Default.C_S_Down < 20)
+            {
+                if (jState.Buttons[Properties.Settings.Default.C_S_Down] && _joyDown == false)
+                {
+                    Debug.Print("入力キー：↑");
+                    _todaynum++;
+                    _alldaynum++;
+                    _s_downnum++;
+                    S_Down.Text = _s_downnum.ToString();
+                    S_Down.BackColor = Color.LightPink;
+                    _joyDown = true;
+                }
+                else
+                {
+                    if (jState.Buttons[Properties.Settings.Default.C_S_Down] == false)
+                    {
+                        _joyDown = false;
+                        S_Down.BackColor = _keyBackColor;
+                    }
+                }
+            }
+            else if (Properties.Settings.Default.C_S_Down >= 50 && Properties.Settings.Default.C_S_Up < 80)
+            {
+                // 軸入力の場合の処理
+                if (Properties.Settings.Default.C_S_Down == 50)
+                {
+                    if (_s_rel_old_x != _s_rel_now_x)
+                    {
+                        // 左の場合
+                        if (_s_rel_now_x == _rangeMin && _joyDown == false)
+                        {
+                            Debug.Print("入力キー：7");
+                            _todaynum++;
+                            _alldaynum++;
+                            _s_downnum++;
+                            S_Down.Text = _s_downnum.ToString();
+                            S_Down.BackColor = Color.LightPink;
+                            _joyDown = true;
+                        }
+                        else
+                        {
+                            if (_s_rel_now_x != _rangeMin)
+                            {
+                                _joyDown = false;
+                                S_Down.BackColor = _keyBackColor;
+                            }
+                        }
+                    }
+                }
+                // 十字キー入力「右」の場合。
+                else if (Properties.Settings.Default.C_S_Down == 51)
+                {
+                    if (_s_rel_old_x != _s_rel_now_x)
+                    {
+                        // 右の場合
+                        if (_s_rel_now_x == _rangeMax && _joyDown == false)
+                        {
+                            Debug.Print("入力キー：7");
+                            _todaynum++;
+                            _alldaynum++;
+                            _s_downnum++;
+                            S_Down.Text = _s_downnum.ToString();
+                            S_Down.BackColor = Color.LightPink;
+                            _joyDown = true;
+                        }
+                        else
+                        {
+                            if (_s_rel_now_x != _rangeMax)
+                            {
+                                _joyDown = false;
+                                S_Down.BackColor = _keyBackColor;
+                            }
+                        }
+                    }
+                }
+                // 十字キー入力「上」の場合。
+                else if (Properties.Settings.Default.C_S_Down == 52)
+                {
+                    if (_s_rel_old_y != _s_rel_now_y)
+                    {
+                        // 上の場合
+                        if (_s_rel_now_y == _rangeMin && _joyDown == false)
+                        {
+                            Debug.Print("入力キー：7");
+                            _todaynum++;
+                            _alldaynum++;
+                            _s_downnum++;
+                            S_Down.Text = _s_downnum.ToString();
+                            S_Down.BackColor = Color.LightPink;
+                            _joyDown = true;
+                        }
+                        else
+                        {
+                            if (_s_rel_now_y != _rangeMin)
+                            {
+                                _joyDown = false;
+                                S_Down.BackColor = _keyBackColor;
+                            }
+                        }
+                    }
+                }
+                // 十字キー入力「下」の場合。
+                else if (Properties.Settings.Default.C_S_Down == 53)
+                {
+                    if (_s_rel_old_y != _s_rel_now_y)
+                    {
+                        // 下の場合
+                        if (_s_rel_now_y == _rangeMax && _joyDown == false)
+                        {
+                            Debug.Print("入力キー：7");
+                            _todaynum++;
+                            _alldaynum++;
+                            _s_downnum++;
+                            S_Down.Text = _s_downnum.ToString();
+                            S_Down.BackColor = Color.LightPink;
+                            _joyDown = true;
+                        }
+                        else
+                        {
+                            if (_s_rel_now_y != _rangeMax)
+                            {
+                                _joyDown = false;
+                                S_Down.BackColor = _keyBackColor;
+                            }
+                        }
+                    }
+                }
+            }
+            else if (Properties.Settings.Default.C_S_Up >= 80)
+            {
+                if (Properties.Settings.Default.C_S_Up == 80)
+                {
+                }
+                if (Properties.Settings.Default.C_S_Up == 81)
+                {
+                }
+                if (Properties.Settings.Default.C_S_Up == 82)
+                {
+                }
+                if (Properties.Settings.Default.C_S_Up == 83)
+                {
+                }
+                if (Properties.Settings.Default.C_S_Up == 84)
+                {
+                }
+                if (Properties.Settings.Default.C_S_Up == 85)
+                {
+                }
+                if (Properties.Settings.Default.C_S_Up == 86)
+                {
+                }
+                if (Properties.Settings.Default.C_S_Up == 87)
+                {
+                }
+            }
         }
         #endregion
 
@@ -1747,6 +2365,9 @@ namespace BeatCounter
 
             Properties.Settings.Default.Controller = 3;
             Properties.Settings.Default.Save();
+
+            KeyConfig keyconf = new KeyConfig();
+            keyconf.Show();
 
             Initialize();
         }
