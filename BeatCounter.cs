@@ -46,7 +46,6 @@ namespace BeatCounter
         private int _rangeMin = 0;
 
         // 鍵盤が押されっぱなしか
-        private bool _joyCb = false;
         private bool _joy1b = false;
         private bool _joy2b = false;
         private bool _joy3b = false;
@@ -69,6 +68,11 @@ namespace BeatCounter
 
         // 現在の背景色
         private Color _keyBackColor = new Color();
+
+        // キーボード時の入力取得用
+        private Keys _keyboardInput = new Keys();
+        private Keys _keyboardInputOff = new Keys();
+        private List<string> _keyList = new List<string>();
         #endregion
 
         #region main処理群
@@ -87,7 +91,7 @@ namespace BeatCounter
         }
 
         /// <summary>
-        /// 毎フレーム処理
+        /// Formの処理
         /// </summary>
         public void Exec()
         {
@@ -118,7 +122,14 @@ namespace BeatCounter
         /// </summary>
         public void MainLoop()
         {
-            UpdateForPad();
+            if (!KeyBoardTips.Checked)
+            {
+                UpdateForPad();
+            }
+            else
+            {
+                UpdateForKeyBoard();
+            }
         }
 
         /// <summary>
@@ -166,15 +177,15 @@ namespace BeatCounter
             _s_rel_old_y = _s_rel_now_y;
             _s_rel_now_y = jState.Y;
 
-            // INFINITASプレイ時の皿の処理
-            if (InfinitasPlayTips.Checked == true)
+            // アナログ皿入力は基本的にDAOや虹、プロコンのみ
+            if (AnalogSCTips.Checked == true)
             {
-                InfinitasMode(jState);
+                AnalogSCMode(jState);
             }
             // BMSプレイ時の皿の処理
-            else if (BmsPlayTips.Checked == true)
+            else if (DigitalSCTips.Checked == true)
             {
-                BMSMode(jState);
+                DigitalSCMode(jState);
             }
 
             var a = jState.PointOfViewControllers;
@@ -1336,6 +1347,21 @@ namespace BeatCounter
                 _onceAction2 = true;
             }
         }
+
+        /// <summary>
+        /// キ－ボード入力処理
+        /// </summary>
+        public void UpdateForKeyBoard()
+        {
+            // 数値変更モードの時は処理しない。
+            if (_keyChangeMode) { return; }
+
+            // Key判定自体はKeyDownの処理内で行う。
+
+            // 今回の合計と総合計を押された分だけ加算。
+            TodayKeys.Text = _todaynum.ToString();
+            AllDayKeys.Text = _alldaynum.ToString();
+        }
         #endregion
 
         #region 初期化処理群
@@ -1550,7 +1576,15 @@ namespace BeatCounter
             }
             else if (Properties.Settings.Default.Controller == 2)
             {
+                BeatmaniaProConTips_Click(new object(), new EventArgs());
+            }
+            else if (Properties.Settings.Default.Controller == 3)
+            {
                 CustomTips_Click(new object(), new EventArgs());
+            }
+            else if (Properties.Settings.Default.Controller == 4)
+            {
+                KeyBoardTips_Click(new object(), new EventArgs());
             }
 
             // 全期間の合計値を保存する。
@@ -1625,9 +1659,9 @@ namespace BeatCounter
 
         #region 皿の判定処理
         /// <summary>
-        /// ゲームモードがINFINITAS時の処理
+        /// 皿の処理がアナログ時の処理(皿入力が回した分だけ加減算される、ON/OFFではないとき)
         /// </summary>
-        public void InfinitasMode(JoystickState jState)
+        public void AnalogSCMode(JoystickState jState)
         {
             if (DaoTips.Checked)
             {
@@ -1748,9 +1782,9 @@ namespace BeatCounter
         }
 
         /// <summary>
-        /// ゲームモードがBMS時の処理
+        /// 皿の処理がデジタル時の処理(皿入力がON/OFF入力の時)
         /// </summary>
-        public void BMSMode(JoystickState jState)
+        public void DigitalSCMode(JoystickState jState)
         {
             if (DaoTips.Checked)
             {
@@ -2143,113 +2177,6 @@ namespace BeatCounter
         }
         #endregion
 
-        #region コメントアウト(デジタルデバイスオンリーでキーコンフィグ出来るCustomモードで使用予定)
-        /// <summary>
-        /// カスタム入力モードで左が入力された時の処理
-        /// </summary>
-        //public void InsertLeft(bool insert)
-        //{
-        //    if (_Gateb)
-        //    {
-        //        if (_s_rel_now_x == _rangeMin && insert == false)
-        //        {
-        //            Debug.Print("入力キー：Left");
-        //            _todaynum++;
-        //            _alldaynum++;
-        //            _joyCb = true;
-        //        }
-        //        else if(_s_rel_now_x == _rangeMin && insert == true)
-        //        {
-
-        //        }
-        //        else
-        //        {
-        //            if (_s_rel_now_x != _rangeMin)
-        //            {
-        //                _joyCb = false;
-        //            }
-        //        }
-        //    }
-        //    _Gateb = false;
-        //}
-
-        /// <summary>
-        /// カスタム入力モードで右が入力された時の処理
-        /// </summary>
-        //public void InsertRight(bool insert)
-        //{
-        //    if (_Gateb)
-        //    {
-        //        if (_s_rel_now_x == _rangeMax && insert == false)
-        //        {
-        //            Debug.Print("入力キー：Right");
-        //            _todaynum++;
-        //            _alldaynum++;
-        //            _joyCb = true;
-        //        }
-        //        else
-        //        {
-        //            if (_s_rel_now_x != _rangeMax)
-        //            {
-        //                _joyCb = false;
-        //            }
-        //        }
-        //    }
-        //    _Gateb = false;
-        //}
-
-        /// <summary>
-        /// カスタム入力モードで上が入力された時の処理
-        /// </summary>
-        //public void InsertUp(bool insert)
-        //{
-        //    if (_Gateb)
-        //    {
-        //        if (_s_rel_now_y == _rangeMax && insert == false)
-        //        {
-        //            Debug.Print("入力キー：Up");
-        //            _todaynum++;
-        //            _alldaynum++;
-        //            _joyCb = true;
-        //        }
-        //        else
-        //        {
-        //            if (_s_rel_now_x != _rangeMax)
-        //            {
-        //                _joyCb = false;
-        //            }
-        //        }
-        //    }
-        //    _Gateb = false;
-        //}
-
-        /// <summary>
-        /// カスタム入力モードで下が入力された時の処理
-        /// </summary>
-        //public void InsertDown(bool insert)
-        //{
-        //    if (_Gateb)
-        //    {
-
-        //        if (_s_rel_now_y == _rangeMin && insert == false)
-        //        {
-        //            Debug.Print("入力キー：Down");
-        //            _todaynum++;
-        //            _alldaynum++;
-        //            _joyCb = true;
-        //        }
-        //        else
-        //        {
-        //            if (_s_rel_now_y != _rangeMin)
-        //            {
-        //                _joyCb = false;
-        //            }
-        //        }
-        //    }
-        //    _Gateb = false;
-        //}
-        #endregion
-
         #region Actions
         /// <summary>
         /// アプリケーションロード時の処理
@@ -2268,8 +2195,8 @@ namespace BeatCounter
         /// <param name="e"></param>
         private void InfinitasPlayTips_Click(object sender, EventArgs e)
         {
-            InfinitasPlayTips.Checked = true;
-            BmsPlayTips.Checked = false;
+            AnalogSCTips.Checked = true;
+            DigitalSCTips.Checked = false;
 
             Properties.Settings.Default.PlayMode = 0;
             Properties.Settings.Default.Save();
@@ -2284,8 +2211,8 @@ namespace BeatCounter
         /// <param name="e"></param>
         private void BmsPlayTips_Click(object sender, EventArgs e)
         {
-            InfinitasPlayTips.Checked = false;
-            BmsPlayTips.Checked = true;
+            AnalogSCTips.Checked = false;
+            DigitalSCTips.Checked = true;
 
             Properties.Settings.Default.PlayMode = 1;
             Properties.Settings.Default.Save();
@@ -2305,6 +2232,22 @@ namespace BeatCounter
             PS2ConTips.Checked = false;
             BeatmaniaProConTips.Checked = false;
             CustomTips.Checked = false;
+            KeyBoardTips.Checked = false;
+
+            // BMSのみチェックを入れる。
+            DigitalSCTips.Enabled = true;
+            AnalogSCTips.Enabled = true;
+
+            if (Properties.Settings.Default.PlayMode == 0)
+            {
+                AnalogSCTips.Checked = true;
+                DigitalSCTips.Checked = false;
+            }
+            else
+            {
+                AnalogSCTips.Checked = false;
+                DigitalSCTips.Checked = true;
+            }
 
             Properties.Settings.Default.Controller = 0;
             Properties.Settings.Default.Save();
@@ -2324,6 +2267,13 @@ namespace BeatCounter
             PS2ConTips.Checked = true;
             BeatmaniaProConTips.Checked = false;
             CustomTips.Checked = false;
+            KeyBoardTips.Checked = false;
+
+            // BMSのみチェックを入れる。
+            DigitalSCTips.Enabled = false;
+            AnalogSCTips.Enabled = false;
+            DigitalSCTips.Checked = true;
+            AnalogSCTips.Checked = false;
 
             Properties.Settings.Default.Controller = 1;
             Properties.Settings.Default.Save();
@@ -2343,6 +2293,13 @@ namespace BeatCounter
             PS2ConTips.Checked = false;
             BeatmaniaProConTips.Checked = true;
             CustomTips.Checked = false;
+            KeyBoardTips.Checked = false;
+
+            // INFINITASモードのみチェックを付ける。
+            DigitalSCTips.Enabled = false;
+            DigitalSCTips.Checked = false;
+            AnalogSCTips.Enabled = false;
+            AnalogSCTips.Checked = true;
 
             Properties.Settings.Default.Controller = 2;
             Properties.Settings.Default.Save();
@@ -2362,6 +2319,13 @@ namespace BeatCounter
             PS2ConTips.Checked = false;
             BeatmaniaProConTips.Checked = false;
             CustomTips.Checked = true;
+            KeyBoardTips.Checked = false;
+
+            // BMSモードのみチェックとEnable属性を付ける。
+            DigitalSCTips.Enabled = false;
+            DigitalSCTips.Checked = true;
+            AnalogSCTips.Enabled = false;
+            AnalogSCTips.Checked = false;
 
             Properties.Settings.Default.Controller = 3;
             Properties.Settings.Default.Save();
@@ -2370,6 +2334,37 @@ namespace BeatCounter
             keyconf.Show();
 
             Initialize();
+        }
+
+        /// <summary>
+        /// コントローラではなくキーボードの時
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void KeyBoardTips_Click(object sender, EventArgs e)
+        {
+            // 指定されたコントローラ以外のチェックを外す。
+            DaoTips.Checked = false;
+            PS2ConTips.Checked = false;
+            BeatmaniaProConTips.Checked = false;
+            CustomTips.Checked = false;
+            KeyBoardTips.Checked = true;
+
+            // BMSモードのみチェックとEnable属性を付ける。
+            DigitalSCTips.Enabled = false;
+            DigitalSCTips.Checked = true;
+            AnalogSCTips.Enabled = false;
+            AnalogSCTips.Checked = false;
+
+            Properties.Settings.Default.Controller = 4;
+            Properties.Settings.Default.Save();
+
+            KeyBoardConfig keyconf = new KeyBoardConfig();
+            keyconf.Show();
+
+            this.KeyPreview = true;
+            this.KeyDown += BeatCounter_KeyDown;
+            this.KeyUp += BeatCounter_KeyUp;
         }
 
         /// <summary>
@@ -2415,7 +2410,6 @@ namespace BeatCounter
                 _keyChangeMode = !_keyChangeMode;
 
                 // カウンタの変更以外の処理をUnenableにする。
-                PlayGameTips.Enabled = false;
                 ControllerTips.Enabled = false;
                 SChangeTips.Enabled = false;
                 BackColorTips.Enabled = false;
@@ -2525,7 +2519,6 @@ namespace BeatCounter
                 }
 
                 // カウンタの変更以外の処理をUnenableにする。
-                PlayGameTips.Enabled = true;
                 ControllerTips.Enabled = true;
                 SChangeTips.Enabled = true;
                 BackColorTips.Enabled = true;
@@ -2672,6 +2665,193 @@ namespace BeatCounter
             // 全期間の合計値を保存する。
             Properties.Settings.Default.SaveAllDayKey = _alldaynum;
             Properties.Settings.Default.Save();
+        }
+
+        private void BeatCounter_KeyDown(object sender, KeyEventArgs e)
+        {
+            _keyboardInput = e.KeyData;
+            var res = _keyboardInput.ToString().Split('|');
+            _keyList = new List<string>() { };
+            _keyList.AddRange(res);
+
+            foreach (string result in _keyList)
+            {
+                if (result == Properties.Settings.Default.K_Key1 && _joy1b == false)
+                {
+                    Debug.Print("入力キー：1");
+                    _todaynum++;
+                    _alldaynum++;
+                    _key1num++;
+                    Key1.Text = _key1num.ToString();
+                    Key1.BackColor = Color.LightPink;
+                    _joy1b = true;
+                }
+                else if (result == Properties.Settings.Default.K_Key2 && _joy2b == false)
+                {
+                    Debug.Print("入力キー：2");
+                    _todaynum++;
+                    _alldaynum++;
+                    _key2num++;
+                    Key2.Text = _key2num.ToString();
+                    Key2.BackColor = Color.LightPink;
+                    _joy2b = true;
+                }
+                else if (result == Properties.Settings.Default.K_Key3 && _joy3b == false)
+                {
+                    Debug.Print("入力キー：3");
+                    _todaynum++;
+                    _alldaynum++;
+                    _key3num++;
+                    Key3.Text = _key3num.ToString();
+                    Key3.BackColor = Color.LightPink;
+                    _joy3b = true;
+                }
+                else if (result == Properties.Settings.Default.K_Key4 && _joy4b == false)
+                {
+                    Debug.Print("入力キー：4");
+                    _todaynum++;
+                    _alldaynum++;
+                    _key4num++;
+                    Key4.Text = _key4num.ToString();
+                    Key4.BackColor = Color.LightPink;
+                    _joy4b = true;
+                }
+                else if (result == Properties.Settings.Default.K_Key5 && _joy5b == false)
+                {
+                    Debug.Print("入力キー：5");
+                    _todaynum++;
+                    _alldaynum++;
+                    _key5num++;
+                    Key5.Text = _key5num.ToString();
+                    Key5.BackColor = Color.LightPink;
+                    _joy5b = true;
+                }
+                else if (result == Properties.Settings.Default.K_Key6 && _joy6b == false)
+                {
+                    Debug.Print("入力キー：6");
+                    _todaynum++;
+                    _alldaynum++;
+                    _key6num++;
+                    Key6.Text = _key6num.ToString();
+                    Key6.BackColor = Color.LightPink;
+                    _joy6b = true;
+                }
+                else if (result == Properties.Settings.Default.K_Key7 && _joy7b == false)
+                {
+                    Debug.Print("入力キー：7");
+                    _todaynum++;
+                    _alldaynum++;
+                    _key7num++;
+                    Key7.Text = _key7num.ToString();
+                    Key7.BackColor = Color.LightPink;
+                    _joy7b = true;
+                }
+                else if (result == Properties.Settings.Default.K_S_Up && _joyUp == false)
+                {
+                    Debug.Print("入力キー：↑");
+                    _todaynum++;
+                    _alldaynum++;
+                    _s_upnum++;
+                    S_Up.Text = _s_upnum.ToString();
+                    S_Up.BackColor = Color.LightPink;
+                    _joyUp = true;
+                }
+                else if (result == Properties.Settings.Default.K_S_Down && _joyDown == false)
+                {
+                    Debug.Print("入力キー：↓");
+                    _todaynum++;
+                    _alldaynum++;
+                    _s_downnum++;
+                    S_Down.Text = _s_downnum.ToString();
+                    S_Down.BackColor = Color.LightPink;
+                    _joyDown = true;
+                }
+            }
+        }
+
+
+        private void BeatCounter_KeyUp(object sender, KeyEventArgs e)
+        {
+            _keyboardInputOff = e.KeyData;
+            var res = _keyboardInputOff.ToString().Split('|');
+            _keyList = new List<string>() { };
+            _keyList.AddRange(res);
+
+            foreach (string result in _keyList)
+            {
+                if (result == Properties.Settings.Default.K_Key1)
+                {
+                    // 押しっぱなし判定を解除
+                    _joy1b = false;
+
+                    // 背景色を戻す。
+                    Key1.BackColor = _keyBackColor;
+                }
+                else if (result == Properties.Settings.Default.K_Key2)
+                {
+                    // 押しっぱなし判定を解除
+                    _joy2b = false;
+
+                    // 背景色を戻す。
+                    Key2.BackColor = _keyBackColor;
+                }
+                else if (result == Properties.Settings.Default.K_Key3)
+                {
+                    // 押しっぱなし判定を解除
+                    _joy3b = false;
+
+                    // 背景色を戻す。
+                    Key3.BackColor = _keyBackColor;
+                }
+                else if (result == Properties.Settings.Default.K_Key4)
+                {
+                    // 押しっぱなし判定を解除
+                    _joy4b = false;
+
+                    // 背景色を戻す。
+                    Key4.BackColor = _keyBackColor;
+                }
+                else if (result == Properties.Settings.Default.K_Key5)
+                {
+                    // 押しっぱなし判定を解除
+                    _joy5b = false;
+
+                    // 背景色を戻す。
+                    Key5.BackColor = _keyBackColor;
+                }
+                else if (result == Properties.Settings.Default.K_Key6)
+                {
+                    // 押しっぱなし判定を解除
+                    _joy6b = false;
+
+                    // 背景色を戻す。
+                    Key6.BackColor = _keyBackColor;
+                }
+                else if (result == Properties.Settings.Default.K_Key7)
+                {
+                    // 押しっぱなし判定を解除
+                    _joy7b = false;
+
+                    // 背景色を戻す。
+                    Key7.BackColor = _keyBackColor;
+                }
+                else if (result == Properties.Settings.Default.K_S_Up)
+                {
+                    // 押しっぱなし判定を解除
+                    _joyUp = false;
+
+                    // 背景色を戻す。
+                    S_Up.BackColor = _keyBackColor;
+                }
+                else if (result == Properties.Settings.Default.K_S_Down)
+                {
+                    // 押しっぱなし判定を解除
+                    _joyDown = false;
+
+                    // 背景色を戻す。
+                    S_Down.BackColor = _keyBackColor;
+                }
+            }
         }
         #endregion
     }

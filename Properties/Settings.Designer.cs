@@ -190,5 +190,113 @@ namespace BeatCounter.Properties {
                 this["C_Key7"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string K_S_Up {
+            get {
+                return ((string)(this["K_S_Up"]));
+            }
+            set {
+                this["K_S_Up"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string K_S_Down {
+            get {
+                return ((string)(this["K_S_Down"]));
+            }
+            set {
+                this["K_S_Down"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string K_Key1 {
+            get {
+                return ((string)(this["K_Key1"]));
+            }
+            set {
+                this["K_Key1"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string K_Key2 {
+            get {
+                return ((string)(this["K_Key2"]));
+            }
+            set {
+                this["K_Key2"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string K_Key3 {
+            get {
+                return ((string)(this["K_Key3"]));
+            }
+            set {
+                this["K_Key3"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string K_Key4 {
+            get {
+                return ((string)(this["K_Key4"]));
+            }
+            set {
+                this["K_Key4"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string K_Key5 {
+            get {
+                return ((string)(this["K_Key5"]));
+            }
+            set {
+                this["K_Key5"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string K_Key6 {
+            get {
+                return ((string)(this["K_Key6"]));
+            }
+            set {
+                this["K_Key6"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string K_Key7 {
+            get {
+                return ((string)(this["K_Key7"]));
+            }
+            set {
+                this["K_Key7"] = value;
+            }
+        }
     }
 }

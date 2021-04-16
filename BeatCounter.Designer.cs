@@ -33,10 +33,10 @@ namespace BeatCounter
             this.L_TodayKeys = new System.Windows.Forms.Label();
             this.L_S_Up = new System.Windows.Forms.Label();
             this.L_S_Down = new System.Windows.Forms.Label();
-            this.PlayGameTips = new System.Windows.Forms.ToolStripMenuItem();
-            this.InfinitasPlayTips = new System.Windows.Forms.ToolStripMenuItem();
-            this.BmsPlayTips = new System.Windows.Forms.ToolStripMenuItem();
             this.ControllerTips = new System.Windows.Forms.ToolStripMenuItem();
+            this.AnalogSCTips = new System.Windows.Forms.ToolStripMenuItem();
+            this.DigitalSCTips = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.DaoTips = new System.Windows.Forms.ToolStripMenuItem();
             this.PS2ConTips = new System.Windows.Forms.ToolStripMenuItem();
             this.BeatmaniaProConTips = new System.Windows.Forms.ToolStripMenuItem();
@@ -76,6 +76,8 @@ namespace BeatCounter
             this.Key6 = new System.Windows.Forms.Label();
             this.AllDayKeys = new System.Windows.Forms.Label();
             this.Key7 = new System.Windows.Forms.Label();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
+            this.KeyBoardTips = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -123,41 +125,40 @@ namespace BeatCounter
             this.L_S_Down.Text = "↓";
             this.L_S_Down.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // PlayGameTips
-            // 
-            this.PlayGameTips.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.InfinitasPlayTips,
-            this.BmsPlayTips});
-            this.PlayGameTips.Name = "PlayGameTips";
-            this.PlayGameTips.Size = new System.Drawing.Size(70, 20);
-            this.PlayGameTips.Text = "プレイ対象";
-            // 
-            // InfinitasPlayTips
-            // 
-            this.InfinitasPlayTips.Checked = true;
-            this.InfinitasPlayTips.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.InfinitasPlayTips.Name = "InfinitasPlayTips";
-            this.InfinitasPlayTips.Size = new System.Drawing.Size(127, 22);
-            this.InfinitasPlayTips.Text = "INFINITAS";
-            this.InfinitasPlayTips.Click += new System.EventHandler(this.InfinitasPlayTips_Click);
-            // 
-            // BmsPlayTips
-            // 
-            this.BmsPlayTips.Name = "BmsPlayTips";
-            this.BmsPlayTips.Size = new System.Drawing.Size(127, 22);
-            this.BmsPlayTips.Text = "BMS";
-            this.BmsPlayTips.Click += new System.EventHandler(this.BmsPlayTips_Click);
-            // 
             // ControllerTips
             // 
             this.ControllerTips.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.AnalogSCTips,
+            this.DigitalSCTips,
+            this.toolStripMenuItem1,
             this.DaoTips,
             this.PS2ConTips,
             this.BeatmaniaProConTips,
-            this.CustomTips});
+            this.CustomTips,
+            this.toolStripMenuItem2,
+            this.KeyBoardTips});
             this.ControllerTips.Name = "ControllerTips";
             this.ControllerTips.Size = new System.Drawing.Size(77, 20);
             this.ControllerTips.Text = "コントローラー";
+            // 
+            // AnalogSCTips
+            // 
+            this.AnalogSCTips.Name = "AnalogSCTips";
+            this.AnalogSCTips.Size = new System.Drawing.Size(180, 22);
+            this.AnalogSCTips.Text = "アナログ皿入力";
+            this.AnalogSCTips.Click += new System.EventHandler(this.InfinitasPlayTips_Click);
+            // 
+            // DigitalSCTips
+            // 
+            this.DigitalSCTips.Name = "DigitalSCTips";
+            this.DigitalSCTips.Size = new System.Drawing.Size(180, 22);
+            this.DigitalSCTips.Text = "デジタル皿入力";
+            this.DigitalSCTips.Click += new System.EventHandler(this.BmsPlayTips_Click);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(177, 6);
             // 
             // DaoTips
             // 
@@ -167,7 +168,7 @@ namespace BeatCounter
             this.DaoTips.Name = "DaoTips";
             this.DaoTips.ShowShortcutKeys = false;
             this.DaoTips.Size = new System.Drawing.Size(180, 22);
-            this.DaoTips.Text = "DAO";
+            this.DaoTips.Text = "DJ DAO";
             this.DaoTips.Click += new System.EventHandler(this.DaoTips_Click);
             // 
             // PS2ConTips
@@ -298,7 +299,6 @@ namespace BeatCounter
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.PlayGameTips,
             this.ControllerTips,
             this.コンフィグToolStripMenuItem,
             this.ResetTips});
@@ -714,6 +714,18 @@ namespace BeatCounter
             this.Key7.Text = "0";
             this.Key7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(177, 6);
+            // 
+            // KeyBoardTips
+            // 
+            this.KeyBoardTips.Name = "KeyBoardTips";
+            this.KeyBoardTips.Size = new System.Drawing.Size(180, 22);
+            this.KeyBoardTips.Text = "キーボード";
+            this.KeyBoardTips.Click += new System.EventHandler(this.KeyBoardTips_Click);
+            // 
             // BeatCounter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -766,9 +778,6 @@ namespace BeatCounter
         private System.Windows.Forms.Label L_TodayKeys;
         private System.Windows.Forms.Label L_S_Down;
         private System.Windows.Forms.Label L_S_Up;
-        private System.Windows.Forms.ToolStripMenuItem PlayGameTips;
-        private System.Windows.Forms.ToolStripMenuItem InfinitasPlayTips;
-        private System.Windows.Forms.ToolStripMenuItem BmsPlayTips;
         private System.Windows.Forms.ToolStripMenuItem ControllerTips;
         private System.Windows.Forms.ToolStripMenuItem DaoTips;
         private System.Windows.Forms.ToolStripMenuItem PS2ConTips;
@@ -809,6 +818,11 @@ namespace BeatCounter
         private System.Windows.Forms.ToolStripMenuItem CustomTips;
         private System.Windows.Forms.ToolStripMenuItem CustomKeyConfigTips;
         private System.Windows.Forms.ToolStripMenuItem BeatmaniaProConTips;
+        private System.Windows.Forms.ToolStripMenuItem AnalogSCTips;
+        private System.Windows.Forms.ToolStripMenuItem DigitalSCTips;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
+        private System.Windows.Forms.ToolStripMenuItem KeyBoardTips;
     }
 }
 
