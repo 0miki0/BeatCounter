@@ -56,9 +56,6 @@ namespace BeatCounter
         private bool _joyUp = false;
         private bool _joyDown = false;
 
-        // 処理の読み込みを制御する為の処理。
-        private bool _Gateb = false;
-
         // 初期設定用
         private bool _onceAction1 = false;
         private bool _onceAction2 = false;
@@ -70,9 +67,12 @@ namespace BeatCounter
         private Color _keyBackColor = new Color();
 
         // キーボード時の入力取得用
-        private Keys _keyboardInput = new Keys();
-        private Keys _keyboardInputOff = new Keys();
-        private List<string> _keyList = new List<string>();
+        private List<string> _list = new List<string>();
+
+        // DLLをインポート
+        [System.Runtime.InteropServices.DllImport("user32.dll", CharSet = System.Runtime.InteropServices.CharSet.Auto, CallingConvention = System.Runtime.InteropServices.CallingConvention.StdCall)]
+        public static extern short GetAsyncKeyState(int nVirtKey);
+
         #endregion
 
         #region main処理群
@@ -196,155 +196,91 @@ namespace BeatCounter
                 // Key1 判定 (1鍵が押されたとき且つ、押しっぱなしになってない判定の場合)
                 if (jState.Buttons[0] && _joy1b == false)
                 {
-                    Debug.Print("入力キー：1");
-                    // 今日分の叩いた数を加算する。
-                    _todaynum++;
-
-                    // 全期間合計を加算する。
-                    _alldaynum++;
-
-                    // 1鍵を叩いた数を加算する。
-                    _key1num++;
-
-                    // Formに表示する。
-                    Key1.Text = _key1num.ToString();
-
-                    // 押下された時、光らせる。
-                    Key1.BackColor = Color.LightPink;
-
-                    // 押下されっぱなしの時にカウントされないように判定を追加。
-                    _joy1b = true;
+                    Push1Key(true);
                 }
                 else
                 {
                     if (jState.Buttons[0] == false)
                     {
-                        // 押しっぱなし判定を解除
-                        _joy1b = false;
-
-                        // 背景色を戻す。
-                        Key1.BackColor = _keyBackColor;
+                        Push1Key(false);
                     }
                 }
 
                 // Key2 判定
                 if (jState.Buttons[1] && _joy2b == false)
                 {
-                    Debug.Print("入力キー：2");
-                    _todaynum++;
-                    _alldaynum++;
-                    _key2num++;
-                    Key2.Text = _key2num.ToString();
-                    Key2.BackColor = Color.LightPink;
-                    _joy2b = true;
-
+                    Push2Key(true);
                 }
                 else
                 {
                     if (jState.Buttons[1] == false)
                     {
-                        _joy2b = false;
-                        Key2.BackColor = _keyBackColor;
+                        Push2Key(false);
                     }
                 }
 
                 // Key3 判定
                 if (jState.Buttons[2] && _joy3b == false)
                 {
-                    Debug.Print("入力キー：3");
-                    _todaynum++;
-                    _alldaynum++;
-                    _key3num++;
-                    Key3.Text = _key3num.ToString();
-                    Key3.BackColor = Color.LightPink;
-                    _joy3b = true;
+                    Push3Key(true);
                 }
                 else
                 {
                     if (jState.Buttons[2] == false)
                     {
-                        _joy3b = false;
-                        Key3.BackColor = _keyBackColor;
+                        Push3Key(false);
                     }
                 }
 
                 // Key4 判定
                 if (jState.Buttons[3] && _joy4b == false)
                 {
-                    Debug.Print("入力キー：4");
-                    _todaynum++;
-                    _alldaynum++;
-                    _key4num++;
-                    Key4.Text = _key4num.ToString();
-                    Key4.BackColor = Color.LightPink;
-                    _joy4b = true;
+                    Push4Key(true);
                 }
                 else
                 {
                     if (jState.Buttons[3] == false)
                     {
-                        _joy4b = false;
-                        Key4.BackColor = _keyBackColor;
+                        Push4Key(false);
                     }
                 }
 
                 // Key5 判定
                 if (jState.Buttons[4] && _joy5b == false)
                 {
-                    Debug.Print("入力キー：5");
-                    _todaynum++;
-                    _alldaynum++;
-                    _key5num++;
-                    Key5.Text = _key5num.ToString();
-                    Key5.BackColor = Color.LightPink;
-                    _joy5b = true;
+                    Push5Key(true);
                 }
                 else
                 {
                     if (jState.Buttons[4] == false)
                     {
-                        _joy5b = false;
-                        Key5.BackColor = _keyBackColor;
+                        Push5Key(false);
                     }
                 }
 
                 // Key6 判定
                 if (jState.Buttons[5] && _joy6b == false)
                 {
-                    Debug.Print("入力キー：6");
-                    _todaynum++;
-                    _alldaynum++;
-                    _key6num++;
-                    Key6.Text = _key6num.ToString();
-                    Key6.BackColor = Color.LightPink;
-                    _joy6b = true;
+                    Push6Key(true);
                 }
                 else
                 {
                     if (jState.Buttons[5] == false)
                     {
-                        _joy6b = false;
-                        Key6.BackColor = _keyBackColor;
+                        Push6Key(false);
                     }
                 }
 
                 // Key7 判定
                 if (jState.Buttons[6] && _joy7b == false)
                 {
-                    Debug.Print("入力キー：7");
-                    _todaynum++;
-                    _alldaynum++;
-                    _key7num++;
-                    Key7.Text = _key7num.ToString();
-                    Key7.BackColor = Color.LightPink;
-                    _joy7b = true;
+                    Push7Key(true);
                 }
                 else
                 {
                     if (jState.Buttons[6] == false)
                     {
-                        _joy7b = false;
-                        Key7.BackColor = _keyBackColor;
+                        Push7Key(false);
                     }
                 }
             }
@@ -353,144 +289,91 @@ namespace BeatCounter
                 // Key1 判定 (1鍵が押されたとき且つ、押しっぱなしになってない判定の場合)
                 if (jState.Buttons[3] && _joy1b == false)
                 {
-                    Debug.Print("入力キー：1");
-                    _todaynum++;
-                    _alldaynum++;
-                    _key1num++;
-                    Key1.Text = _key1num.ToString();
-                    Key1.BackColor = Color.LightPink;
-                    _joy1b = true;
+                    Push1Key(true);
                 }
                 else
                 {
                     if (jState.Buttons[3] == false)
                     {
-                        // 押しっぱなし判定を解除
-                        _joy1b = false;
-
-                        // 背景色を戻す。
-                        Key1.BackColor = _keyBackColor;
+                        Push1Key(false);
                     }
                 }
 
                 // Key2 判定
                 if (jState.Buttons[6] && _joy2b == false)
                 {
-                    Debug.Print("入力キー：2");
-                    _todaynum++;
-                    _alldaynum++;
-                    _key2num++;
-                    Key2.Text = _key2num.ToString();
-                    Key2.BackColor = Color.LightPink;
-                    _joy2b = true;
-
+                    Push2Key(true);
                 }
                 else
                 {
                     if (jState.Buttons[6] == false)
                     {
-                        _joy2b = false;
-                        Key2.BackColor = _keyBackColor;
+                        Push2Key(false);
                     }
                 }
 
                 // Key3 判定
                 if (jState.Buttons[2] && _joy3b == false)
                 {
-                    Debug.Print("入力キー：3");
-                    _todaynum++;
-                    _alldaynum++;
-                    _key3num++;
-                    Key3.Text = _key3num.ToString();
-                    Key3.BackColor = Color.LightPink;
-                    _joy3b = true;
+                    Push3Key(true);
                 }
                 else
                 {
                     if (jState.Buttons[2] == false)
                     {
-                        _joy3b = false;
-                        Key3.BackColor = _keyBackColor;
+                        Push3Key(false);
                     }
                 }
 
                 // Key4 判定
                 if (jState.Buttons[7] && _joy4b == false)
                 {
-                    Debug.Print("入力キー：4");
-                    _todaynum++;
-                    _alldaynum++;
-                    _key4num++;
-                    Key4.Text = _key4num.ToString();
-                    Key4.BackColor = Color.LightPink;
-                    _joy4b = true;
+                    Push4Key(true);
                 }
                 else
                 {
                     if (jState.Buttons[7] == false)
                     {
-                        _joy4b = false;
-                        Key4.BackColor = _keyBackColor;
+                        Push4Key(false);
                     }
                 }
 
                 // Key5 判定
                 if (jState.Buttons[1] && _joy5b == false)
                 {
-                    Debug.Print("入力キー：5");
-                    _todaynum++;
-                    _alldaynum++;
-                    _key5num++;
-                    Key5.Text = _key5num.ToString();
-                    Key5.BackColor = Color.LightPink;
-                    _joy5b = true;
+                    Push5Key(true);
                 }
                 else
                 {
                     if (jState.Buttons[1] == false)
                     {
-                        _joy5b = false;
-                        Key5.BackColor = _keyBackColor;
+                        Push5Key(false);
                     }
                 }
 
                 // Key6 判定
                 if (jState.Buttons[4] && _joy6b == false)
                 {
-                    Debug.Print("入力キー：6");
-                    _todaynum++;
-                    _alldaynum++;
-                    _key6num++;
-                    Key6.Text = _key6num.ToString();
-                    Key6.BackColor = Color.LightPink;
-                    _joy6b = true;
+                    Push6Key(true);
                 }
                 else
                 {
                     if (jState.Buttons[4] == false)
                     {
-                        _joy6b = false;
-                        Key6.BackColor = _keyBackColor;
+                        Push6Key(false);
                     }
                 }
 
                 // Key7 判定
                 if (_s_rel_now_x == 0 && _joy7b == false)
                 {
-                    Debug.Print("入力キー：7");
-                    _todaynum++;
-                    _alldaynum++;
-                    _key7num++;
-                    Key7.Text = _key7num.ToString();
-                    Key7.BackColor = Color.LightPink;
-                    _joy7b = true;
+                    Push7Key(true);
                 }
                 else
                 {
                     if (_s_rel_now_x != 0)
                     {
-                        _joy7b = false;
-                        Key7.BackColor = _keyBackColor;
+                        Push7Key(false);
                     }
                 }
             }
@@ -507,23 +390,13 @@ namespace BeatCounter
                     // 保存された設定を元に押されたキーが該当するキーであることを判別する。
                     if (jState.Buttons[Properties.Settings.Default.C_Key1] && _joy1b == false)
                     {
-                        Debug.Print("入力キー：1");
-                        _todaynum++;
-                        _alldaynum++;
-                        _key1num++;
-                        Key1.Text = _key1num.ToString();
-                        Key1.BackColor = Color.LightPink;
-                        _joy1b = true;
+                        Push1Key(true);
                     }
                     else
                     {
                         if (jState.Buttons[Properties.Settings.Default.C_Key1] == false)
                         {
-                            // 押しっぱなし判定を解除
-                            _joy1b = false;
-
-                            // 背景色を戻す。
-                            Key1.BackColor = _keyBackColor;
+                            Push1Key(false);
                         }
                     }
                 }
@@ -535,20 +408,13 @@ namespace BeatCounter
                         // 左の場合
                         if (_s_rel_now_x == 0 && _joy1b == false)
                         {
-                            Debug.Print("入力キー：1");
-                            _todaynum++;
-                            _alldaynum++;
-                            _key1num++;
-                            Key1.Text = _key1num.ToString();
-                            Key1.BackColor = Color.LightPink;
-                            _joy1b = true;
+                            Push1Key(true);
                         }
                         else
                         {
                             if (_s_rel_now_x != 0)
                             {
-                                _joy1b = false;
-                                Key1.BackColor = _keyBackColor;
+                                Push1Key(false);
                             }
                         }
                     }
@@ -558,20 +424,13 @@ namespace BeatCounter
                         // 左の場合
                         if (_s_rel_now_x == 1000 && _joy1b == false)
                         {
-                            Debug.Print("入力キー：1");
-                            _todaynum++;
-                            _alldaynum++;
-                            _key1num++;
-                            Key1.Text = _key1num.ToString();
-                            Key1.BackColor = Color.LightPink;
-                            _joy1b = true;
+                            Push1Key(true);
                         }
                         else
                         {
                             if (_s_rel_now_x != 1000)
                             {
-                                _joy1b = false;
-                                Key1.BackColor = _keyBackColor;
+                                Push1Key(false);
                             }
                         }
                     }
@@ -581,20 +440,13 @@ namespace BeatCounter
                         // 左の場合
                         if (_s_rel_now_y == 1000 && _joy1b == false)
                         {
-                            Debug.Print("入力キー：1");
-                            _todaynum++;
-                            _alldaynum++;
-                            _key1num++;
-                            Key1.Text = _key1num.ToString();
-                            Key1.BackColor = Color.LightPink;
-                            _joy1b = true;
+                            Push1Key(true);
                         }
                         else
                         {
                             if (_s_rel_now_y != 1000)
                             {
-                                _joy1b = false;
-                                Key1.BackColor = _keyBackColor;
+                                Push1Key(false);
                             }
                         }
                     }
@@ -604,20 +456,13 @@ namespace BeatCounter
                         // 左の場合
                         if (_s_rel_now_y == 0 && _joy1b == false)
                         {
-                            Debug.Print("入力キー：1");
-                            _todaynum++;
-                            _alldaynum++;
-                            _key1num++;
-                            Key1.Text = _key1num.ToString();
-                            Key1.BackColor = Color.LightPink;
-                            _joy1b = true;
+                            Push1Key(true);
                         }
                         else
                         {
                             if (_s_rel_now_y != 0)
                             {
-                                _joy1b = false;
-                                Key1.BackColor = _keyBackColor;
+                                Push1Key(false);
                             }
                         }
                     }
@@ -628,20 +473,13 @@ namespace BeatCounter
                 {
                     if (jState.Buttons[Properties.Settings.Default.C_Key2] && _joy2b == false)
                     {
-                        Debug.Print("入力キー：2");
-                        _todaynum++;
-                        _alldaynum++;
-                        _key2num++;
-                        Key2.Text = _key2num.ToString();
-                        Key2.BackColor = Color.LightPink;
-                        _joy2b = true;
+                        Push2Key(true);
                     }
                     else
                     {
                         if (jState.Buttons[Properties.Settings.Default.C_Key2] == false)
                         {
-                            _joy2b = false;
-                            Key2.BackColor = _keyBackColor;
+                            Push2Key(false);
                         }
                     }
                 }
@@ -653,20 +491,13 @@ namespace BeatCounter
                         // 左の場合
                         if (_s_rel_now_x == 0 && _joy2b == false)
                         {
-                            Debug.Print("入力キー：2");
-                            _todaynum++;
-                            _alldaynum++;
-                            _key2num++;
-                            Key2.Text = _key2num.ToString();
-                            Key2.BackColor = Color.LightPink;
-                            _joy2b = true;
+                            Push2Key(true);
                         }
                         else
                         {
                             if (_s_rel_now_x != 0)
                             {
-                                _joy2b = false;
-                                Key2.BackColor = _keyBackColor;
+                                Push2Key(false);
                             }
                         }
                     }
@@ -676,20 +507,13 @@ namespace BeatCounter
                         // 左の場合
                         if (_s_rel_now_x == 1000 && _joy2b == false)
                         {
-                            Debug.Print("入力キー：2");
-                            _todaynum++;
-                            _alldaynum++;
-                            _key2num++;
-                            Key2.Text = _key2num.ToString();
-                            Key2.BackColor = Color.LightPink;
-                            _joy2b = true;
+                            Push2Key(true);
                         }
                         else
                         {
                             if (_s_rel_now_x != 1000)
                             {
-                                _joy2b = false;
-                                Key2.BackColor = _keyBackColor;
+                                Push2Key(false);
                             }
                         }
                     }
@@ -699,20 +523,13 @@ namespace BeatCounter
                         // 左の場合
                         if (_s_rel_now_y == 1000 && _joy2b == false)
                         {
-                            Debug.Print("入力キー：2");
-                            _todaynum++;
-                            _alldaynum++;
-                            _key2num++;
-                            Key2.Text = _key2num.ToString();
-                            Key2.BackColor = Color.LightPink;
-                            _joy2b = true;
+                            Push2Key(true);
                         }
                         else
                         {
                             if (_s_rel_now_y != 1000)
                             {
-                                _joy2b = false;
-                                Key1.BackColor = _keyBackColor;
+                                Push2Key(false);
                             }
                         }
                     }
@@ -722,20 +539,13 @@ namespace BeatCounter
                         // 左の場合
                         if (_s_rel_now_y == 0 && _joy2b == false)
                         {
-                            Debug.Print("入力キー：2");
-                            _todaynum++;
-                            _alldaynum++;
-                            _key2num++;
-                            Key2.Text = _key2num.ToString();
-                            Key2.BackColor = Color.LightPink;
-                            _joy2b = true;
+                            Push2Key(true);
                         }
                         else
                         {
                             if (_s_rel_now_y != 0)
                             {
-                                _joy2b = false;
-                                Key2.BackColor = _keyBackColor;
+                                Push2Key(false);
                             }
                         }
                     }
@@ -746,20 +556,13 @@ namespace BeatCounter
                 {
                     if (jState.Buttons[Properties.Settings.Default.C_Key3] && _joy3b == false)
                     {
-                        Debug.Print("入力キー：3");
-                        _todaynum++;
-                        _alldaynum++;
-                        _key3num++;
-                        Key3.Text = _key3num.ToString();
-                        Key3.BackColor = Color.LightPink;
-                        _joy3b = true;
+                        Push3Key(true);
                     }
                     else
                     {
                         if (jState.Buttons[Properties.Settings.Default.C_Key3] == false)
                         {
-                            _joy3b = false;
-                            Key3.BackColor = _keyBackColor;
+                            Push3Key(false);
                         }
                     }
                 }
@@ -771,20 +574,13 @@ namespace BeatCounter
                         // 左の場合
                         if (_s_rel_now_x == 0 && _joy3b == false)
                         {
-                            Debug.Print("入力キー：3");
-                            _todaynum++;
-                            _alldaynum++;
-                            _key3num++;
-                            Key3.Text = _key3num.ToString();
-                            Key3.BackColor = Color.LightPink;
-                            _joy3b = true;
+                            Push3Key(true);
                         }
                         else
                         {
                             if (_s_rel_now_x != 0)
                             {
-                                _joy3b = false;
-                                Key3.BackColor = _keyBackColor;
+                                Push3Key(false);
                             }
                         }
                     }
@@ -794,20 +590,13 @@ namespace BeatCounter
                         // 左の場合
                         if (_s_rel_now_x == 1000 && _joy3b == false)
                         {
-                            Debug.Print("入力キー：3");
-                            _todaynum++;
-                            _alldaynum++;
-                            _key3num++;
-                            Key3.Text = _key3num.ToString();
-                            Key3.BackColor = Color.LightPink;
-                            _joy3b = true;
+                            Push3Key(true);
                         }
                         else
                         {
                             if (_s_rel_now_x != 1000)
                             {
-                                _joy3b = false;
-                                Key3.BackColor = _keyBackColor;
+                                Push3Key(false);
                             }
                         }
                     }
@@ -817,20 +606,13 @@ namespace BeatCounter
                         // 左の場合
                         if (_s_rel_now_y == 1000 && _joy3b == false)
                         {
-                            Debug.Print("入力キー：3");
-                            _todaynum++;
-                            _alldaynum++;
-                            _key3num++;
-                            Key3.Text = _key3num.ToString();
-                            Key3.BackColor = Color.LightPink;
-                            _joy3b = true;
+                            Push3Key(true);
                         }
                         else
                         {
                             if (_s_rel_now_y != 1000)
                             {
-                                _joy3b = false;
-                                Key3.BackColor = _keyBackColor;
+                                Push3Key(false);
                             }
                         }
                     }
@@ -840,20 +622,13 @@ namespace BeatCounter
                         // 左の場合
                         if (_s_rel_now_y == 0 && _joy3b == false)
                         {
-                            Debug.Print("入力キー：3");
-                            _todaynum++;
-                            _alldaynum++;
-                            _key3num++;
-                            Key3.Text = _key3num.ToString();
-                            Key3.BackColor = Color.LightPink;
-                            _joy3b = true;
+                            Push3Key(true);
                         }
                         else
                         {
                             if (_s_rel_now_y != 0)
                             {
-                                _joy3b = false;
-                                Key3.BackColor = _keyBackColor;
+                                Push3Key(false);
                             }
                         }
                     }
@@ -864,20 +639,13 @@ namespace BeatCounter
                 {
                     if (jState.Buttons[Properties.Settings.Default.C_Key4] && _joy4b == false)
                     {
-                        Debug.Print("入力キー：4");
-                        _todaynum++;
-                        _alldaynum++;
-                        _key4num++;
-                        Key4.Text = _key4num.ToString();
-                        Key4.BackColor = Color.LightPink;
-                        _joy4b = true;
+                        Push4Key(true);
                     }
                     else
                     {
                         if (jState.Buttons[Properties.Settings.Default.C_Key4] == false)
                         {
-                            _joy4b = false;
-                            Key4.BackColor = _keyBackColor;
+                            Push4Key(false);
                         }
                     }
                 }
@@ -889,20 +657,13 @@ namespace BeatCounter
                         // 左の場合
                         if (_s_rel_now_x == 0 && _joy4b == false)
                         {
-                            Debug.Print("入力キー：4");
-                            _todaynum++;
-                            _alldaynum++;
-                            _key4num++;
-                            Key4.Text = _key4num.ToString();
-                            Key4.BackColor = Color.LightPink;
-                            _joy4b = true;
+                            Push4Key(true);
                         }
                         else
                         {
                             if (_s_rel_now_x != 0)
                             {
-                                _joy4b = false;
-                                Key4.BackColor = _keyBackColor;
+                                Push4Key(false);
                             }
                         }
                     }
@@ -912,20 +673,13 @@ namespace BeatCounter
                         // 左の場合
                         if (_s_rel_now_x == 1000 && _joy4b == false)
                         {
-                            Debug.Print("入力キー：4");
-                            _todaynum++;
-                            _alldaynum++;
-                            _key4num++;
-                            Key4.Text = _key4num.ToString();
-                            Key4.BackColor = Color.LightPink;
-                            _joy4b = true;
+                            Push4Key(true);
                         }
                         else
                         {
                             if (_s_rel_now_x != 1000)
                             {
-                                _joy4b = false;
-                                Key4.BackColor = _keyBackColor;
+                                Push4Key(false);
                             }
                         }
                     }
@@ -935,20 +689,13 @@ namespace BeatCounter
                         // 左の場合
                         if (_s_rel_now_y == 1000 && _joy4b == false)
                         {
-                            Debug.Print("入力キー：4");
-                            _todaynum++;
-                            _alldaynum++;
-                            _key4num++;
-                            Key4.Text = _key4num.ToString();
-                            Key4.BackColor = Color.LightPink;
-                            _joy4b = true;
+                            Push4Key(true);
                         }
                         else
                         {
                             if (_s_rel_now_y != 1000)
                             {
-                                _joy4b = false;
-                                Key4.BackColor = _keyBackColor;
+                                Push4Key(false);
                             }
                         }
                     }
@@ -958,20 +705,13 @@ namespace BeatCounter
                         // 左の場合
                         if (_s_rel_now_y == 0 && _joy4b == false)
                         {
-                            Debug.Print("入力キー：4");
-                            _todaynum++;
-                            _alldaynum++;
-                            _key4num++;
-                            Key4.Text = _key4num.ToString();
-                            Key4.BackColor = Color.LightPink;
-                            _joy4b = true;
+                            Push4Key(true);
                         }
                         else
                         {
                             if (_s_rel_now_y != 0)
                             {
-                                _joy4b = false;
-                                Key4.BackColor = _keyBackColor;
+                                Push4Key(false);
                             }
                         }
                     }
@@ -982,20 +722,13 @@ namespace BeatCounter
                 {
                     if (jState.Buttons[Properties.Settings.Default.C_Key5] && _joy5b == false)
                     {
-                        Debug.Print("入力キー：5");
-                        _todaynum++;
-                        _alldaynum++;
-                        _key5num++;
-                        Key5.Text = _key5num.ToString();
-                        Key5.BackColor = Color.LightPink;
-                        _joy5b = true;
+                        Push5Key(true);
                     }
                     else
                     {
                         if (jState.Buttons[Properties.Settings.Default.C_Key5] == false)
                         {
-                            _joy5b = false;
-                            Key5.BackColor = _keyBackColor;
+                            Push5Key(false);
                         }
                     }
                 }
@@ -1007,20 +740,13 @@ namespace BeatCounter
                         // 左の場合
                         if (_s_rel_now_x == 0 && _joy5b == false)
                         {
-                            Debug.Print("入力キー：5");
-                            _todaynum++;
-                            _alldaynum++;
-                            _key5num++;
-                            Key5.Text = _key5num.ToString();
-                            Key5.BackColor = Color.LightPink;
-                            _joy5b = true;
+                            Push5Key(true);
                         }
                         else
                         {
                             if (_s_rel_now_x != 0)
                             {
-                                _joy5b = false;
-                                Key5.BackColor = _keyBackColor;
+                                Push5Key(false);
                             }
                         }
                     }
@@ -1030,20 +756,13 @@ namespace BeatCounter
                         // 左の場合
                         if (_s_rel_now_x == 1000 && _joy5b == false)
                         {
-                            Debug.Print("入力キー：5");
-                            _todaynum++;
-                            _alldaynum++;
-                            _key5num++;
-                            Key5.Text = _key5num.ToString();
-                            Key5.BackColor = Color.LightPink;
-                            _joy5b = true;
+                            Push5Key(true);
                         }
                         else
                         {
                             if (_s_rel_now_x != 1000)
                             {
-                                _joy5b = false;
-                                Key5.BackColor = _keyBackColor;
+                                Push5Key(false);
                             }
                         }
                     }
@@ -1053,20 +772,13 @@ namespace BeatCounter
                         // 左の場合
                         if (_s_rel_now_y == 1000 && _joy5b == false)
                         {
-                            Debug.Print("入力キー：5");
-                            _todaynum++;
-                            _alldaynum++;
-                            _key5num++;
-                            Key5.Text = _key5num.ToString();
-                            Key5.BackColor = Color.LightPink;
-                            _joy5b = true;
+                            Push5Key(true);
                         }
                         else
                         {
                             if (_s_rel_now_y != 1000)
                             {
-                                _joy5b = false;
-                                Key5.BackColor = _keyBackColor;
+                                Push5Key(false);
                             }
                         }
                     }
@@ -1076,20 +788,13 @@ namespace BeatCounter
                         // 左の場合
                         if (_s_rel_now_y == 0 && _joy5b == false)
                         {
-                            Debug.Print("入力キー：5");
-                            _todaynum++;
-                            _alldaynum++;
-                            _key5num++;
-                            Key5.Text = _key5num.ToString();
-                            Key5.BackColor = Color.LightPink;
-                            _joy5b = true;
+                            Push5Key(true);
                         }
                         else
                         {
                             if (_s_rel_now_y != 0)
                             {
-                                _joy5b = false;
-                                Key5.BackColor = _keyBackColor;
+                                Push5Key(false);
                             }
                         }
                     }
@@ -1100,20 +805,13 @@ namespace BeatCounter
                 {
                     if (jState.Buttons[Properties.Settings.Default.C_Key6] && _joy6b == false)
                     {
-                        Debug.Print("入力キー：6");
-                        _todaynum++;
-                        _alldaynum++;
-                        _key6num++;
-                        Key6.Text = _key6num.ToString();
-                        Key6.BackColor = Color.LightPink;
-                        _joy6b = true;
+                        Push6Key(true);
                     }
                     else
                     {
                         if (jState.Buttons[Properties.Settings.Default.C_Key6] == false)
                         {
-                            _joy6b = false;
-                            Key6.BackColor = _keyBackColor;
+                            Push6Key(false);
                         }
                     }
                 }
@@ -1125,20 +823,13 @@ namespace BeatCounter
                         // 左の場合
                         if (_s_rel_now_x == 0 && _joy6b == false)
                         {
-                            Debug.Print("入力キー：6");
-                            _todaynum++;
-                            _alldaynum++;
-                            _key6num++;
-                            Key6.Text = _key6num.ToString();
-                            Key6.BackColor = Color.LightPink;
-                            _joy6b = true;
+                            Push6Key(true);
                         }
                         else
                         {
                             if (_s_rel_now_x != 0)
                             {
-                                _joy6b = false;
-                                Key6.BackColor = _keyBackColor;
+                                Push6Key(false);
                             }
                         }
                     }
@@ -1148,20 +839,13 @@ namespace BeatCounter
                         // 左の場合
                         if (_s_rel_now_x == 1000 && _joy6b == false)
                         {
-                            Debug.Print("入力キー：6");
-                            _todaynum++;
-                            _alldaynum++;
-                            _key6num++;
-                            Key6.Text = _key6num.ToString();
-                            Key6.BackColor = Color.LightPink;
-                            _joy6b = true;
+                            Push6Key(true);
                         }
                         else
                         {
                             if (_s_rel_now_x != 1000)
                             {
-                                _joy6b = false;
-                                Key6.BackColor = _keyBackColor;
+                                Push6Key(false);
                             }
                         }
                     }
@@ -1171,20 +855,13 @@ namespace BeatCounter
                         // 左の場合
                         if (_s_rel_now_y == 1000 && _joy6b == false)
                         {
-                            Debug.Print("入力キー：6");
-                            _todaynum++;
-                            _alldaynum++;
-                            _key6num++;
-                            Key6.Text = _key6num.ToString();
-                            Key6.BackColor = Color.LightPink;
-                            _joy6b = true;
+                            Push6Key(true);
                         }
                         else
                         {
                             if (_s_rel_now_y != 1000)
                             {
-                                _joy6b = false;
-                                Key6.BackColor = _keyBackColor;
+                                Push6Key(false);
                             }
                         }
                     }
@@ -1194,20 +871,13 @@ namespace BeatCounter
                         // 左の場合
                         if (_s_rel_now_y == 0 && _joy6b == false)
                         {
-                            Debug.Print("入力キー：6");
-                            _todaynum++;
-                            _alldaynum++;
-                            _key6num++;
-                            Key6.Text = _key6num.ToString();
-                            Key6.BackColor = Color.LightPink;
-                            _joy6b = true;
+                            Push6Key(true);
                         }
                         else
                         {
                             if (_s_rel_now_y != 0)
                             {
-                                _joy6b = false;
-                                Key6.BackColor = _keyBackColor;
+                                Push6Key(false);
                             }
                         }
                     }
@@ -1218,20 +888,13 @@ namespace BeatCounter
                 {
                     if (jState.Buttons[Properties.Settings.Default.C_Key7] && _joy7b == false)
                     {
-                        Debug.Print("入力キー：7");
-                        _todaynum++;
-                        _alldaynum++;
-                        _key7num++;
-                        Key7.Text = _key7num.ToString();
-                        Key7.BackColor = Color.LightPink;
-                        _joy7b = true;
+                        Push7Key(true);
                     }
                     else
                     {
                         if (jState.Buttons[Properties.Settings.Default.C_Key7] == false)
                         {
-                            _joy7b = false;
-                            Key7.BackColor = _keyBackColor;
+                            Push7Key(false);
                         }
                     }
                 }
@@ -1243,20 +906,13 @@ namespace BeatCounter
                         // 左の場合
                         if (_s_rel_now_x == 0 && _joy7b == false)
                         {
-                            Debug.Print("入力キー：7");
-                            _todaynum++;
-                            _alldaynum++;
-                            _key7num++;
-                            Key7.Text = _key7num.ToString();
-                            Key7.BackColor = Color.LightPink;
-                            _joy7b = true;
+                            Push7Key(true);
                         }
                         else
                         {
                             if (_s_rel_now_x != 0)
                             {
-                                _joy7b = false;
-                                Key7.BackColor = _keyBackColor;
+                                Push7Key(false);
                             }
                         }
                     }
@@ -1266,20 +922,13 @@ namespace BeatCounter
                         // 左の場合
                         if (_s_rel_now_x == 1000 && _joy7b == false)
                         {
-                            Debug.Print("入力キー：7");
-                            _todaynum++;
-                            _alldaynum++;
-                            _key7num++;
-                            Key7.Text = _key7num.ToString();
-                            Key7.BackColor = Color.LightPink;
-                            _joy7b = true;
+                            Push7Key(true);
                         }
                         else
                         {
                             if (_s_rel_now_x != 1000)
                             {
-                                _joy7b = false;
-                                Key7.BackColor = _keyBackColor;
+                                Push7Key(false);
                             }
                         }
                     }
@@ -1289,20 +938,13 @@ namespace BeatCounter
                         // 左の場合
                         if (_s_rel_now_y == 1000 && _joy7b == false)
                         {
-                            Debug.Print("入力キー：7");
-                            _todaynum++;
-                            _alldaynum++;
-                            _key7num++;
-                            Key7.Text = _key7num.ToString();
-                            Key7.BackColor = Color.LightPink;
-                            _joy7b = true;
+                            Push7Key(true);
                         }
                         else
                         {
                             if (_s_rel_now_y != 1000)
                             {
-                                _joy7b = false;
-                                Key7.BackColor = _keyBackColor;
+                                Push7Key(false);
                             }
                         }
                     }
@@ -1312,20 +954,13 @@ namespace BeatCounter
                         // 左の場合
                         if (_s_rel_now_y == 0 && _joy7b == false)
                         {
-                            Debug.Print("入力キー：7");
-                            _todaynum++;
-                            _alldaynum++;
-                            _key7num++;
-                            Key7.Text = _key7num.ToString();
-                            Key7.BackColor = Color.LightPink;
-                            _joy7b = true;
+                            Push7Key(true);
                         }
                         else
                         {
                             if (_s_rel_now_y != 0)
                             {
-                                _joy7b = false;
-                                Key7.BackColor = _keyBackColor;
+                                Push7Key(false);
                             }
                         }
                     }
@@ -1357,6 +992,13 @@ namespace BeatCounter
             if (_keyChangeMode) { return; }
 
             // Key判定自体はKeyDownの処理内で行う。
+
+            // バックグラウンドでもキーボードが押下されているかチェックする処理。
+            foreach (string str in _list)
+            {
+                var item = (Keys)Enum.Parse(typeof(Keys), str);
+                GetStateOfKeyLocked(item);
+            }
 
             // 今回の合計と総合計を押された分だけ加算。
             TodayKeys.Text = _todaynum.ToString();
@@ -1600,6 +1242,21 @@ namespace BeatCounter
             {
                 ClearWTips_Click(new object(), new EventArgs());
             }
+
+            // キーボード用のリスト
+            var proc = Properties.Settings.Default;
+            _list = new List<string>()
+            {
+                proc.K_Key1,
+                proc.K_Key2,
+                proc.K_Key3,
+                proc.K_Key4,
+                proc.K_Key5,
+                proc.K_Key6,
+                proc.K_Key7,
+                proc.K_S_Up,
+                proc.K_S_Down
+            };
         }
 
         /// <summary>
@@ -1893,20 +1550,13 @@ namespace BeatCounter
             {
                 if (jState.Buttons[Properties.Settings.Default.C_S_Up] && _joyUp == false)
                 {
-                    Debug.Print("入力キー：↑");
-                    _todaynum++;
-                    _alldaynum++;
-                    _s_upnum++;
-                    S_Up.Text = _s_upnum.ToString();
-                    S_Up.BackColor = Color.LightPink;
-                    _joyUp = true;
+                    PushUpKey(true);
                 }
                 else
                 {
                     if (jState.Buttons[Properties.Settings.Default.C_S_Up] == false)
                     {
-                        _joyUp = false;
-                        S_Up.BackColor = _keyBackColor;
+                        PushUpKey(false);
                     }
                 }
             }
@@ -1920,20 +1570,13 @@ namespace BeatCounter
                         // 左の場合
                         if (_s_rel_now_x == _rangeMin && _joyUp == false)
                         {
-                            Debug.Print("入力キー：7");
-                            _todaynum++;
-                            _alldaynum++;
-                            _s_upnum++;
-                            S_Up.Text = _s_upnum.ToString();
-                            S_Up.BackColor = Color.LightPink;
-                            _joyUp = true;
+                            PushUpKey(true);
                         }
                         else
                         {
                             if (_s_rel_now_x != _rangeMin)
                             {
-                                _joyUp = false;
-                                S_Up.BackColor = _keyBackColor;
+                                PushUpKey(false);
                             }
                         }
                     }
@@ -1946,20 +1589,13 @@ namespace BeatCounter
                         // 右の場合
                         if (_s_rel_now_x == _rangeMax && _joyUp == false)
                         {
-                            Debug.Print("入力キー：7");
-                            _todaynum++;
-                            _alldaynum++;
-                            _s_upnum++;
-                            S_Up.Text = _s_upnum.ToString();
-                            S_Up.BackColor = Color.LightPink;
-                            _joyUp = true;
+                            PushUpKey(true);
                         }
                         else
                         {
                             if (_s_rel_now_x != _rangeMax)
                             {
-                                _joyUp = false;
-                                S_Up.BackColor = _keyBackColor;
+                                PushUpKey(false);
                             }
                         }
                     }
@@ -1972,20 +1608,13 @@ namespace BeatCounter
                         // 上の場合
                         if (_s_rel_now_y == _rangeMin && _joyUp == false)
                         {
-                            Debug.Print("入力キー：7");
-                            _todaynum++;
-                            _alldaynum++;
-                            _s_upnum++;
-                            S_Up.Text = _s_upnum.ToString();
-                            S_Up.BackColor = Color.LightPink;
-                            _joyUp = true;
+                            PushUpKey(true);
                         }
                         else
                         {
                             if (_s_rel_now_y != _rangeMin)
                             {
-                                _joyUp = false;
-                                S_Up.BackColor = _keyBackColor;
+                                PushUpKey(false);
                             }
                         }
                     }
@@ -1998,20 +1627,13 @@ namespace BeatCounter
                         // 左の場合
                         if (_s_rel_now_y == _rangeMax && _joyUp == false)
                         {
-                            Debug.Print("入力キー：7");
-                            _todaynum++;
-                            _alldaynum++;
-                            _s_upnum++;
-                            S_Up.Text = _s_upnum.ToString();
-                            S_Up.BackColor = Color.LightPink;
-                            _joyUp = true;
+                            PushUpKey(true);
                         }
                         else
                         {
                             if (_s_rel_now_y != _rangeMax)
                             {
-                                _joyUp = false;
-                                S_Up.BackColor = _keyBackColor;
+                                PushUpKey(false);
                             }
                         }
                     }
@@ -2023,20 +1645,13 @@ namespace BeatCounter
             {
                 if (jState.Buttons[Properties.Settings.Default.C_S_Down] && _joyDown == false)
                 {
-                    Debug.Print("入力キー：↑");
-                    _todaynum++;
-                    _alldaynum++;
-                    _s_downnum++;
-                    S_Down.Text = _s_downnum.ToString();
-                    S_Down.BackColor = Color.LightPink;
-                    _joyDown = true;
+                    PushDownKey(true);
                 }
                 else
                 {
                     if (jState.Buttons[Properties.Settings.Default.C_S_Down] == false)
                     {
-                        _joyDown = false;
-                        S_Down.BackColor = _keyBackColor;
+                        PushDownKey(false);
                     }
                 }
             }
@@ -2050,20 +1665,13 @@ namespace BeatCounter
                         // 左の場合
                         if (_s_rel_now_x == _rangeMin && _joyDown == false)
                         {
-                            Debug.Print("入力キー：7");
-                            _todaynum++;
-                            _alldaynum++;
-                            _s_downnum++;
-                            S_Down.Text = _s_downnum.ToString();
-                            S_Down.BackColor = Color.LightPink;
-                            _joyDown = true;
+                            PushDownKey(true);
                         }
                         else
                         {
                             if (_s_rel_now_x != _rangeMin)
                             {
-                                _joyDown = false;
-                                S_Down.BackColor = _keyBackColor;
+                                PushDownKey(false);
                             }
                         }
                     }
@@ -2076,20 +1684,13 @@ namespace BeatCounter
                         // 右の場合
                         if (_s_rel_now_x == _rangeMax && _joyDown == false)
                         {
-                            Debug.Print("入力キー：7");
-                            _todaynum++;
-                            _alldaynum++;
-                            _s_downnum++;
-                            S_Down.Text = _s_downnum.ToString();
-                            S_Down.BackColor = Color.LightPink;
-                            _joyDown = true;
+                            PushDownKey(true);
                         }
                         else
                         {
                             if (_s_rel_now_x != _rangeMax)
                             {
-                                _joyDown = false;
-                                S_Down.BackColor = _keyBackColor;
+                                PushDownKey(false);
                             }
                         }
                     }
@@ -2102,20 +1703,13 @@ namespace BeatCounter
                         // 上の場合
                         if (_s_rel_now_y == _rangeMin && _joyDown == false)
                         {
-                            Debug.Print("入力キー：7");
-                            _todaynum++;
-                            _alldaynum++;
-                            _s_downnum++;
-                            S_Down.Text = _s_downnum.ToString();
-                            S_Down.BackColor = Color.LightPink;
-                            _joyDown = true;
+                            PushDownKey(true);
                         }
                         else
                         {
                             if (_s_rel_now_y != _rangeMin)
                             {
-                                _joyDown = false;
-                                S_Down.BackColor = _keyBackColor;
+                                PushDownKey(false);
                             }
                         }
                     }
@@ -2128,20 +1722,13 @@ namespace BeatCounter
                         // 下の場合
                         if (_s_rel_now_y == _rangeMax && _joyDown == false)
                         {
-                            Debug.Print("入力キー：7");
-                            _todaynum++;
-                            _alldaynum++;
-                            _s_downnum++;
-                            S_Down.Text = _s_downnum.ToString();
-                            S_Down.BackColor = Color.LightPink;
-                            _joyDown = true;
+                            PushDownKey(true);
                         }
                         else
                         {
                             if (_s_rel_now_y != _rangeMax)
                             {
-                                _joyDown = false;
-                                S_Down.BackColor = _keyBackColor;
+                                PushDownKey(false);
                             }
                         }
                     }
@@ -2363,8 +1950,6 @@ namespace BeatCounter
             keyconf.Show();
 
             this.KeyPreview = true;
-            this.KeyDown += BeatCounter_KeyDown;
-            this.KeyUp += BeatCounter_KeyUp;
         }
 
         /// <summary>
@@ -2575,6 +2160,7 @@ namespace BeatCounter
             {
                 return;
             }
+
             WhiteTips.Checked = false;
             BlackTips.Checked = !BlackTips.Checked;
             ClearWTips.Checked = false;
@@ -2614,16 +2200,8 @@ namespace BeatCounter
         /// <param name="e"></param>
         private void TodayClearTips_Click(object sender, EventArgs e)
         {
-            DialogResult dialog = MessageBox.Show(
-                "今回の合計および各回数を消去します。" +
-                "よろしいですか？",
-                "今回の合計の消去",
-                MessageBoxButtons.YesNo);
-
-            if (dialog == DialogResult.Yes)
-            {
-                TodayInit();
-            }
+            var cls = new BeatCounterCommon();
+            cls.DialogYesNo("今回の回数を消去します。", "よろしいですか？", "今回の回数の消去");
         }
 
         /// <summary>
@@ -2633,16 +2211,8 @@ namespace BeatCounter
         /// <param name="e"></param>
         private void AlldayClearTips_Click(object sender, EventArgs e)
         {
-            DialogResult dialog = MessageBox.Show(
-                "全ての回数を消去します。" +
-                "よろしいですか？",
-                "全期間合計の消去",
-                MessageBoxButtons.YesNo);
-
-            if (dialog == DialogResult.Yes)
-            {
-                AlldayInit();
-            }
+            var cls = new BeatCounterCommon();
+            cls.DialogYesNo("全ての回数を消去します。", "よろしいですか？", "全期間合計の消去");
         }
 
         /// <summary>
@@ -2667,190 +2237,259 @@ namespace BeatCounter
             Properties.Settings.Default.Save();
         }
 
-        private void BeatCounter_KeyDown(object sender, KeyEventArgs e)
+        public void GetStateOfKeyLocked(System.Windows.Forms.Keys Key_Value)
         {
-            _keyboardInput = e.KeyData;
-            var res = _keyboardInput.ToString().Split('|');
-            _keyList = new List<string>() { };
-            _keyList.AddRange(res);
+            // WindowsAPIで押下判定
+            bool Key_State = (GetAsyncKeyState((int)Key_Value) & 0x8000) != 0;
 
-            foreach (string result in _keyList)
+            if (Key_State == true && Key_Value.ToString() == Properties.Settings.Default.K_Key1 && _joy1b == false)
             {
-                if (result == Properties.Settings.Default.K_Key1 && _joy1b == false)
-                {
-                    Debug.Print("入力キー：1");
-                    _todaynum++;
-                    _alldaynum++;
-                    _key1num++;
-                    Key1.Text = _key1num.ToString();
-                    Key1.BackColor = Color.LightPink;
-                    _joy1b = true;
-                }
-                else if (result == Properties.Settings.Default.K_Key2 && _joy2b == false)
-                {
-                    Debug.Print("入力キー：2");
-                    _todaynum++;
-                    _alldaynum++;
-                    _key2num++;
-                    Key2.Text = _key2num.ToString();
-                    Key2.BackColor = Color.LightPink;
-                    _joy2b = true;
-                }
-                else if (result == Properties.Settings.Default.K_Key3 && _joy3b == false)
-                {
-                    Debug.Print("入力キー：3");
-                    _todaynum++;
-                    _alldaynum++;
-                    _key3num++;
-                    Key3.Text = _key3num.ToString();
-                    Key3.BackColor = Color.LightPink;
-                    _joy3b = true;
-                }
-                else if (result == Properties.Settings.Default.K_Key4 && _joy4b == false)
-                {
-                    Debug.Print("入力キー：4");
-                    _todaynum++;
-                    _alldaynum++;
-                    _key4num++;
-                    Key4.Text = _key4num.ToString();
-                    Key4.BackColor = Color.LightPink;
-                    _joy4b = true;
-                }
-                else if (result == Properties.Settings.Default.K_Key5 && _joy5b == false)
-                {
-                    Debug.Print("入力キー：5");
-                    _todaynum++;
-                    _alldaynum++;
-                    _key5num++;
-                    Key5.Text = _key5num.ToString();
-                    Key5.BackColor = Color.LightPink;
-                    _joy5b = true;
-                }
-                else if (result == Properties.Settings.Default.K_Key6 && _joy6b == false)
-                {
-                    Debug.Print("入力キー：6");
-                    _todaynum++;
-                    _alldaynum++;
-                    _key6num++;
-                    Key6.Text = _key6num.ToString();
-                    Key6.BackColor = Color.LightPink;
-                    _joy6b = true;
-                }
-                else if (result == Properties.Settings.Default.K_Key7 && _joy7b == false)
-                {
-                    Debug.Print("入力キー：7");
-                    _todaynum++;
-                    _alldaynum++;
-                    _key7num++;
-                    Key7.Text = _key7num.ToString();
-                    Key7.BackColor = Color.LightPink;
-                    _joy7b = true;
-                }
-                else if (result == Properties.Settings.Default.K_S_Up && _joyUp == false)
-                {
-                    Debug.Print("入力キー：↑");
-                    _todaynum++;
-                    _alldaynum++;
-                    _s_upnum++;
-                    S_Up.Text = _s_upnum.ToString();
-                    S_Up.BackColor = Color.LightPink;
-                    _joyUp = true;
-                }
-                else if (result == Properties.Settings.Default.K_S_Down && _joyDown == false)
-                {
-                    Debug.Print("入力キー：↓");
-                    _todaynum++;
-                    _alldaynum++;
-                    _s_downnum++;
-                    S_Down.Text = _s_downnum.ToString();
-                    S_Down.BackColor = Color.LightPink;
-                    _joyDown = true;
-                }
+                Push1Key(true);
+            }
+            else if (Key_State == false && Key_Value.ToString() == Properties.Settings.Default.K_Key1)
+            {
+                Push1Key(false);
+            }
+
+            if (Key_State == true && Key_Value.ToString() == Properties.Settings.Default.K_Key2 && _joy2b == false)
+            {
+                Push2Key(true);
+            }
+            else if (Key_State == false && Key_Value.ToString() == Properties.Settings.Default.K_Key2)
+            {
+                Push2Key(false);
+            }
+
+            if (Key_State == true && Key_Value.ToString() == Properties.Settings.Default.K_Key3 && _joy3b == false)
+            {
+                Push3Key(true);
+            }
+            else if (Key_State == false && Key_Value.ToString() == Properties.Settings.Default.K_Key3)
+            {
+                Push3Key(false);
+            }
+
+            if (Key_State == true && Key_Value.ToString() == Properties.Settings.Default.K_Key4 && _joy4b == false)
+            {
+                Push4Key(true);
+            }
+            else if (Key_State == false && Key_Value.ToString() == Properties.Settings.Default.K_Key4)
+            {
+                Push4Key(false);
+            }
+
+            if (Key_State == true && Key_Value.ToString() == Properties.Settings.Default.K_Key5 && _joy5b == false)
+            {
+                Push5Key(true);
+            }
+            else if (Key_State == false && Key_Value.ToString() == Properties.Settings.Default.K_Key5)
+            {
+                Push5Key(false);
+            }
+
+            if (Key_State == true && Key_Value.ToString() == Properties.Settings.Default.K_Key6 && _joy6b == false)
+            {
+                Push6Key(true);
+            }
+            else if (Key_State == false && Key_Value.ToString() == Properties.Settings.Default.K_Key6)
+            {
+                Push6Key(false);
+            }
+
+            if (Key_State == true && Key_Value.ToString() == Properties.Settings.Default.K_Key7 && _joy7b == false)
+            {
+                Push7Key(true);
+            }
+            else if (Key_State == false && Key_Value.ToString() == Properties.Settings.Default.K_Key7)
+            {
+                Push7Key(false);
+            }
+
+            if (Key_State == true && Key_Value.ToString() == Properties.Settings.Default.K_S_Up && _joyUp == false)
+            {
+                PushUpKey(true);
+            }
+            else if (Key_State == false && Key_Value.ToString() == Properties.Settings.Default.K_S_Up)
+            {
+                PushUpKey(false);
+            }
+
+            if (Key_State == true && Key_Value.ToString() == Properties.Settings.Default.K_S_Down && _joyDown == false)
+            {
+                PushDownKey(true);
+            }
+            else if (Key_State == false && Key_Value.ToString() == Properties.Settings.Default.K_S_Down)
+            {
+                PushDownKey(false);
+            }
+
+        }
+        #endregion
+
+        #region Key情報
+        public void Push1Key(bool chk)
+        {
+            if (chk)
+            {
+                Debug.Print("入力キー：1");
+                _todaynum++;
+                _alldaynum++;
+                _key1num++;
+                Key1.Text = _key1num.ToString();
+                Key1.BackColor = Color.LightPink;
+                _joy1b = true;
+            }
+            else
+            {
+                // 押しっぱなし判定を解除
+                _joy1b = false;
+
+                // 背景色を戻す。
+                Key1.BackColor = _keyBackColor;
             }
         }
-
-
-        private void BeatCounter_KeyUp(object sender, KeyEventArgs e)
+        public void Push2Key(bool chk)
         {
-            _keyboardInputOff = e.KeyData;
-            var res = _keyboardInputOff.ToString().Split('|');
-            _keyList = new List<string>() { };
-            _keyList.AddRange(res);
-
-            foreach (string result in _keyList)
+            if (chk)
             {
-                if (result == Properties.Settings.Default.K_Key1)
-                {
-                    // 押しっぱなし判定を解除
-                    _joy1b = false;
-
-                    // 背景色を戻す。
-                    Key1.BackColor = _keyBackColor;
-                }
-                else if (result == Properties.Settings.Default.K_Key2)
-                {
-                    // 押しっぱなし判定を解除
-                    _joy2b = false;
-
-                    // 背景色を戻す。
-                    Key2.BackColor = _keyBackColor;
-                }
-                else if (result == Properties.Settings.Default.K_Key3)
-                {
-                    // 押しっぱなし判定を解除
-                    _joy3b = false;
-
-                    // 背景色を戻す。
-                    Key3.BackColor = _keyBackColor;
-                }
-                else if (result == Properties.Settings.Default.K_Key4)
-                {
-                    // 押しっぱなし判定を解除
-                    _joy4b = false;
-
-                    // 背景色を戻す。
-                    Key4.BackColor = _keyBackColor;
-                }
-                else if (result == Properties.Settings.Default.K_Key5)
-                {
-                    // 押しっぱなし判定を解除
-                    _joy5b = false;
-
-                    // 背景色を戻す。
-                    Key5.BackColor = _keyBackColor;
-                }
-                else if (result == Properties.Settings.Default.K_Key6)
-                {
-                    // 押しっぱなし判定を解除
-                    _joy6b = false;
-
-                    // 背景色を戻す。
-                    Key6.BackColor = _keyBackColor;
-                }
-                else if (result == Properties.Settings.Default.K_Key7)
-                {
-                    // 押しっぱなし判定を解除
-                    _joy7b = false;
-
-                    // 背景色を戻す。
-                    Key7.BackColor = _keyBackColor;
-                }
-                else if (result == Properties.Settings.Default.K_S_Up)
-                {
-                    // 押しっぱなし判定を解除
-                    _joyUp = false;
-
-                    // 背景色を戻す。
-                    S_Up.BackColor = _keyBackColor;
-                }
-                else if (result == Properties.Settings.Default.K_S_Down)
-                {
-                    // 押しっぱなし判定を解除
-                    _joyDown = false;
-
-                    // 背景色を戻す。
-                    S_Down.BackColor = _keyBackColor;
-                }
+                Debug.Print("入力キー：2");
+                _todaynum++;
+                _alldaynum++;
+                _key2num++;
+                Key2.Text = _key2num.ToString();
+                Key2.BackColor = Color.LightPink;
+                _joy2b = true;
+            }
+            else
+            {
+                _joy2b = false;
+                Key2.BackColor = _keyBackColor;
+            }
+        }
+        public void Push3Key(bool chk)
+        {
+            if (chk)
+            {
+                Debug.Print("入力キー：3");
+                _todaynum++;
+                _alldaynum++;
+                _key3num++;
+                Key3.Text = _key3num.ToString();
+                Key3.BackColor = Color.LightPink;
+                _joy3b = true;
+            }
+            else
+            {
+                _joy3b = false;
+                Key3.BackColor = _keyBackColor;
+            }
+        }
+        public void Push4Key(bool chk)
+        {
+            if (chk)
+            {
+                Debug.Print("入力キー：4");
+                _todaynum++;
+                _alldaynum++;
+                _key4num++;
+                Key4.Text = _key4num.ToString();
+                Key4.BackColor = Color.LightPink;
+                _joy4b = true;
+            }
+            else
+            {
+                _joy4b = false;
+                Key4.BackColor = _keyBackColor;
+            }
+        }
+        public void Push5Key(bool chk)
+        {
+            if (chk)
+            {
+                Debug.Print("入力キー：5");
+                _todaynum++;
+                _alldaynum++;
+                _key5num++;
+                Key5.Text = _key5num.ToString();
+                Key5.BackColor = Color.LightPink;
+                _joy5b = true;
+            }
+            else
+            {
+                _joy5b = false;
+                Key5.BackColor = _keyBackColor;
+            }
+        }
+        public void Push6Key(bool chk)
+        {
+            if (chk)
+            {
+                Debug.Print("入力キー：6");
+                _todaynum++;
+                _alldaynum++;
+                _key6num++;
+                Key6.Text = _key6num.ToString();
+                Key6.BackColor = Color.LightPink;
+                _joy6b = true;
+            }
+            else
+            {
+                _joy6b = false;
+                Key6.BackColor = _keyBackColor;
+            }
+        }
+        public void Push7Key(bool chk)
+        {
+            if (chk)
+            {
+                Debug.Print("入力キー：7");
+                _todaynum++;
+                _alldaynum++;
+                _key7num++;
+                Key7.Text = _key7num.ToString();
+                Key7.BackColor = Color.LightPink;
+                _joy7b = true;
+            }
+            else
+            {
+                _joy7b = false;
+                Key7.BackColor = _keyBackColor;
+            }
+        }
+        public void PushUpKey(bool chk)
+        {
+            if (chk)
+            {
+                Debug.Print("入力キー：↑");
+                _todaynum++;
+                _alldaynum++;
+                _s_upnum++;
+                S_Up.Text = _s_upnum.ToString();
+                S_Up.BackColor = Color.LightPink;
+                _joyUp = true;
+            }
+            else
+            {
+                _joyUp = false;
+                S_Up.BackColor = _keyBackColor;
+            }
+        }
+        public void PushDownKey(bool chk)
+        {
+            if (chk)
+            {
+                Debug.Print("入力キー：↓");
+                _todaynum++;
+                _alldaynum++;
+                _s_downnum++;
+                S_Down.Text = _s_downnum.ToString();
+                S_Down.BackColor = Color.LightPink;
+                _joyDown = true;
+            }
+            else
+            {
+                _joyDown = false;
+                S_Down.BackColor = _keyBackColor;
             }
         }
         #endregion

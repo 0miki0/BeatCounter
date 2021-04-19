@@ -80,6 +80,9 @@
     <Compile Include="BeatCounter.Designer.cs">
       <DependentUpon>BeatCounter.cs</DependentUpon>
     </Compile>
+    <Compile Include="BeatCounterCommon.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Config.cs">
       <SubType>Form</SubType>
     </Compile>
