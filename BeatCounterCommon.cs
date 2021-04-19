@@ -9,7 +9,7 @@ namespace BeatCounter
 {
     class BeatCounterCommon : BeatCounter
     {
-        public void DialogYesNo(string str1, string str2, string str3)
+        public DialogResult DialogYesNo(string str1, string str2, string str3)
         {
             DialogResult dialog = MessageBox.Show(
                 str1 +
@@ -17,10 +17,7 @@ namespace BeatCounter
                 str3,
                 MessageBoxButtons.YesNo);
 
-            if (dialog == DialogResult.Yes)
-            {
-                AlldayInit();
-            }
+            return dialog;
         }
     }
 }

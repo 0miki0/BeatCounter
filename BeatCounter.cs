@@ -2201,7 +2201,12 @@ namespace BeatCounter
         private void TodayClearTips_Click(object sender, EventArgs e)
         {
             var cls = new BeatCounterCommon();
-            cls.DialogYesNo("今回の回数を消去します。", "よろしいですか？", "今回の回数の消去");
+            var res = cls.DialogYesNo("今回の回数を消去します。", "よろしいですか？", "今回の回数の消去");
+
+            if (res == DialogResult.Yes)
+            {
+                TodayInit();
+            }
         }
 
         /// <summary>
@@ -2212,7 +2217,11 @@ namespace BeatCounter
         private void AlldayClearTips_Click(object sender, EventArgs e)
         {
             var cls = new BeatCounterCommon();
-            cls.DialogYesNo("全ての回数を消去します。", "よろしいですか？", "全期間合計の消去");
+            var res = cls.DialogYesNo("全ての回数を消去します。", "よろしいですか？", "全期間合計の消去");
+            if (res == DialogResult.Yes)
+            {
+                AlldayInit();
+            }
         }
 
         /// <summary>
