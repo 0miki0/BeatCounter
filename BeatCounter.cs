@@ -14,17 +14,17 @@ namespace BeatCounter
         private Joystick _joy;
 
         // 鍵盤or皿が操作された回数を格納
-        private int _s_upnum;
+        private long _s_upnum;
         private int _s_downnum;
-        private int _key1num;
-        private int _key2num;
-        private int _key3num;
-        private int _key4num;
-        private int _key5num;
-        private int _key6num;
-        private int _key7num;
-        private int _todaynum;
-        private int _alldaynum;
+        private long _key1num;
+        private long _key2num;
+        private long _key3num;
+        private long _key4num;
+        private long _key5num;
+        private long _key6num;
+        private long _key7num;
+        private long _todaynum;
+        private long _alldaynum;
 
         // 前フレームと現フレームのアナログ軸の位置を格納する
         private int _s_rel_old_x;
@@ -2024,7 +2024,7 @@ namespace BeatCounter
                 foreach (TextBox Key in T_Keys)
                 {
                     // TextBoxに入力された値が数値であるかチェックする。
-                    var check = int.TryParse(Key.Text, out int i);
+                    var check = long.TryParse(Key.Text, out long i);
 
                     // 数値以外が入力されている場合エラーを返す。
                     if (!check)

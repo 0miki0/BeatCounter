@@ -144,21 +144,21 @@ namespace BeatCounter
             // AnalogSCTips
             // 
             this.AnalogSCTips.Name = "AnalogSCTips";
-            this.AnalogSCTips.Size = new System.Drawing.Size(180, 22);
+            this.AnalogSCTips.Size = new System.Drawing.Size(167, 22);
             this.AnalogSCTips.Text = "アナログ皿入力";
             this.AnalogSCTips.Click += new System.EventHandler(this.InfinitasPlayTips_Click);
             // 
             // DigitalSCTips
             // 
             this.DigitalSCTips.Name = "DigitalSCTips";
-            this.DigitalSCTips.Size = new System.Drawing.Size(180, 22);
+            this.DigitalSCTips.Size = new System.Drawing.Size(167, 22);
             this.DigitalSCTips.Text = "デジタル皿入力";
             this.DigitalSCTips.Click += new System.EventHandler(this.BmsPlayTips_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(177, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(164, 6);
             // 
             // DaoTips
             // 
@@ -167,7 +167,7 @@ namespace BeatCounter
             this.DaoTips.Font = new System.Drawing.Font("源ノ角ゴシック Regular", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.DaoTips.Name = "DaoTips";
             this.DaoTips.ShowShortcutKeys = false;
-            this.DaoTips.Size = new System.Drawing.Size(180, 22);
+            this.DaoTips.Size = new System.Drawing.Size(167, 22);
             this.DaoTips.Text = "DJ DAO";
             this.DaoTips.Click += new System.EventHandler(this.DaoTips_Click);
             // 
@@ -176,7 +176,7 @@ namespace BeatCounter
             this.PS2ConTips.Font = new System.Drawing.Font("源ノ角ゴシック Regular", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.PS2ConTips.Name = "PS2ConTips";
             this.PS2ConTips.ShowShortcutKeys = false;
-            this.PS2ConTips.Size = new System.Drawing.Size(180, 22);
+            this.PS2ConTips.Size = new System.Drawing.Size(167, 22);
             this.PS2ConTips.Text = "PS2専コン";
             this.PS2ConTips.Click += new System.EventHandler(this.PS2ConTips_Click);
             // 
@@ -184,7 +184,7 @@ namespace BeatCounter
             // 
             this.BeatmaniaProConTips.Enabled = false;
             this.BeatmaniaProConTips.Name = "BeatmaniaProConTips";
-            this.BeatmaniaProConTips.Size = new System.Drawing.Size(180, 22);
+            this.BeatmaniaProConTips.Size = new System.Drawing.Size(167, 22);
             this.BeatmaniaProConTips.Text = "Beatmania プロコン";
             this.BeatmaniaProConTips.Click += new System.EventHandler(this.BeatmaniaProConTips_Click);
             // 
@@ -192,19 +192,19 @@ namespace BeatCounter
             // 
             this.CustomTips.Name = "CustomTips";
             this.CustomTips.ShowShortcutKeys = false;
-            this.CustomTips.Size = new System.Drawing.Size(180, 22);
+            this.CustomTips.Size = new System.Drawing.Size(167, 22);
             this.CustomTips.Text = "カスタム";
             this.CustomTips.Click += new System.EventHandler(this.CustomTips_Click);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(177, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(164, 6);
             // 
             // KeyBoardTips
             // 
             this.KeyBoardTips.Name = "KeyBoardTips";
-            this.KeyBoardTips.Size = new System.Drawing.Size(180, 22);
+            this.KeyBoardTips.Size = new System.Drawing.Size(167, 22);
             this.KeyBoardTips.Text = "キーボード";
             this.KeyBoardTips.Click += new System.EventHandler(this.KeyBoardTips_Click);
             // 

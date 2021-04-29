@@ -26,9 +26,9 @@ namespace BeatCounter.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int SaveAllDayKey {
+        public long SaveAllDayKey {
             get {
-                return ((int)(this["SaveAllDayKey"]));
+                return ((long)(this["SaveAllDayKey"]));
             }
             set {
                 this["SaveAllDayKey"] = value;
