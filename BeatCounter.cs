@@ -15,7 +15,7 @@ namespace BeatCounter
 
         // 鍵盤or皿が操作された回数を格納
         private long _s_upnum;
-        private int _s_downnum;
+        private long _s_downnum;
         private long _key1num;
         private long _key2num;
         private long _key3num;
