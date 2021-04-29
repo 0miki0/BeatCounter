@@ -193,7 +193,7 @@ namespace BeatCounter.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Z")]
         public string K_S_Up {
             get {
                 return ((string)(this["K_S_Up"]));
@@ -205,7 +205,7 @@ namespace BeatCounter.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Z")]
         public string K_S_Down {
             get {
                 return ((string)(this["K_S_Down"]));
@@ -217,7 +217,7 @@ namespace BeatCounter.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Z")]
         public string K_Key1 {
             get {
                 return ((string)(this["K_Key1"]));
@@ -229,7 +229,7 @@ namespace BeatCounter.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Z")]
         public string K_Key2 {
             get {
                 return ((string)(this["K_Key2"]));
@@ -241,7 +241,7 @@ namespace BeatCounter.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Z")]
         public string K_Key3 {
             get {
                 return ((string)(this["K_Key3"]));
@@ -253,7 +253,7 @@ namespace BeatCounter.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Z")]
         public string K_Key4 {
             get {
                 return ((string)(this["K_Key4"]));
@@ -265,7 +265,7 @@ namespace BeatCounter.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Z")]
         public string K_Key5 {
             get {
                 return ((string)(this["K_Key5"]));
@@ -277,7 +277,7 @@ namespace BeatCounter.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Z")]
         public string K_Key6 {
             get {
                 return ((string)(this["K_Key6"]));
@@ -289,7 +289,7 @@ namespace BeatCounter.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Z")]
         public string K_Key7 {
             get {
                 return ((string)(this["K_Key7"]));

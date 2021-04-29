@@ -45,31 +45,31 @@
       <Value Profile="(Default)">12</Value>
     </Setting>
     <Setting Name="K_S_Up" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">Z</Value>
     </Setting>
     <Setting Name="K_S_Down" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">Z</Value>
     </Setting>
     <Setting Name="K_Key1" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">Z</Value>
     </Setting>
     <Setting Name="K_Key2" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">Z</Value>
     </Setting>
     <Setting Name="K_Key3" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">Z</Value>
     </Setting>
     <Setting Name="K_Key4" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">Z</Value>
     </Setting>
     <Setting Name="K_Key5" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">Z</Value>
     </Setting>
     <Setting Name="K_Key6" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">Z</Value>
     </Setting>
     <Setting Name="K_Key7" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">Z</Value>
     </Setting>
   </Settings>
 </SettingsFile>

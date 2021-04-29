@@ -41,6 +41,8 @@ namespace BeatCounter
             this.PS2ConTips = new System.Windows.Forms.ToolStripMenuItem();
             this.BeatmaniaProConTips = new System.Windows.Forms.ToolStripMenuItem();
             this.CustomTips = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
+            this.KeyBoardTips = new System.Windows.Forms.ToolStripMenuItem();
             this.コンフィグToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SChangeTips = new System.Windows.Forms.ToolStripMenuItem();
             this.CountChangeTips = new System.Windows.Forms.ToolStripMenuItem();
@@ -76,30 +78,28 @@ namespace BeatCounter
             this.Key6 = new System.Windows.Forms.Label();
             this.AllDayKeys = new System.Windows.Forms.Label();
             this.Key7 = new System.Windows.Forms.Label();
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
-            this.KeyBoardTips = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // L_AlldayKeys
             // 
-            this.L_AlldayKeys.AutoSize = true;
             this.L_AlldayKeys.Font = new System.Drawing.Font("源ノ角ゴシック Medium", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.L_AlldayKeys.Location = new System.Drawing.Point(255, 41);
+            this.L_AlldayKeys.Location = new System.Drawing.Point(260, 40);
             this.L_AlldayKeys.Name = "L_AlldayKeys";
-            this.L_AlldayKeys.Size = new System.Drawing.Size(69, 24);
+            this.L_AlldayKeys.Size = new System.Drawing.Size(64, 24);
             this.L_AlldayKeys.TabIndex = 7;
-            this.L_AlldayKeys.Text = "TOTAL :";
+            this.L_AlldayKeys.Text = "TOTAL";
+            this.L_AlldayKeys.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // L_TodayKeys
             // 
-            this.L_TodayKeys.AutoSize = true;
             this.L_TodayKeys.Font = new System.Drawing.Font("源ノ角ゴシック Medium", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.L_TodayKeys.Location = new System.Drawing.Point(60, 41);
+            this.L_TodayKeys.Location = new System.Drawing.Point(66, 40);
             this.L_TodayKeys.Name = "L_TodayKeys";
-            this.L_TodayKeys.Size = new System.Drawing.Size(72, 24);
+            this.L_TodayKeys.Size = new System.Drawing.Size(64, 24);
             this.L_TodayKeys.TabIndex = 7;
-            this.L_TodayKeys.Text = "TODAY :";
+            this.L_TodayKeys.Text = "TODAY";
+            this.L_TodayKeys.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // L_S_Up
             // 
@@ -195,6 +195,18 @@ namespace BeatCounter
             this.CustomTips.Size = new System.Drawing.Size(180, 22);
             this.CustomTips.Text = "カスタム";
             this.CustomTips.Click += new System.EventHandler(this.CustomTips_Click);
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(177, 6);
+            // 
+            // KeyBoardTips
+            // 
+            this.KeyBoardTips.Name = "KeyBoardTips";
+            this.KeyBoardTips.Size = new System.Drawing.Size(180, 22);
+            this.KeyBoardTips.Text = "キーボード";
+            this.KeyBoardTips.Click += new System.EventHandler(this.KeyBoardTips_Click);
             // 
             // コンフィグToolStripMenuItem
             // 
@@ -713,18 +725,6 @@ namespace BeatCounter
             this.Key7.TabIndex = 39;
             this.Key7.Text = "0";
             this.Key7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // toolStripMenuItem2
-            // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(177, 6);
-            // 
-            // KeyBoardTips
-            // 
-            this.KeyBoardTips.Name = "KeyBoardTips";
-            this.KeyBoardTips.Size = new System.Drawing.Size(180, 22);
-            this.KeyBoardTips.Text = "キーボード";
-            this.KeyBoardTips.Click += new System.EventHandler(this.KeyBoardTips_Click);
             // 
             // BeatCounter
             // 
