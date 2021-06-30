@@ -14,8 +14,17 @@ namespace BeatCounter
     {
         private int checkNow = 0;
 
+
         public KeyBoardConfig()
         {
+            //フォームの最大化ボタンの表示、非表示を切り替える
+            this.MaximizeBox = !this.MaximizeBox;
+            //フォームの最小化ボタンの表示、非表示を切り替える
+            this.MinimizeBox = !this.MinimizeBox;
+            //フォームのコントロールボックスの表示、非表示を切り替える
+            //コントロールボックスを非表示にすると最大化、最小化、閉じるボタンも消える
+            this.ControlBox = !this.ControlBox;
+
             InitializeComponent();
 
             KeyInit();

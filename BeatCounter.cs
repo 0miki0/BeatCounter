@@ -113,6 +113,7 @@ namespace BeatCounter
                 Application.DoEvents();
 
                 // CPUがフル稼働しないようにFPSの制限をかける。(簡易的に、おおよそ秒間60フレーム程度に制限)
+                // 皿の処理が不安定になるのでコメントアウト。
                 //Thread.Sleep(16);
             }
         }
@@ -122,13 +123,21 @@ namespace BeatCounter
         /// </summary>
         public void MainLoop()
         {
-            if (!KeyBoardTips.Checked)
+            try
             {
-                UpdateForPad();
+                if (!KeyBoardTips.Checked)
+                {
+                    UpdateForPad();
+                }
+                else
+                {
+                    UpdateForKeyBoard();
+                }
             }
-            else
+            catch (SharpDX.SharpDXException)
             {
-                UpdateForKeyBoard();
+                BeatCounter_Close(new object(), new FormClosingEventArgs(new CloseReason(), false));
+                Close();
             }
         }
 
@@ -1131,7 +1140,7 @@ namespace BeatCounter
             T_Key6.Text = InitInt.ToString();
             T_Key7.Text = InitInt.ToString();
             T_TodayKeys.Text = InitInt.ToString();
-            T_AllDayKeys.Text = Properties.Settings.Default.SaveAllDayKey.ToString();
+            T_AllDayKeys.Text = Properties.Settings.Default.SaveAllDayKey1.ToString();
 
             S_Up.Text = InitInt.ToString();
             S_Down.Text = InitInt.ToString();
@@ -1143,7 +1152,7 @@ namespace BeatCounter
             Key6.Text = InitInt.ToString();
             Key7.Text = InitInt.ToString();
             TodayKeys.Text = InitInt.ToString();
-            AllDayKeys.Text = Properties.Settings.Default.SaveAllDayKey.ToString();
+            AllDayKeys.Text = Properties.Settings.Default.SaveAllDayKey1.ToString();
 
             _s_upnum = InitInt;
             _s_downnum = InitInt;
@@ -1155,7 +1164,7 @@ namespace BeatCounter
             _key6num = InitInt;
             _key7num = InitInt;
             _todaynum = InitInt;
-            _alldaynum = Properties.Settings.Default.SaveAllDayKey;
+            _alldaynum = Properties.Settings.Default.SaveAllDayKey1;
         }
 
         /// <summary>
@@ -1241,6 +1250,30 @@ namespace BeatCounter
             else
             {
                 ClearWTips_Click(new object(), new EventArgs());
+            }
+
+            // カウンタの切り替え
+            if (Properties.Settings.Default.SaveCounter == 1)
+            {
+                Total1_Load_Click(new object(), new EventArgs());
+            }
+            else if (Properties.Settings.Default.SaveCounter == 2)
+            {
+                Total2_Load_Click(new object(), new EventArgs());
+            }
+            else if (Properties.Settings.Default.SaveCounter == 3)
+            {
+                Total3_Load_Click(new object(), new EventArgs());
+            }
+
+            // 前回終了時のプレイサイドを初期選択にする。
+            if (Properties.Settings.Default.PlaySide == 1)
+            {
+                LeftSideTips_Click(new object(), new EventArgs());
+            }
+            else if (Properties.Settings.Default.PlaySide == 2)
+            {
+                RightSideTips_Click(new object(), new EventArgs());
             }
 
             // キーボード用のリスト
@@ -1350,22 +1383,12 @@ namespace BeatCounter
                         if (_isRight)
                         {
                             Console.WriteLine("1");
-                            _todaynum++;
-                            _alldaynum++;
-                            _s_downnum++;
-                            S_Down.Text = _s_downnum.ToString();
-                            S_Down.BackColor = Color.LightPink;
-                            S_Up.BackColor = _keyBackColor;
+                            TurnTable_PlaySideCheck(1);
                         }
                         else
                         {
                             Console.WriteLine("2");
-                            _todaynum++;
-                            _alldaynum++;
-                            _s_upnum++;
-                            S_Up.Text = _s_upnum.ToString();
-                            S_Up.BackColor = Color.LightPink;
-                            S_Down.BackColor = _keyBackColor;
+                            TurnTable_PlaySideCheck(2);
                         }
 
                         _isRight = nowRight;
@@ -1378,22 +1401,12 @@ namespace BeatCounter
                         if (nowRight)
                         {
                             Console.WriteLine("3");
-                            _todaynum++;
-                            _alldaynum++;
-                            _s_upnum++;
-                            S_Up.Text = _s_upnum.ToString();
-                            S_Up.BackColor = Color.LightPink;
-                            S_Down.BackColor = _keyBackColor;
+                            TurnTable_PlaySideCheck(2);
                         }
                         else
                         {
                             Console.WriteLine("4");
-                            _todaynum++;
-                            _alldaynum++;
-                            _s_downnum++;
-                            S_Down.Text = _s_downnum.ToString();
-                            S_Down.BackColor = Color.LightPink;
-                            S_Up.BackColor = _keyBackColor;
+                            TurnTable_PlaySideCheck(1);
                         }
 
                         _isActive = true;
@@ -1452,23 +1465,13 @@ namespace BeatCounter
                     if (_s_rel_now_x == _rangeMax)
                     {
                         Debug.Print("入力キー：↑");
-                        _todaynum++;
-                        _alldaynum++;
-                        _s_upnum++;
-                        S_Up.Text = _s_upnum.ToString();
-                        S_Up.BackColor = Color.LightPink;
-                        S_Down.BackColor = _keyBackColor;
+                        TurnTable_PlaySideCheck(2);
                     }
                     // 現在軸の位置がMIN値の場合。
                     else if (_s_rel_now_x == _rangeMin)
                     {
                         Debug.Print("入力キー：↓");
-                        _todaynum++;
-                        _alldaynum++;
-                        _s_downnum++;
-                        S_Down.Text = _s_downnum.ToString();
-                        S_Down.BackColor = Color.LightPink;
-                        S_Up.BackColor = _keyBackColor;
+                        TurnTable_PlaySideCheck(1);
                     }
                 }
                 // 中央に軸が存在する場合(動いていない場合)
@@ -1505,23 +1508,13 @@ namespace BeatCounter
                 if (_s_rel_now_y == _rangeMax)
                 {
                     Debug.Print("入力キー：↑");
-                    _todaynum++;
-                    _alldaynum++;
-                    _s_upnum++;
-                    S_Up.Text = _s_upnum.ToString();
-                    S_Up.BackColor = Color.LightPink;
-                    S_Down.BackColor = _keyBackColor;
+                    TurnTable_PlaySideCheck(2);
                 }
                 // 現在軸の位置がMAX値の場合。
                 else if (_s_rel_now_y == _rangeMin)
                 {
                     Debug.Print("入力キー：↓");
-                    _todaynum++;
-                    _alldaynum++;
-                    _s_downnum++;
-                    S_Down.Text = _s_downnum.ToString();
-                    S_Down.BackColor = Color.LightPink;
-                    S_Up.BackColor = _keyBackColor;
+                    TurnTable_PlaySideCheck(1);
                 }
             }
             // 中央に軸が存在する場合(動いていない場合)
@@ -1734,33 +1727,33 @@ namespace BeatCounter
                     }
                 }
             }
-            else if (Properties.Settings.Default.C_S_Up >= 80)
-            {
-                if (Properties.Settings.Default.C_S_Up == 80)
-                {
-                }
-                if (Properties.Settings.Default.C_S_Up == 81)
-                {
-                }
-                if (Properties.Settings.Default.C_S_Up == 82)
-                {
-                }
-                if (Properties.Settings.Default.C_S_Up == 83)
-                {
-                }
-                if (Properties.Settings.Default.C_S_Up == 84)
-                {
-                }
-                if (Properties.Settings.Default.C_S_Up == 85)
-                {
-                }
-                if (Properties.Settings.Default.C_S_Up == 86)
-                {
-                }
-                if (Properties.Settings.Default.C_S_Up == 87)
-                {
-                }
-            }
+            //else if (Properties.Settings.Default.C_S_Up >= 80)
+            //{
+            //    if (Properties.Settings.Default.C_S_Up == 80)
+            //    {
+            //    }
+            //    if (Properties.Settings.Default.C_S_Up == 81)
+            //    {
+            //    }
+            //    if (Properties.Settings.Default.C_S_Up == 82)
+            //    {
+            //    }
+            //    if (Properties.Settings.Default.C_S_Up == 83)
+            //    {
+            //    }
+            //    if (Properties.Settings.Default.C_S_Up == 84)
+            //    {
+            //    }
+            //    if (Properties.Settings.Default.C_S_Up == 85)
+            //    {
+            //    }
+            //    if (Properties.Settings.Default.C_S_Up == 86)
+            //    {
+            //    }
+            //    if (Properties.Settings.Default.C_S_Up == 87)
+            //    {
+            //    }
+            //}
         }
         #endregion
 
@@ -2241,8 +2234,25 @@ namespace BeatCounter
         /// <param name="e"></param>
         private void BeatCounter_Close(object sender, FormClosingEventArgs e)
         {
-            // 全期間の合計値を保存する。
-            Properties.Settings.Default.SaveAllDayKey = _alldaynum;
+            if (Total1_Load.Checked)
+            {
+                // 全期間の合計値を保存する。
+                Properties.Settings.Default.SaveAllDayKey1 = _alldaynum;
+                Properties.Settings.Default.SaveCounter = 1;
+            }
+            else if (Total2_Load.Checked)
+            {
+                // 全期間の合計値を保存する。
+                Properties.Settings.Default.SaveAllDayKey2 = _alldaynum;
+                Properties.Settings.Default.SaveCounter = 2;
+            }
+            else if (Total3_Load.Checked)
+            {
+                // 全期間の合計値を保存する。
+                Properties.Settings.Default.SaveAllDayKey3 = _alldaynum;
+                Properties.Settings.Default.SaveCounter = 3;
+            }
+
             Properties.Settings.Default.Save();
         }
 
@@ -2333,6 +2343,88 @@ namespace BeatCounter
             }
 
         }
+
+        /// <summary>
+        /// TOTALの保存1
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Total1_Load_Click(object sender, EventArgs e)
+        {
+            if (Total1_Load.Checked)
+            {
+                return;
+            }
+            else if (Total2_Load.Checked)
+            {
+                Properties.Settings.Default.SaveAllDayKey2 = _alldaynum;
+                Total2_Load.Checked = false;
+            }
+            else if (Total3_Load.Checked)
+            {
+                Properties.Settings.Default.SaveAllDayKey3 = _alldaynum;
+                Total3_Load.Checked = false;
+            }
+
+            Total1_Load.Checked = true;
+            _alldaynum = Properties.Settings.Default.SaveAllDayKey1;
+            Properties.Settings.Default.Save();
+        }
+
+        /// <summary>
+        /// TOTALの保存2
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Total2_Load_Click(object sender, EventArgs e)
+        {
+            if (Total2_Load.Checked)
+            {
+                return;
+            }
+            else if (Total1_Load.Checked)
+            {
+                Properties.Settings.Default.SaveAllDayKey1 = _alldaynum;
+                Total1_Load.Checked = false;
+            }
+            else if (Total3_Load.Checked)
+            {
+                Properties.Settings.Default.SaveAllDayKey3 = _alldaynum;
+                Total3_Load.Checked = false;
+            }
+
+            Total2_Load.Checked = true;
+            _alldaynum = Properties.Settings.Default.SaveAllDayKey2;
+            Properties.Settings.Default.Save();
+        }
+
+        /// <summary>
+        /// TOTALの保存3
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Total3_Load_Click(object sender, EventArgs e)
+        {
+            if (Total3_Load.Checked)
+            {
+                return;
+            }
+            else if (Total1_Load.Checked)
+            {
+                Properties.Settings.Default.SaveAllDayKey1 = _alldaynum;
+                Total1_Load.Checked = false;
+            }
+            else if (Total2_Load.Checked)
+            {
+                Properties.Settings.Default.SaveAllDayKey2 = _alldaynum;
+                Total2_Load.Checked = false;
+            }
+
+            Total3_Load.Checked = true;
+            _alldaynum = Properties.Settings.Default.SaveAllDayKey3;
+            Properties.Settings.Default.Save();
+        }
+
         #endregion
 
         #region Key情報
@@ -2502,5 +2594,148 @@ namespace BeatCounter
             }
         }
         #endregion
+
+        /// <summary>
+        /// コンフィグ「プレイサイド」で1Pを選択したときの処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void LeftSideTips_Click(object sender, EventArgs e)
+        {
+            if (LeftSideTips.Checked)
+            {
+                return;
+            }
+            if (RightSideTips.Checked)
+            {
+                RightSideTips.Checked = false;
+                LeftSideTips.Checked = true;
+            }
+
+            L_S_Up.Left = 9;
+            L_S_Down.Left = 9;
+            S_Up.Left = 32;
+            S_Down.Left = 32;
+            Key1.Left = 133;
+            Key2.Left = 182;
+            Key3.Left = 229;
+            Key4.Left = 278;
+            Key5.Left = 325;
+            Key6.Left = 374;
+            Key7.Left = 421;
+
+            T_S_Up.Left = 32;
+            T_S_Down.Left = 32;
+            T_Key1.Left = 133;
+            T_Key2.Left = 182;
+            T_Key3.Left = 229;
+            T_Key4.Left = 278;
+            T_Key5.Left = 325;
+            T_Key6.Left = 374;
+            T_Key7.Left = 421;
+
+            Properties.Settings.Default.PlaySide = 1;
+            Properties.Settings.Default.Save();
+        }
+
+        /// <summary>
+        /// コンフィグ「プレイサイド」で2Pを選択したときの処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void RightSideTips_Click(object sender, EventArgs e)
+        {
+            if (RightSideTips.Checked)
+            {
+                return;
+            }
+            if (LeftSideTips.Checked)
+            {
+                LeftSideTips.Checked = false;
+                RightSideTips.Checked = true;
+            }
+
+            L_S_Up.Left = 498;
+            L_S_Down.Left = 498;
+            S_Up.Left = 401;
+            S_Down.Left = 401;
+            Key1.Left = 12;
+            Key2.Left = 61;
+            Key3.Left = 108;
+            Key4.Left = 157;
+            Key5.Left = 204;
+            Key6.Left = 257;
+            Key7.Left = 300;
+
+            T_S_Up.Left = 401;
+            T_S_Down.Left = 401;
+            T_Key1.Left = 12;
+            T_Key2.Left = 61;
+            T_Key3.Left = 108;
+            T_Key4.Left = 157;
+            T_Key5.Left = 204;
+            T_Key6.Left = 257;
+            T_Key7.Left = 300;
+
+            Properties.Settings.Default.PlaySide = 2;
+            Properties.Settings.Default.Save();
+        }
+
+        /// <summary>
+        /// 皿を回した時にカウンタを計測するための処理
+        /// </summary>
+        /// <param name="slide">1:下方向, 2:上方向</param>
+        public void TurnTable_PlaySideCheck(int slide)
+        {
+            // 下方向に回した。
+            if (slide == 1)
+            {
+                // 1P側で下に回した。
+                if (LeftSideTips.Checked == true)
+                {
+                    _todaynum++;
+                    _alldaynum++;
+                    _s_downnum++;
+                    S_Down.Text = _s_downnum.ToString();
+                    S_Down.BackColor = Color.LightPink;
+                    S_Up.BackColor = _keyBackColor;
+                }
+                // 2P側で下に回した。 = 1P側で上に回した。
+                else if (RightSideTips.Checked == true)
+                {
+                    _todaynum++;
+                    _alldaynum++;
+                    _s_upnum++;
+                    S_Up.Text = _s_upnum.ToString();
+                    S_Up.BackColor = Color.LightPink;
+                    S_Down.BackColor = _keyBackColor;
+                }
+            }
+            // 上方向に回した。
+            else if (slide == 2)
+            {
+                // 1P側で上に回した。
+                if (LeftSideTips.Checked == true)
+                {
+                    _todaynum++;
+                    _alldaynum++;
+                    _s_upnum++;
+                    S_Up.Text = _s_upnum.ToString();
+                    S_Up.BackColor = Color.LightPink;
+                    S_Down.BackColor = _keyBackColor;
+
+                }
+                // 2P側で上に回した。 = 1P側で下に回した。
+                else if (RightSideTips.Checked == true)
+                {
+                    _todaynum++;
+                    _alldaynum++;
+                    _s_downnum++;
+                    S_Down.Text = _s_downnum.ToString();
+                    S_Down.BackColor = Color.LightPink;
+                    S_Up.BackColor = _keyBackColor;
+                }
+            }
+        }
     }
 }

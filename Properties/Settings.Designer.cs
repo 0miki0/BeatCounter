@@ -26,12 +26,12 @@ namespace BeatCounter.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public long SaveAllDayKey {
+        public long SaveAllDayKey1 {
             get {
-                return ((long)(this["SaveAllDayKey"]));
+                return ((long)(this["SaveAllDayKey1"]));
             }
             set {
-                this["SaveAllDayKey"] = value;
+                this["SaveAllDayKey1"] = value;
             }
         }
         
@@ -296,6 +296,54 @@ namespace BeatCounter.Properties {
             }
             set {
                 this["K_Key7"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public long SaveAllDayKey2 {
+            get {
+                return ((long)(this["SaveAllDayKey2"]));
+            }
+            set {
+                this["SaveAllDayKey2"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public long SaveAllDayKey3 {
+            get {
+                return ((long)(this["SaveAllDayKey3"]));
+            }
+            set {
+                this["SaveAllDayKey3"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int SaveCounter {
+            get {
+                return ((int)(this["SaveCounter"]));
+            }
+            set {
+                this["SaveCounter"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int PlaySide {
+            get {
+                return ((int)(this["PlaySide"]));
+            }
+            set {
+                this["PlaySide"] = value;
             }
         }
     }

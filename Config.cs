@@ -8,6 +8,14 @@ namespace BeatCounter
     {
         public Config()
         {
+            //フォームの最大化ボタンの表示、非表示を切り替える
+            this.MaximizeBox = !this.MaximizeBox;
+            //フォームの最小化ボタンの表示、非表示を切り替える
+            this.MinimizeBox = !this.MinimizeBox;
+            //フォームのコントロールボックスの表示、非表示を切り替える
+            //コントロールボックスを非表示にすると最大化、最小化、閉じるボタンも消える
+            this.ControlBox = !this.ControlBox;
+
             InitializeComponent();
             Text_Kando.Text = Properties.Settings.Default.Kando.ToString();
 
@@ -57,7 +65,7 @@ namespace BeatCounter
         /// <param name="e"></param>
         private void Def_Button_Click(object sender, EventArgs e)
         {
-            Text_Kando.Text = Properties.Settings.Default.Kando.ToString();
+            Text_Kando.Text = "5000";
         }
     }
 }

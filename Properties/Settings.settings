@@ -2,7 +2,7 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="BeatCounter.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="SaveAllDayKey" Type="System.Int64" Scope="User">
+    <Setting Name="SaveAllDayKey1" Type="System.Int64" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="Kando" Type="System.UInt64" Scope="User">
@@ -70,6 +70,18 @@
     </Setting>
     <Setting Name="K_Key7" Type="System.String" Scope="User">
       <Value Profile="(Default)">Z</Value>
+    </Setting>
+    <Setting Name="SaveAllDayKey2" Type="System.Int64" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="SaveAllDayKey3" Type="System.Int64" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="SaveCounter" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="PlaySide" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1</Value>
     </Setting>
   </Settings>
 </SettingsFile>
