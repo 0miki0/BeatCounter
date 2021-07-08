@@ -51,12 +51,15 @@ namespace BeatCounter
             this.BlackTips = new System.Windows.Forms.ToolStripMenuItem();
             this.ClearWTips = new System.Windows.Forms.ToolStripMenuItem();
             this.CustomKeyConfigTips = new System.Windows.Forms.ToolStripMenuItem();
+            this.PlaySideTips = new System.Windows.Forms.ToolStripMenuItem();
+            this.LeftSideTips = new System.Windows.Forms.ToolStripMenuItem();
+            this.RightSideTips = new System.Windows.Forms.ToolStripMenuItem();
             this.ResetTips = new System.Windows.Forms.ToolStripMenuItem();
             this.TodayClearTips = new System.Windows.Forms.ToolStripMenuItem();
             this.AlldayClearTips = new System.Windows.Forms.ToolStripMenuItem();
             this.TodayShortTips = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.tOTALの保存ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.TotalTips = new System.Windows.Forms.ToolStripMenuItem();
             this.Total1_Load = new System.Windows.Forms.ToolStripMenuItem();
             this.Total2_Load = new System.Windows.Forms.ToolStripMenuItem();
             this.Total3_Load = new System.Windows.Forms.ToolStripMenuItem();
@@ -82,9 +85,6 @@ namespace BeatCounter
             this.Key6 = new System.Windows.Forms.Label();
             this.AllDayKeys = new System.Windows.Forms.Label();
             this.Key7 = new System.Windows.Forms.Label();
-            this.PlaySideTips = new System.Windows.Forms.ToolStripMenuItem();
-            this.LeftSideTips = new System.Windows.Forms.ToolStripMenuItem();
-            this.RightSideTips = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -230,14 +230,14 @@ namespace BeatCounter
             // SChangeTips
             // 
             this.SChangeTips.Name = "SChangeTips";
-            this.SChangeTips.Size = new System.Drawing.Size(180, 22);
+            this.SChangeTips.Size = new System.Drawing.Size(151, 22);
             this.SChangeTips.Text = "皿の感度";
             this.SChangeTips.Click += new System.EventHandler(this.SChangeTips_Click);
             // 
             // CountChangeTips
             // 
             this.CountChangeTips.Name = "CountChangeTips";
-            this.CountChangeTips.Size = new System.Drawing.Size(180, 22);
+            this.CountChangeTips.Size = new System.Drawing.Size(151, 22);
             this.CountChangeTips.Text = "カウントの編集";
             this.CountChangeTips.Click += new System.EventHandler(this.CountChangeTips_Click);
             // 
@@ -248,27 +248,27 @@ namespace BeatCounter
             this.BlackTips,
             this.ClearWTips});
             this.BackColorTips.Name = "BackColorTips";
-            this.BackColorTips.Size = new System.Drawing.Size(180, 22);
+            this.BackColorTips.Size = new System.Drawing.Size(151, 22);
             this.BackColorTips.Text = "背景色";
             // 
             // WhiteTips
             // 
             this.WhiteTips.Name = "WhiteTips";
-            this.WhiteTips.Size = new System.Drawing.Size(180, 22);
+            this.WhiteTips.Size = new System.Drawing.Size(98, 22);
             this.WhiteTips.Text = "白";
             this.WhiteTips.Click += new System.EventHandler(this.WhiteTips_Click);
             // 
             // BlackTips
             // 
             this.BlackTips.Name = "BlackTips";
-            this.BlackTips.Size = new System.Drawing.Size(180, 22);
+            this.BlackTips.Size = new System.Drawing.Size(98, 22);
             this.BlackTips.Text = "黒";
             this.BlackTips.Click += new System.EventHandler(this.BlackTips_Click);
             // 
             // ClearWTips
             // 
             this.ClearWTips.Name = "ClearWTips";
-            this.ClearWTips.Size = new System.Drawing.Size(180, 22);
+            this.ClearWTips.Size = new System.Drawing.Size(98, 22);
             this.ClearWTips.Text = "透明";
             this.ClearWTips.Click += new System.EventHandler(this.ClearWTips_Click);
             // 
@@ -276,9 +276,34 @@ namespace BeatCounter
             // 
             this.CustomKeyConfigTips.Enabled = false;
             this.CustomKeyConfigTips.Name = "CustomKeyConfigTips";
-            this.CustomKeyConfigTips.Size = new System.Drawing.Size(180, 22);
+            this.CustomKeyConfigTips.Size = new System.Drawing.Size(151, 22);
             this.CustomKeyConfigTips.Text = "カスタムキー編集";
             this.CustomKeyConfigTips.Visible = false;
+            // 
+            // PlaySideTips
+            // 
+            this.PlaySideTips.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.LeftSideTips,
+            this.RightSideTips});
+            this.PlaySideTips.Name = "PlaySideTips";
+            this.PlaySideTips.Size = new System.Drawing.Size(151, 22);
+            this.PlaySideTips.Text = "プレイサイド";
+            // 
+            // LeftSideTips
+            // 
+            this.LeftSideTips.Checked = true;
+            this.LeftSideTips.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.LeftSideTips.Name = "LeftSideTips";
+            this.LeftSideTips.Size = new System.Drawing.Size(87, 22);
+            this.LeftSideTips.Text = "1P";
+            this.LeftSideTips.Click += new System.EventHandler(this.LeftSideTips_Click);
+            // 
+            // RightSideTips
+            // 
+            this.RightSideTips.Name = "RightSideTips";
+            this.RightSideTips.Size = new System.Drawing.Size(87, 22);
+            this.RightSideTips.Text = "2P";
+            this.RightSideTips.Click += new System.EventHandler(this.RightSideTips_Click);
             // 
             // ResetTips
             // 
@@ -322,41 +347,41 @@ namespace BeatCounter
             this.ControllerTips,
             this.コンフィグToolStripMenuItem,
             this.ResetTips,
-            this.tOTALの保存ToolStripMenuItem});
+            this.TotalTips});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(524, 24);
             this.menuStrip1.TabIndex = 21;
             this.menuStrip1.Text = "menuStrip1";
             // 
-            // tOTALの保存ToolStripMenuItem
+            // TotalTips
             // 
-            this.tOTALの保存ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.TotalTips.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.Total1_Load,
             this.Total2_Load,
             this.Total3_Load});
-            this.tOTALの保存ToolStripMenuItem.Name = "tOTALの保存ToolStripMenuItem";
-            this.tOTALの保存ToolStripMenuItem.Size = new System.Drawing.Size(88, 20);
-            this.tOTALの保存ToolStripMenuItem.Text = "TOTALの保存";
+            this.TotalTips.Name = "TotalTips";
+            this.TotalTips.Size = new System.Drawing.Size(88, 20);
+            this.TotalTips.Text = "TOTALの保存";
             // 
             // Total1_Load
             // 
             this.Total1_Load.Name = "Total1_Load";
-            this.Total1_Load.Size = new System.Drawing.Size(80, 22);
+            this.Total1_Load.Size = new System.Drawing.Size(180, 22);
             this.Total1_Load.Text = "1";
             this.Total1_Load.Click += new System.EventHandler(this.Total1_Load_Click);
             // 
             // Total2_Load
             // 
             this.Total2_Load.Name = "Total2_Load";
-            this.Total2_Load.Size = new System.Drawing.Size(80, 22);
+            this.Total2_Load.Size = new System.Drawing.Size(180, 22);
             this.Total2_Load.Text = "2";
             this.Total2_Load.Click += new System.EventHandler(this.Total2_Load_Click);
             // 
             // Total3_Load
             // 
             this.Total3_Load.Name = "Total3_Load";
-            this.Total3_Load.Size = new System.Drawing.Size(80, 22);
+            this.Total3_Load.Size = new System.Drawing.Size(180, 22);
             this.Total3_Load.Text = "3";
             this.Total3_Load.Click += new System.EventHandler(this.Total3_Load_Click);
             // 
@@ -766,31 +791,6 @@ namespace BeatCounter
             this.Key7.Text = "0";
             this.Key7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // PlaySideTips
-            // 
-            this.PlaySideTips.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.LeftSideTips,
-            this.RightSideTips});
-            this.PlaySideTips.Name = "PlaySideTips";
-            this.PlaySideTips.Size = new System.Drawing.Size(180, 22);
-            this.PlaySideTips.Text = "プレイサイド";
-            // 
-            // LeftSideTips
-            // 
-            this.LeftSideTips.Checked = true;
-            this.LeftSideTips.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.LeftSideTips.Name = "LeftSideTips";
-            this.LeftSideTips.Size = new System.Drawing.Size(180, 22);
-            this.LeftSideTips.Text = "1P";
-            this.LeftSideTips.Click += new System.EventHandler(this.LeftSideTips_Click);
-            // 
-            // RightSideTips
-            // 
-            this.RightSideTips.Name = "RightSideTips";
-            this.RightSideTips.Size = new System.Drawing.Size(180, 22);
-            this.RightSideTips.Text = "2P";
-            this.RightSideTips.Click += new System.EventHandler(this.RightSideTips_Click);
-            // 
             // BeatCounter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -888,7 +888,7 @@ namespace BeatCounter
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem KeyBoardTips;
-        private System.Windows.Forms.ToolStripMenuItem tOTALの保存ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem TotalTips;
         private System.Windows.Forms.ToolStripMenuItem Total1_Load;
         private System.Windows.Forms.ToolStripMenuItem Total2_Load;
         private System.Windows.Forms.ToolStripMenuItem Total3_Load;

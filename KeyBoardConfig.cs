@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Linq;
+using System.Xml.XPath;
 
 namespace BeatCounter
 {
@@ -14,8 +10,11 @@ namespace BeatCounter
     {
         private int checkNow = 0;
 
+        // 親ウィンドウから渡されたXML情報を格納/リターンするための変数。
+        public XDocument _keyboardConfxml;
 
-        public KeyBoardConfig()
+
+        public KeyBoardConfig(XDocument xml, XMLClass cls)
         {
             //フォームの最大化ボタンの表示、非表示を切り替える
             this.MaximizeBox = !this.MaximizeBox;
@@ -24,6 +23,26 @@ namespace BeatCounter
             //フォームのコントロールボックスの表示、非表示を切り替える
             //コントロールボックスを非表示にすると最大化、最小化、閉じるボタンも消える
             this.ControlBox = !this.ControlBox;
+
+            try
+            {
+                //xmlファイルを指定する
+                _keyboardConfxml = xml;
+                if (_keyboardConfxml == null)
+                {
+                    throw new System.IO.DirectoryNotFoundException();
+                }
+            }
+            catch (System.IO.DirectoryNotFoundException e)
+            {
+                DialogResult dialog = MessageBox.Show(
+                    "Config.xmlファイルが見つかりませんでした。" +
+                    "アプリケーションを終了します。",
+                    "エラー",
+                    MessageBoxButtons.OK);
+                Close();
+                return;
+            }
 
             InitializeComponent();
 
@@ -36,15 +55,15 @@ namespace BeatCounter
             KeyPreview = false;
             this.KeyDown += KeyBoardConfig_KeyDown;
 
-            var up = Properties.Settings.Default.K_S_Up;
-            var down = Properties.Settings.Default.K_S_Down;
-            var k1 = Properties.Settings.Default.K_Key1;
-            var k2 = Properties.Settings.Default.K_Key2;
-            var k3 = Properties.Settings.Default.K_Key3;
-            var k4 = Properties.Settings.Default.K_Key4;
-            var k5 = Properties.Settings.Default.K_Key5;
-            var k6 = Properties.Settings.Default.K_Key6;
-            var k7 = Properties.Settings.Default.K_Key7;
+            var up = _keyboardConfxml.XPathSelectElement("//K_S_Up").Value;
+            var down = _keyboardConfxml.XPathSelectElement("//K_S_Down").Value;
+            var k1 = _keyboardConfxml.XPathSelectElement("//K_Key1").Value;
+            var k2 = _keyboardConfxml.XPathSelectElement("//K_Key2").Value;
+            var k3 = _keyboardConfxml.XPathSelectElement("//K_Key3").Value;
+            var k4 = _keyboardConfxml.XPathSelectElement("//K_Key4").Value;
+            var k5 = _keyboardConfxml.XPathSelectElement("//K_Key5").Value;
+            var k6 = _keyboardConfxml.XPathSelectElement("//K_Key6").Value;
+            var k7 = _keyboardConfxml.XPathSelectElement("//K_Key7").Value;
 
             SC_UP_B.Text = up;
             SC_UP_B.Tag = up;
@@ -302,29 +321,52 @@ namespace BeatCounter
 
         private void OK_B_Click(object sender, EventArgs e)
         {
-            var res_up = SC_UP_B.Tag.ToString();
-            var res_down = SC_Down_B.Tag.ToString();
-            var res_1 = Key1_B.Tag.ToString();
-            var res_2 = Key2_B.Tag.ToString();
-            var res_3 = Key3_B.Tag.ToString();
-            var res_4 = Key4_B.Tag.ToString();
-            var res_5 = Key5_B.Tag.ToString();
-            var res_6 = Key6_B.Tag.ToString();
-            var res_7 = Key7_B.Tag.ToString();
+            try
+            {
+                var res_up = SC_UP_B.Tag.ToString();
+                var res_down = SC_Down_B.Tag.ToString();
+                var res_1 = Key1_B.Tag.ToString();
+                var res_2 = Key2_B.Tag.ToString();
+                var res_3 = Key3_B.Tag.ToString();
+                var res_4 = Key4_B.Tag.ToString();
+                var res_5 = Key5_B.Tag.ToString();
+                var res_6 = Key6_B.Tag.ToString();
+                var res_7 = Key7_B.Tag.ToString();
 
+                var element_u = _keyboardConfxml.Root.Elements().FirstOrDefault(x => x.Attribute("id")?.Value == "K_S_Up");
+                var element_d = _keyboardConfxml.Root.Elements().FirstOrDefault(x => x.Attribute("id")?.Value == "K_S_Down");
+                var element1 = _keyboardConfxml.Root.Elements().FirstOrDefault(x => x.Attribute("id")?.Value == "K_Key1");
+                var element2 = _keyboardConfxml.Root.Elements().FirstOrDefault(x => x.Attribute("id")?.Value == "K_Key2");
+                var element3 = _keyboardConfxml.Root.Elements().FirstOrDefault(x => x.Attribute("id")?.Value == "K_Key3");
+                var element4 = _keyboardConfxml.Root.Elements().FirstOrDefault(x => x.Attribute("id")?.Value == "K_Key4");
+                var element5 = _keyboardConfxml.Root.Elements().FirstOrDefault(x => x.Attribute("id")?.Value == "K_Key5");
+                var element6 = _keyboardConfxml.Root.Elements().FirstOrDefault(x => x.Attribute("id")?.Value == "K_Key6");
+                var element7 = _keyboardConfxml.Root.Elements().FirstOrDefault(x => x.Attribute("id")?.Value == "K_Key7");
 
-            Properties.Settings.Default.K_S_Up = res_up;
-            Properties.Settings.Default.K_S_Down = res_down;
-            Properties.Settings.Default.K_Key1 = res_1;
-            Properties.Settings.Default.K_Key2 = res_2;
-            Properties.Settings.Default.K_Key3 = res_3;
-            Properties.Settings.Default.K_Key4 = res_4;
-            Properties.Settings.Default.K_Key5 = res_5;
-            Properties.Settings.Default.K_Key6 = res_6;
-            Properties.Settings.Default.K_Key7 = res_7;
+                element_u.SetValue(res_up);
+                element_d.SetValue(res_down);
+                element1.SetValue(res_1);
+                element2.SetValue(res_2);
+                element3.SetValue(res_3);
+                element4.SetValue(res_4);
+                element5.SetValue(res_5);
+                element6.SetValue(res_6);
+                element7.SetValue(res_7);
 
-            Properties.Settings.Default.Save();
-            this.Close();
+                this.DialogResult = DialogResult.OK;
+                this.Close();
+            }
+            catch (Exception)
+            {
+                DialogResult dialog = MessageBox.Show(
+                    "Errorが発生しました。" +
+                    "アプリケーションを終了します。",
+                    "エラー",
+                    MessageBoxButtons.OK);
+                Close();
+                Application.Exit();
+                return;
+            }
         }
 
         private void KeyBoardConfig_KeyDown(object sender, KeyEventArgs e)

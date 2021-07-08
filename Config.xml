@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Init>
+  <BackColor id="BackColor">0</BackColor>
+  <Controller id="Controller">0</Controller>
+  <Counter1 id="Counter1">0</Counter1>
+  <Counter2 id="Counter2">0</Counter2>
+  <Counter3 id="Counter3">0</Counter3>
+  <C_S_Up id="C_S_Up">14</C_S_Up>
+  <C_S_Down id="C_S_Down">15</C_S_Down>
+  <C_Key1 id="C_Key1">3</C_Key1>
+  <C_Key2 id="C_Key2">6</C_Key2>
+  <C_Key3 id="C_Key3">2</C_Key3>
+  <C_Key4 id="C_Key4">7</C_Key4>
+  <C_Key5 id="C_Key5">1</C_Key5>
+  <C_Key6 id="C_Key6">4</C_Key6>
+  <C_Key7 id="C_Key7">12</C_Key7>
+  <Kando id="Kando">5000</Kando>
+  <K_S_Up id="K_S_Up">Z</K_S_Up>
+  <K_S_Down id="K_S_Down">Z</K_S_Down>
+  <K_Key1 id="K_Key1">Z</K_Key1>
+  <K_Key2 id="K_Key2">Z</K_Key2>
+  <K_Key3 id="K_Key3">Z</K_Key3>
+  <K_Key4 id="K_Key4">Z</K_Key4>
+  <K_Key5 id="K_Key5">Z</K_Key5>
+  <K_Key6 id="K_Key6">Z</K_Key6>
+  <K_Key7 id="K_Key7">Z</K_Key7>
+  <PlayMode id="PlayMode">0</PlayMode>
+  <PlaySide id="PlaySide">1</PlaySide>
+  <SaveCounter id="SaveCounter">1</SaveCounter>
+</Init>

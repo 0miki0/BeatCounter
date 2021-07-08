@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Linq;
+using System.Xml.XPath;
 
 namespace BeatCounter
 {
     public partial class KeyConfig : Form
     {
-        public KeyConfig()
+        // 親ウィンドウから渡されたXML情報を格納/リターンするための変数。
+        public XDocument _keyConfxml;
+
+        public KeyConfig(XDocument xml, XMLClass cls)
         {
             //フォームの最大化ボタンの表示、非表示を切り替える
             this.MaximizeBox = !this.MaximizeBox;
@@ -22,6 +22,27 @@ namespace BeatCounter
             //コントロールボックスを非表示にすると最大化、最小化、閉じるボタンも消える
             this.ControlBox = !this.ControlBox;
 
+            try
+            {
+                //xmlファイルを指定する
+                _keyConfxml = xml;
+                if (_keyConfxml == null)
+                {
+                    throw new System.IO.DirectoryNotFoundException();
+                }
+            }
+            catch (System.IO.DirectoryNotFoundException)
+            {
+                DialogResult dialog = MessageBox.Show(
+                    "Config.xmlファイルが見つかりませんでした。" +
+                    "アプリケーションを終了します。",
+                    "エラー",
+                    MessageBoxButtons.OK);
+                Close();
+                Application.Exit();
+                return;
+            }
+
             InitializeComponent();
 
             KeyInit();
@@ -29,15 +50,15 @@ namespace BeatCounter
 
         public void KeyInit()
         {
-            var up = Properties.Settings.Default.C_S_Up;
-            var down = Properties.Settings.Default.C_S_Down;
-            var k1 = Properties.Settings.Default.C_Key1;
-            var k2 = Properties.Settings.Default.C_Key2;
-            var k3 = Properties.Settings.Default.C_Key3;
-            var k4 = Properties.Settings.Default.C_Key4;
-            var k5 = Properties.Settings.Default.C_Key5;
-            var k6 = Properties.Settings.Default.C_Key6;
-            var k7 = Properties.Settings.Default.C_Key7;
+            var up = int.Parse(_keyConfxml.XPathSelectElement("//C_S_Up").Value);
+            var down = int.Parse(_keyConfxml.XPathSelectElement("//C_S_Down").Value);
+            var k1 = int.Parse(_keyConfxml.XPathSelectElement("//C_Key1").Value);
+            var k2 = int.Parse(_keyConfxml.XPathSelectElement("//C_Key2").Value);
+            var k3 = int.Parse(_keyConfxml.XPathSelectElement("//C_Key3").Value);
+            var k4 = int.Parse(_keyConfxml.XPathSelectElement("//C_Key4").Value);
+            var k5 = int.Parse(_keyConfxml.XPathSelectElement("//C_Key5").Value);
+            var k6 = int.Parse(_keyConfxml.XPathSelectElement("//C_Key6").Value);
+            var k7 = int.Parse(_keyConfxml.XPathSelectElement("//C_Key7").Value);
 
 
             if (up < 50)
@@ -996,54 +1017,76 @@ namespace BeatCounter
             var try_6 = int.TryParse(Key6_B.Tag.ToString(), out int res_6);
             var try_7 = int.TryParse(Key7_B.Tag.ToString(), out int res_7);
 
-
-            if (try_up)
+            try
             {
-                Properties.Settings.Default.C_S_Up = res_up;
-            }
+                if (try_up)
+                {
+                    var element = _keyConfxml.Root.Elements().FirstOrDefault(x => x.Attribute("id")?.Value == "C_S_Up");
+                    element.SetValue(res_up);
+                }
 
-            if (try_down)
+                if (try_down)
+                {
+                    var element = _keyConfxml.Root.Elements().FirstOrDefault(x => x.Attribute("id")?.Value == "C_S_Down");
+                    element.SetValue(res_down);
+                }
+
+                if (try_1)
+                {
+                    var element = _keyConfxml.Root.Elements().FirstOrDefault(x => x.Attribute("id")?.Value == "C_Key1");
+                    element.SetValue(res_1);
+                }
+
+                if (try_2)
+                {
+                    var element = _keyConfxml.Root.Elements().FirstOrDefault(x => x.Attribute("id")?.Value == "C_Key2");
+                    element.SetValue(res_2);
+                }
+
+                if (try_3)
+                {
+                    var element = _keyConfxml.Root.Elements().FirstOrDefault(x => x.Attribute("id")?.Value == "C_Key3");
+                    element.SetValue(res_3);
+                }
+
+                if (try_4)
+                {
+                    var element = _keyConfxml.Root.Elements().FirstOrDefault(x => x.Attribute("id")?.Value == "C_Key4");
+                    element.SetValue(res_4);
+                }
+
+                if (try_5)
+                {
+                    var element = _keyConfxml.Root.Elements().FirstOrDefault(x => x.Attribute("id")?.Value == "C_Key5");
+                    element.SetValue(res_5);
+                }
+
+                if (try_6)
+                {
+                    var element = _keyConfxml.Root.Elements().FirstOrDefault(x => x.Attribute("id")?.Value == "C_Key6");
+                    element.SetValue(res_6);
+                }
+
+                if (try_7)
+                {
+                    var element = _keyConfxml.Root.Elements().FirstOrDefault(x => x.Attribute("id")?.Value == "C_Key7");
+                    element.SetValue(res_7);
+                }
+
+                this.DialogResult = DialogResult.OK;
+                this.Close();
+            }
+            catch (Exception)
             {
-                Properties.Settings.Default.C_S_Down = res_down;
+                DialogResult dialog = MessageBox.Show(
+                    "Errorが発生しました。" +
+                    "アプリケーションを終了します。",
+                    "エラー",
+                    MessageBoxButtons.OK);
+                Close();
+                Application.Exit();
+                return;
             }
-
-            if (try_1)
-            {
-                Properties.Settings.Default.C_Key1 = res_1;
-            }
-
-            if (try_2)
-            {
-                Properties.Settings.Default.C_Key2 = res_2;
-            }
-
-            if (try_3)
-            {
-                Properties.Settings.Default.C_Key3 = res_3;
-            }
-
-            if (try_4)
-            {
-                Properties.Settings.Default.C_Key4 = res_4;
-            }
-
-            if (try_5)
-            {
-                Properties.Settings.Default.C_Key5 = res_5;
-            }
-
-            if (try_6)
-            {
-                Properties.Settings.Default.C_Key6 = res_6;
-            }
-
-            if (try_7)
-            {
-                Properties.Settings.Default.C_Key7 = res_7;
-            }
-
-            Properties.Settings.Default.Save();
-            this.Close();
         }
     }
 }

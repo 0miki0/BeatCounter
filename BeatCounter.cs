@@ -3,13 +3,20 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
+using System.Xml.Linq;
+using System.Xml.XPath;
 
 namespace BeatCounter
 {
     public partial class BeatCounter : Form, IDisposable
     {
         #region private
+        /// XMLファイルの情報を格納する。
+        private XDocument _xml;
+        private XMLClass _cls = new XMLClass();
+
         /// コントローラの情報
         private Joystick _joy;
 
@@ -56,9 +63,10 @@ namespace BeatCounter
         private bool _joyUp = false;
         private bool _joyDown = false;
 
-        // 初期設定用
+        // 初期設定用(1度しか動かさない処理用)
         private bool _onceAction1 = false;
         private bool _onceAction2 = false;
+        private bool _onceAction3 = false;
 
         // カウント変更モードか
         private bool _keyChangeMode = false;
@@ -66,10 +74,10 @@ namespace BeatCounter
         // 現在の背景色
         private Color _keyBackColor = new Color();
 
-        // キーボード時の入力取得用
+        // バックグラウンドでキーボードの打鍵を処理するためのリスト
         private List<string> _list = new List<string>();
 
-        // DLLをインポート
+        // バックグラウンドでキーボードの打鍵を処理するためのDLLをインポート
         [System.Runtime.InteropServices.DllImport("user32.dll", CharSet = System.Runtime.InteropServices.CharSet.Auto, CallingConvention = System.Runtime.InteropServices.CallingConvention.StdCall)]
         public static extern short GetAsyncKeyState(int nVirtKey);
 
@@ -81,10 +89,27 @@ namespace BeatCounter
         /// </summary>
         public BeatCounter()
         {
+            // XMLファイルの読み込みで失敗したらアプリを終了する。
+            try
+            {
+                //xmlファイルを指定する
+                _xml = XDocument.Load("Config.xml");
+            }
+            catch (System.IO.DirectoryNotFoundException e)
+            {
+                DialogResult dialog = MessageBox.Show(
+                    "Config.xmlファイルが見つかりませんでした。" +
+                    "アプリケーションを終了します。",
+                    "エラー",
+                    MessageBoxButtons.OK);
+                Close();
+                return;
+            }
+
             InitializeComponent();
 
             // 起動時の変数を初期化
-            TodayInit();
+            TodayInit(false);
 
             // 最大化を無効に
             MaximizeBox = false;
@@ -96,7 +121,7 @@ namespace BeatCounter
         public void Exec()
         {
             // DirectXデバイスの初期化処理
-            Initialize();
+            DirectXInit();
 
             // 設定の読み込み
             SettingInit();
@@ -127,17 +152,20 @@ namespace BeatCounter
             {
                 if (!KeyBoardTips.Checked)
                 {
+                    // GamePad系の処理に遷移
                     UpdateForPad();
                 }
                 else
                 {
+                    // キーボード用の処理に遷移
                     UpdateForKeyBoard();
                 }
             }
             catch (SharpDX.SharpDXException)
             {
+                // アプリ起動時に読み込まれていたGamePadが切断された場合、閉じる処理を呼び出し、アプリを終了する。
                 BeatCounter_Close(new object(), new FormClosingEventArgs(new CloseReason(), false));
-                Close();
+                Application.Exit();
             }
         }
 
@@ -394,25 +422,25 @@ namespace BeatCounter
             {
                 // 十字キー入力とボタン入力で処理を分ける必要がある？要修正？
                 // Key1 判定 (1鍵が押されたとき且つ、押しっぱなしになってない判定の場合)
-                if (Properties.Settings.Default.C_Key1 < 20)
+                if (_cls.C_Key1 < 20)
                 {
                     // 保存された設定を元に押されたキーが該当するキーであることを判別する。
-                    if (jState.Buttons[Properties.Settings.Default.C_Key1] && _joy1b == false)
+                    if (jState.Buttons[_cls.C_Key1] && _joy1b == false)
                     {
                         Push1Key(true);
                     }
                     else
                     {
-                        if (jState.Buttons[Properties.Settings.Default.C_Key1] == false)
+                        if (jState.Buttons[_cls.C_Key1] == false)
                         {
                             Push1Key(false);
                         }
                     }
                 }
-                else if (Properties.Settings.Default.C_Key1 >= 50)
+                else if (_cls.C_Key1 >= 50)
                 {
                     // 軸入力の場合の処理
-                    if (Properties.Settings.Default.C_Key1 == 50)
+                    if (_cls.C_Key1 == 50)
                     {
                         // 左の場合
                         if (_s_rel_now_x == 0 && _joy1b == false)
@@ -428,7 +456,7 @@ namespace BeatCounter
                         }
                     }
                     // 十字キー入力「右」の場合。
-                    else if (Properties.Settings.Default.C_Key1 == 51)
+                    else if (_cls.C_Key1 == 51)
                     {
                         // 左の場合
                         if (_s_rel_now_x == 1000 && _joy1b == false)
@@ -444,7 +472,7 @@ namespace BeatCounter
                         }
                     }
                     // 十字キー入力「上」の場合。
-                    else if (Properties.Settings.Default.C_Key1 == 52)
+                    else if (_cls.C_Key1 == 52)
                     {
                         // 左の場合
                         if (_s_rel_now_y == 1000 && _joy1b == false)
@@ -460,7 +488,7 @@ namespace BeatCounter
                         }
                     }
                     // 十字キー入力「下」の場合。
-                    else if (Properties.Settings.Default.C_Key1 == 53)
+                    else if (_cls.C_Key1 == 53)
                     {
                         // 左の場合
                         if (_s_rel_now_y == 0 && _joy1b == false)
@@ -478,24 +506,24 @@ namespace BeatCounter
                 }
 
                 // Key2 判定
-                if (Properties.Settings.Default.C_Key2 < 20)
+                if (_cls.C_Key2 < 20)
                 {
-                    if (jState.Buttons[Properties.Settings.Default.C_Key2] && _joy2b == false)
+                    if (jState.Buttons[_cls.C_Key2] && _joy2b == false)
                     {
                         Push2Key(true);
                     }
                     else
                     {
-                        if (jState.Buttons[Properties.Settings.Default.C_Key2] == false)
+                        if (jState.Buttons[_cls.C_Key2] == false)
                         {
                             Push2Key(false);
                         }
                     }
                 }
-                else if (Properties.Settings.Default.C_Key2 >= 50)
+                else if (_cls.C_Key2 >= 50)
                 {
                     // 軸入力の場合の処理
-                    if (Properties.Settings.Default.C_Key2 == 50)
+                    if (_cls.C_Key2 == 50)
                     {
                         // 左の場合
                         if (_s_rel_now_x == 0 && _joy2b == false)
@@ -511,7 +539,7 @@ namespace BeatCounter
                         }
                     }
                     // 十字キー入力「右」の場合。
-                    else if (Properties.Settings.Default.C_Key2 == 51)
+                    else if (_cls.C_Key2 == 51)
                     {
                         // 左の場合
                         if (_s_rel_now_x == 1000 && _joy2b == false)
@@ -527,7 +555,7 @@ namespace BeatCounter
                         }
                     }
                     // 十字キー入力「上」の場合。
-                    else if (Properties.Settings.Default.C_Key2 == 52)
+                    else if (_cls.C_Key2 == 52)
                     {
                         // 左の場合
                         if (_s_rel_now_y == 1000 && _joy2b == false)
@@ -543,7 +571,7 @@ namespace BeatCounter
                         }
                     }
                     // 十字キー入力「下」の場合。
-                    else if (Properties.Settings.Default.C_Key2 == 53)
+                    else if (_cls.C_Key2 == 53)
                     {
                         // 左の場合
                         if (_s_rel_now_y == 0 && _joy2b == false)
@@ -561,24 +589,24 @@ namespace BeatCounter
                 }
 
                 // Key3 判定
-                if (Properties.Settings.Default.C_Key3 < 20)
+                if (_cls.C_Key3 < 20)
                 {
-                    if (jState.Buttons[Properties.Settings.Default.C_Key3] && _joy3b == false)
+                    if (jState.Buttons[_cls.C_Key3] && _joy3b == false)
                     {
                         Push3Key(true);
                     }
                     else
                     {
-                        if (jState.Buttons[Properties.Settings.Default.C_Key3] == false)
+                        if (jState.Buttons[_cls.C_Key3] == false)
                         {
                             Push3Key(false);
                         }
                     }
                 }
-                else if (Properties.Settings.Default.C_Key3 >= 50)
+                else if (_cls.C_Key3 >= 50)
                 {
                     // 軸入力の場合の処理
-                    if (Properties.Settings.Default.C_Key3 == 50)
+                    if (_cls.C_Key3 == 50)
                     {
                         // 左の場合
                         if (_s_rel_now_x == 0 && _joy3b == false)
@@ -594,7 +622,7 @@ namespace BeatCounter
                         }
                     }
                     // 十字キー入力「右」の場合。
-                    else if (Properties.Settings.Default.C_Key3 == 51)
+                    else if (_cls.C_Key3 == 51)
                     {
                         // 左の場合
                         if (_s_rel_now_x == 1000 && _joy3b == false)
@@ -610,7 +638,7 @@ namespace BeatCounter
                         }
                     }
                     // 十字キー入力「上」の場合。
-                    else if (Properties.Settings.Default.C_Key3 == 52)
+                    else if (_cls.C_Key3 == 52)
                     {
                         // 左の場合
                         if (_s_rel_now_y == 1000 && _joy3b == false)
@@ -626,7 +654,7 @@ namespace BeatCounter
                         }
                     }
                     // 十字キー入力「下」の場合。
-                    else if (Properties.Settings.Default.C_Key3 == 53)
+                    else if (_cls.C_Key3 == 53)
                     {
                         // 左の場合
                         if (_s_rel_now_y == 0 && _joy3b == false)
@@ -644,24 +672,24 @@ namespace BeatCounter
                 }
 
                 // Key4 判定
-                if (Properties.Settings.Default.C_Key4 < 20)
+                if (_cls.C_Key4 < 20)
                 {
-                    if (jState.Buttons[Properties.Settings.Default.C_Key4] && _joy4b == false)
+                    if (jState.Buttons[_cls.C_Key4] && _joy4b == false)
                     {
                         Push4Key(true);
                     }
                     else
                     {
-                        if (jState.Buttons[Properties.Settings.Default.C_Key4] == false)
+                        if (jState.Buttons[_cls.C_Key4] == false)
                         {
                             Push4Key(false);
                         }
                     }
                 }
-                else if (Properties.Settings.Default.C_Key4 >= 50)
+                else if (_cls.C_Key4 >= 50)
                 {
                     // 軸入力の場合の処理
-                    if (Properties.Settings.Default.C_Key4 == 50)
+                    if (_cls.C_Key4 == 50)
                     {
                         // 左の場合
                         if (_s_rel_now_x == 0 && _joy4b == false)
@@ -677,7 +705,7 @@ namespace BeatCounter
                         }
                     }
                     // 十字キー入力「右」の場合。
-                    else if (Properties.Settings.Default.C_Key4 == 51)
+                    else if (_cls.C_Key4 == 51)
                     {
                         // 左の場合
                         if (_s_rel_now_x == 1000 && _joy4b == false)
@@ -693,7 +721,7 @@ namespace BeatCounter
                         }
                     }
                     // 十字キー入力「上」の場合。
-                    else if (Properties.Settings.Default.C_Key4 == 52)
+                    else if (_cls.C_Key4 == 52)
                     {
                         // 左の場合
                         if (_s_rel_now_y == 1000 && _joy4b == false)
@@ -709,7 +737,7 @@ namespace BeatCounter
                         }
                     }
                     // 十字キー入力「下」の場合。
-                    else if (Properties.Settings.Default.C_Key4 == 53)
+                    else if (_cls.C_Key4 == 53)
                     {
                         // 左の場合
                         if (_s_rel_now_y == 0 && _joy4b == false)
@@ -727,24 +755,24 @@ namespace BeatCounter
                 }
 
                 // Key5 判定
-                if (Properties.Settings.Default.C_Key5 < 20)
+                if (_cls.C_Key5 < 20)
                 {
-                    if (jState.Buttons[Properties.Settings.Default.C_Key5] && _joy5b == false)
+                    if (jState.Buttons[_cls.C_Key5] && _joy5b == false)
                     {
                         Push5Key(true);
                     }
                     else
                     {
-                        if (jState.Buttons[Properties.Settings.Default.C_Key5] == false)
+                        if (jState.Buttons[_cls.C_Key5] == false)
                         {
                             Push5Key(false);
                         }
                     }
                 }
-                else if (Properties.Settings.Default.C_Key5 >= 50)
+                else if (_cls.C_Key5 >= 50)
                 {
                     // 軸入力の場合の処理
-                    if (Properties.Settings.Default.C_Key5 == 50)
+                    if (_cls.C_Key5 == 50)
                     {
                         // 左の場合
                         if (_s_rel_now_x == 0 && _joy5b == false)
@@ -760,7 +788,7 @@ namespace BeatCounter
                         }
                     }
                     // 十字キー入力「右」の場合。
-                    else if (Properties.Settings.Default.C_Key5 == 51)
+                    else if (_cls.C_Key5 == 51)
                     {
                         // 左の場合
                         if (_s_rel_now_x == 1000 && _joy5b == false)
@@ -776,7 +804,7 @@ namespace BeatCounter
                         }
                     }
                     // 十字キー入力「上」の場合。
-                    else if (Properties.Settings.Default.C_Key5 == 52)
+                    else if (_cls.C_Key5 == 52)
                     {
                         // 左の場合
                         if (_s_rel_now_y == 1000 && _joy5b == false)
@@ -792,7 +820,7 @@ namespace BeatCounter
                         }
                     }
                     // 十字キー入力「下」の場合。
-                    else if (Properties.Settings.Default.C_Key5 == 53)
+                    else if (_cls.C_Key5 == 53)
                     {
                         // 左の場合
                         if (_s_rel_now_y == 0 && _joy5b == false)
@@ -810,24 +838,24 @@ namespace BeatCounter
                 }
 
                 // Key6 判定
-                if (Properties.Settings.Default.C_Key6 < 20)
+                if (_cls.C_Key6 < 20)
                 {
-                    if (jState.Buttons[Properties.Settings.Default.C_Key6] && _joy6b == false)
+                    if (jState.Buttons[_cls.C_Key6] && _joy6b == false)
                     {
                         Push6Key(true);
                     }
                     else
                     {
-                        if (jState.Buttons[Properties.Settings.Default.C_Key6] == false)
+                        if (jState.Buttons[_cls.C_Key6] == false)
                         {
                             Push6Key(false);
                         }
                     }
                 }
-                else if (Properties.Settings.Default.C_Key6 >= 50)
+                else if (_cls.C_Key6 >= 50)
                 {
                     // 軸入力の場合の処理
-                    if (Properties.Settings.Default.C_Key6 == 50)
+                    if (_cls.C_Key6 == 50)
                     {
                         // 左の場合
                         if (_s_rel_now_x == 0 && _joy6b == false)
@@ -843,7 +871,7 @@ namespace BeatCounter
                         }
                     }
                     // 十字キー入力「右」の場合。
-                    else if (Properties.Settings.Default.C_Key6 == 51)
+                    else if (_cls.C_Key6 == 51)
                     {
                         // 左の場合
                         if (_s_rel_now_x == 1000 && _joy6b == false)
@@ -859,7 +887,7 @@ namespace BeatCounter
                         }
                     }
                     // 十字キー入力「上」の場合。
-                    else if (Properties.Settings.Default.C_Key6 == 52)
+                    else if (_cls.C_Key6 == 52)
                     {
                         // 左の場合
                         if (_s_rel_now_y == 1000 && _joy6b == false)
@@ -875,7 +903,7 @@ namespace BeatCounter
                         }
                     }
                     // 十字キー入力「下」の場合。
-                    else if (Properties.Settings.Default.C_Key6 == 53)
+                    else if (_cls.C_Key6 == 53)
                     {
                         // 左の場合
                         if (_s_rel_now_y == 0 && _joy6b == false)
@@ -893,24 +921,24 @@ namespace BeatCounter
                 }
 
                 // Key7 判定
-                if (Properties.Settings.Default.C_Key7 < 20)
+                if (_cls.C_Key7 < 20)
                 {
-                    if (jState.Buttons[Properties.Settings.Default.C_Key7] && _joy7b == false)
+                    if (jState.Buttons[_cls.C_Key7] && _joy7b == false)
                     {
                         Push7Key(true);
                     }
                     else
                     {
-                        if (jState.Buttons[Properties.Settings.Default.C_Key7] == false)
+                        if (jState.Buttons[_cls.C_Key7] == false)
                         {
                             Push7Key(false);
                         }
                     }
                 }
-                else if (Properties.Settings.Default.C_Key7 >= 50)
+                else if (_cls.C_Key7 >= 50)
                 {
                     // 軸入力の場合の処理
-                    if (Properties.Settings.Default.C_Key7 == 50)
+                    if (_cls.C_Key7 == 50)
                     {
                         // 左の場合
                         if (_s_rel_now_x == 0 && _joy7b == false)
@@ -926,7 +954,7 @@ namespace BeatCounter
                         }
                     }
                     // 十字キー入力「右」の場合。
-                    else if (Properties.Settings.Default.C_Key7 == 51)
+                    else if (_cls.C_Key7 == 51)
                     {
                         // 左の場合
                         if (_s_rel_now_x == 1000 && _joy7b == false)
@@ -942,7 +970,7 @@ namespace BeatCounter
                         }
                     }
                     // 十字キー入力「上」の場合。
-                    else if (Properties.Settings.Default.C_Key7 == 52)
+                    else if (_cls.C_Key7 == 52)
                     {
                         // 左の場合
                         if (_s_rel_now_y == 1000 && _joy7b == false)
@@ -958,7 +986,7 @@ namespace BeatCounter
                         }
                     }
                     // 十字キー入力「下」の場合。
-                    else if (Properties.Settings.Default.C_Key7 == 53)
+                    else if (_cls.C_Key7 == 53)
                     {
                         // 左の場合
                         if (_s_rel_now_y == 0 && _joy7b == false)
@@ -1019,7 +1047,7 @@ namespace BeatCounter
         /// <summary>
         /// DirectXデバイスの初期化
         /// </summary>
-        public void Initialize()
+        public void DirectXInit()
         {
             // 入力周りの初期化
             DirectInput dinput = new DirectInput();
@@ -1127,7 +1155,7 @@ namespace BeatCounter
         /// <summary>
         /// 今回分の初期化処理 (起動時の変数を初期化する処理でもある)
         /// </summary>
-        public void TodayInit()
+        public void TodayInit(bool swt)
         {
             int InitInt = 0;
             T_S_Up.Text = InitInt.ToString();
@@ -1140,7 +1168,6 @@ namespace BeatCounter
             T_Key6.Text = InitInt.ToString();
             T_Key7.Text = InitInt.ToString();
             T_TodayKeys.Text = InitInt.ToString();
-            T_AllDayKeys.Text = Properties.Settings.Default.SaveAllDayKey1.ToString();
 
             S_Up.Text = InitInt.ToString();
             S_Down.Text = InitInt.ToString();
@@ -1152,7 +1179,6 @@ namespace BeatCounter
             Key6.Text = InitInt.ToString();
             Key7.Text = InitInt.ToString();
             TodayKeys.Text = InitInt.ToString();
-            AllDayKeys.Text = Properties.Settings.Default.SaveAllDayKey1.ToString();
 
             _s_upnum = InitInt;
             _s_downnum = InitInt;
@@ -1164,8 +1190,34 @@ namespace BeatCounter
             _key6num = InitInt;
             _key7num = InitInt;
             _todaynum = InitInt;
-            _alldaynum = Properties.Settings.Default.SaveAllDayKey1;
+
+            if (swt)
+            {
+                // 使用されているカウンタに応じてTotalを初期化。
+                if (Total1_Load.Checked)
+                {
+                    var num = _xml.XPathSelectElement("//Counter1").Value;
+                    T_AllDayKeys.Text = num;
+                    AllDayKeys.Text = num;
+                    _alldaynum = long.Parse(num);
+                }
+                else if (Total2_Load.Checked)
+                {
+                    var num = _xml.XPathSelectElement("//Counter2").Value;
+                    T_AllDayKeys.Text = num;
+                    AllDayKeys.Text = num;
+                    _alldaynum = long.Parse(num);
+                }
+                else if (Total3_Load.Checked)
+                {
+                    var num = _xml.XPathSelectElement("//Counter3").Value;
+                    T_AllDayKeys.Text = num;
+                    AllDayKeys.Text = num;
+                    _alldaynum = long.Parse(num);
+                }
+            }
         }
+
 
         /// <summary>
         /// 総合計の初期化処理
@@ -1174,7 +1226,7 @@ namespace BeatCounter
         {
             int InitInt = 0;
 
-            TodayInit();
+            TodayInit(false);
 
             T_AllDayKeys.Text = InitInt.ToString();
             AllDayKeys.Text = InitInt.ToString();
@@ -1182,114 +1234,130 @@ namespace BeatCounter
         }
 
         /// <summary>
-        /// 設定の読み込み処理
-        /// </summary>
-        public void BackColorInit()
-        {
-            // 全期間の合計値を保存する。
-            if (Properties.Settings.Default.BackColor == 0)
-            {
-                WhiteTips_Click(new object(), new EventArgs());
-            }
-            else if (Properties.Settings.Default.BackColor == 1)
-            {
-                BlackTips_Click(new object(), new EventArgs());
-            }
-            else
-            {
-                ClearWTips_Click(new object(), new EventArgs());
-            }
-        }
-
-        /// <summary>
         /// 設定の読み込み
         /// </summary>
         public void SettingInit()
         {
-            // 前回終了時のモードを初期選択にする。
-            if (Properties.Settings.Default.PlayMode == 0)
-            {
-                InfinitasPlayTips_Click(new object(), new EventArgs());
-            }
-            else if (Properties.Settings.Default.PlayMode == 1)
-            {
-                BmsPlayTips_Click(new object(), new EventArgs());
-            }
+            _cls.BackColor = int.Parse(_xml.XPathSelectElement("//BackColor").Value);
+            _cls.Controller = int.Parse(_xml.XPathSelectElement("//Controller").Value);
+            _cls.Counter1 = int.Parse(_xml.XPathSelectElement("//Counter1").Value);
+            _cls.Counter2 = int.Parse(_xml.XPathSelectElement("//Counter2").Value);
+            _cls.Counter3 = int.Parse(_xml.XPathSelectElement("//Counter3").Value);
+            _cls.Kando = ulong.Parse(_xml.XPathSelectElement("//Kando").Value);
+            _cls.PlayMode = int.Parse(_xml.XPathSelectElement("//PlayMode").Value);
+            _cls.PlaySide = int.Parse(_xml.XPathSelectElement("//PlaySide").Value);
+            _cls.SaveCounter = int.Parse(_xml.XPathSelectElement("//SaveCounter").Value);
 
-            // 前回終了時のコントローラを初期選択にする。
-            if (Properties.Settings.Default.Controller == 0)
-            {
-                DaoTips_Click(new object(), new EventArgs());
-            }
-            else if (Properties.Settings.Default.Controller == 1)
-            {
-                PS2ConTips_Click(new object(), new EventArgs());
-            }
-            else if (Properties.Settings.Default.Controller == 2)
-            {
-                BeatmaniaProConTips_Click(new object(), new EventArgs());
-            }
-            else if (Properties.Settings.Default.Controller == 3)
-            {
-                CustomTips_Click(new object(), new EventArgs());
-            }
-            else if (Properties.Settings.Default.Controller == 4)
-            {
-                KeyBoardTips_Click(new object(), new EventArgs());
-            }
+            // KeyBoard用の変数
+            _cls.K_Key1 = _xml.XPathSelectElement("//K_Key1").Value;
+            _cls.K_Key2 = _xml.XPathSelectElement("//K_Key2").Value;
+            _cls.K_Key3 = _xml.XPathSelectElement("//K_Key3").Value;
+            _cls.K_Key4 = _xml.XPathSelectElement("//K_Key4").Value;
+            _cls.K_Key5 = _xml.XPathSelectElement("//K_Key5").Value;
+            _cls.K_Key6 = _xml.XPathSelectElement("//K_Key6").Value;
+            _cls.K_Key7 = _xml.XPathSelectElement("//K_Key7").Value;
+            _cls.K_S_Up = _xml.XPathSelectElement("//K_S_Up").Value;
+            _cls.K_S_Down = _xml.XPathSelectElement("//K_S_Down").Value;
 
-            // 全期間の合計値を保存する。
-            if (Properties.Settings.Default.BackColor == 0)
-            {
-                WhiteTips_Click(new object(), new EventArgs());
-            }
-            else if (Properties.Settings.Default.BackColor == 1)
-            {
-                BlackTips_Click(new object(), new EventArgs());
-            }
-            else
-            {
-                ClearWTips_Click(new object(), new EventArgs());
-            }
+            // GamePad用の変数
+            _cls.C_Key1 = int.Parse(_xml.XPathSelectElement("//C_Key1").Value);
+            _cls.C_Key2 = int.Parse(_xml.XPathSelectElement("//C_Key2").Value);
+            _cls.C_Key3 = int.Parse(_xml.XPathSelectElement("//C_Key3").Value);
+            _cls.C_Key4 = int.Parse(_xml.XPathSelectElement("//C_Key4").Value);
+            _cls.C_Key5 = int.Parse(_xml.XPathSelectElement("//C_Key5").Value);
+            _cls.C_Key6 = int.Parse(_xml.XPathSelectElement("//C_Key6").Value);
+            _cls.C_Key7 = int.Parse(_xml.XPathSelectElement("//C_Key7").Value);
+            _cls.C_S_Up = int.Parse(_xml.XPathSelectElement("//C_S_Up").Value);
+            _cls.C_S_Down = int.Parse(_xml.XPathSelectElement("//C_S_Down").Value);
 
-            // カウンタの切り替え
-            if (Properties.Settings.Default.SaveCounter == 1)
-            {
-                Total1_Load_Click(new object(), new EventArgs());
-            }
-            else if (Properties.Settings.Default.SaveCounter == 2)
-            {
-                Total2_Load_Click(new object(), new EventArgs());
-            }
-            else if (Properties.Settings.Default.SaveCounter == 3)
-            {
-                Total3_Load_Click(new object(), new EventArgs());
-            }
-
-            // 前回終了時のプレイサイドを初期選択にする。
-            if (Properties.Settings.Default.PlaySide == 1)
-            {
-                LeftSideTips_Click(new object(), new EventArgs());
-            }
-            else if (Properties.Settings.Default.PlaySide == 2)
-            {
-                RightSideTips_Click(new object(), new EventArgs());
-            }
-
-            // キーボード用のリスト
-            var proc = Properties.Settings.Default;
             _list = new List<string>()
             {
-                proc.K_Key1,
-                proc.K_Key2,
-                proc.K_Key3,
-                proc.K_Key4,
-                proc.K_Key5,
-                proc.K_Key6,
-                proc.K_Key7,
-                proc.K_S_Up,
-                proc.K_S_Down
+                _cls.K_Key1,
+                _cls.K_Key2,
+                _cls.K_Key3,
+                _cls.K_Key4,
+                _cls.K_Key5,
+                _cls.K_Key6,
+                _cls.K_Key7,
+                _cls.K_S_Up,
+                _cls.K_S_Down
             };
+
+            // 初回読み込み用の処理。
+            if (_onceAction3 == false)
+            {
+                _onceAction3 = true;
+
+                // 前回終了時のモードを初期選択にする。
+                if (_cls.PlayMode == 0)
+                {
+                    InfinitasPlayTips_Click(new object(), new EventArgs());
+                }
+                else if (_cls.PlayMode == 1)
+                {
+                    BmsPlayTips_Click(new object(), new EventArgs());
+                }
+
+                // 前回終了時のコントローラを初期選択にする。
+                if (_cls.Controller == 0)
+                {
+                    DaoTips_Click(new object(), new EventArgs());
+                }
+                else if (_cls.Controller == 1)
+                {
+                    PS2ConTips_Click(new object(), new EventArgs());
+                }
+                else if (_cls.Controller == 2)
+                {
+                    BeatmaniaProConTips_Click(new object(), new EventArgs());
+                }
+                else if (_cls.Controller == 3)
+                {
+                    CustomTips_Click(new object(), new EventArgs());
+                }
+                else if (_cls.Controller == 4)
+                {
+                    KeyBoardTips_Click(new object(), new EventArgs());
+                }
+
+                // 全期間の合計値を保存する。
+                if (_cls.BackColor == 0)
+                {
+                    WhiteTips_Click(new object(), new EventArgs());
+                }
+                else if (_cls.BackColor == 1)
+                {
+                    BlackTips_Click(new object(), new EventArgs());
+                }
+                else
+                {
+                    ClearWTips_Click(new object(), new EventArgs());
+                }
+
+                // カウンタの切り替え
+                if (_cls.SaveCounter == 1)
+                {
+                    Total1_Load_Click(new object(), new EventArgs());
+                }
+                else if (_cls.SaveCounter == 2)
+                {
+                    Total2_Load_Click(new object(), new EventArgs());
+                }
+                else if (_cls.SaveCounter == 3)
+                {
+                    Total3_Load_Click(new object(), new EventArgs());
+                }
+
+                // 前回終了時のプレイサイドを初期選択にする。
+                if (_cls.PlaySide == 1)
+                {
+                    LeftSideTips_Click(new object(), new EventArgs());
+                }
+                else if (_cls.PlaySide == 2)
+                {
+                    RightSideTips_Click(new object(), new EventArgs());
+                }
+            }
         }
 
         /// <summary>
@@ -1297,7 +1365,10 @@ namespace BeatCounter
         /// </summary>
         public void ChangeColorInit(Color keyBackColor)
         {
-            if (Properties.Settings.Default.BackColor == 0)
+            var backcolor = int.Parse(_xml.XPathSelectElement("//BackColor").Value);
+
+
+            if (backcolor == 0)
             {
                 this.TransparencyKey = new Color();
                 this.BackColor = SystemColors.Control;
@@ -1308,7 +1379,7 @@ namespace BeatCounter
                 L_S_Up.ForeColor = SystemColors.ControlText;
                 L_S_Down.ForeColor = SystemColors.ControlText;
             }
-            else if (Properties.Settings.Default.BackColor == 1)
+            else if (backcolor == 1)
             {
                 this.TransparencyKey = new Color();
                 this.BackColor = Color.FromArgb(64, 64, 64);
@@ -1420,7 +1491,7 @@ namespace BeatCounter
                 }
 
                 // スクラッチを回した時にもう回していない扱いになるかの判定。デフォルト：5000。
-                if (_counter > Properties.Settings.Default.Kando && _isActive)
+                if (_counter > _cls.Kando && _isActive)
                 {
                     _isActive = false;
                     _counter = 0;
@@ -1539,24 +1610,24 @@ namespace BeatCounter
         public void CustomSCCheck(JoystickState jState)
         {
             // S_UP 判定
-            if (Properties.Settings.Default.C_S_Up < 20)
+            if (_cls.C_S_Up < 20)
             {
-                if (jState.Buttons[Properties.Settings.Default.C_S_Up] && _joyUp == false)
+                if (jState.Buttons[_cls.C_S_Up] && _joyUp == false)
                 {
                     PushUpKey(true);
                 }
                 else
                 {
-                    if (jState.Buttons[Properties.Settings.Default.C_S_Up] == false)
+                    if (jState.Buttons[_cls.C_S_Up] == false)
                     {
                         PushUpKey(false);
                     }
                 }
             }
-            else if (Properties.Settings.Default.C_S_Up >= 50 && Properties.Settings.Default.C_S_Up < 80)
+            else if (_cls.C_S_Up >= 50 && _cls.C_S_Up < 80)
             {
                 // 軸入力の場合の処理
-                if (Properties.Settings.Default.C_S_Up == 50)
+                if (_cls.C_S_Up == 50)
                 {
                     if (_s_rel_old_x != _s_rel_now_x)
                     {
@@ -1575,7 +1646,7 @@ namespace BeatCounter
                     }
                 }
                 // 十字キー入力「右」の場合。
-                else if (Properties.Settings.Default.C_S_Up == 51)
+                else if (_cls.C_S_Up == 51)
                 {
                     if (_s_rel_old_x != _s_rel_now_x)
                     {
@@ -1594,7 +1665,7 @@ namespace BeatCounter
                     }
                 }
                 // 十字キー入力「上」の場合。
-                else if (Properties.Settings.Default.C_S_Up == 52)
+                else if (_cls.C_S_Up == 52)
                 {
                     if (_s_rel_old_y != _s_rel_now_y)
                     {
@@ -1613,7 +1684,7 @@ namespace BeatCounter
                     }
                 }
                 // 十字キー入力「下」の場合。
-                else if (Properties.Settings.Default.C_S_Up == 53)
+                else if (_cls.C_S_Up == 53)
                 {
                     if (_s_rel_old_y != _s_rel_now_y)
                     {
@@ -1634,24 +1705,25 @@ namespace BeatCounter
             }
 
             // S_DOWN 判定
-            if (Properties.Settings.Default.C_S_Down < 20)
+            if (_cls.C_S_Down < 20)
             {
-                if (jState.Buttons[Properties.Settings.Default.C_S_Down] && _joyDown == false)
+                if (jState.Buttons[_cls.C_S_Down] && _joyDown == false)
                 {
                     PushDownKey(true);
                 }
                 else
                 {
-                    if (jState.Buttons[Properties.Settings.Default.C_S_Down] == false)
+                    if (jState.Buttons[_cls.C_S_Down] == false)
                     {
                         PushDownKey(false);
                     }
                 }
             }
-            else if (Properties.Settings.Default.C_S_Down >= 50 && Properties.Settings.Default.C_S_Up < 80)
+            else if (_cls.C_S_Down >= 50 && _cls.C_S_Down < 80)
+            //else if (_cls.C_S_Down >= 50 && _cls.C_S_Up < 80)
             {
                 // 軸入力の場合の処理
-                if (Properties.Settings.Default.C_S_Down == 50)
+                if (_cls.C_S_Down == 50)
                 {
                     if (_s_rel_old_x != _s_rel_now_x)
                     {
@@ -1670,7 +1742,7 @@ namespace BeatCounter
                     }
                 }
                 // 十字キー入力「右」の場合。
-                else if (Properties.Settings.Default.C_S_Down == 51)
+                else if (_cls.C_S_Down == 51)
                 {
                     if (_s_rel_old_x != _s_rel_now_x)
                     {
@@ -1689,7 +1761,7 @@ namespace BeatCounter
                     }
                 }
                 // 十字キー入力「上」の場合。
-                else if (Properties.Settings.Default.C_S_Down == 52)
+                else if (_cls.C_S_Down == 52)
                 {
                     if (_s_rel_old_y != _s_rel_now_y)
                     {
@@ -1708,7 +1780,7 @@ namespace BeatCounter
                     }
                 }
                 // 十字キー入力「下」の場合。
-                else if (Properties.Settings.Default.C_S_Down == 53)
+                else if (_cls.C_S_Down == 53)
                 {
                     if (_s_rel_old_y != _s_rel_now_y)
                     {
@@ -1727,33 +1799,6 @@ namespace BeatCounter
                     }
                 }
             }
-            //else if (Properties.Settings.Default.C_S_Up >= 80)
-            //{
-            //    if (Properties.Settings.Default.C_S_Up == 80)
-            //    {
-            //    }
-            //    if (Properties.Settings.Default.C_S_Up == 81)
-            //    {
-            //    }
-            //    if (Properties.Settings.Default.C_S_Up == 82)
-            //    {
-            //    }
-            //    if (Properties.Settings.Default.C_S_Up == 83)
-            //    {
-            //    }
-            //    if (Properties.Settings.Default.C_S_Up == 84)
-            //    {
-            //    }
-            //    if (Properties.Settings.Default.C_S_Up == 85)
-            //    {
-            //    }
-            //    if (Properties.Settings.Default.C_S_Up == 86)
-            //    {
-            //    }
-            //    if (Properties.Settings.Default.C_S_Up == 87)
-            //    {
-            //    }
-            //}
         }
         #endregion
 
@@ -1778,10 +1823,12 @@ namespace BeatCounter
             AnalogSCTips.Checked = true;
             DigitalSCTips.Checked = false;
 
-            Properties.Settings.Default.PlayMode = 0;
-            Properties.Settings.Default.Save();
+            // 変数に格納したXML情報にある要素の取得処理
+            var element = _xml.Root.Elements().FirstOrDefault(x => x.Attribute("id")?.Value == "PlayMode");
+            // 取得した要素に新しい値をセットする。
+            element.SetValue(0);
 
-            Initialize();
+            DirectXInit();
         }
 
         /// <summary>
@@ -1794,10 +1841,10 @@ namespace BeatCounter
             AnalogSCTips.Checked = false;
             DigitalSCTips.Checked = true;
 
-            Properties.Settings.Default.PlayMode = 1;
-            Properties.Settings.Default.Save();
+            var element = _xml.Root.Elements().FirstOrDefault(x => x.Attribute("id")?.Value == "PlayMode");
+            element.SetValue(1);
 
-            Initialize();
+            DirectXInit();
         }
 
         /// <summary>
@@ -1818,7 +1865,9 @@ namespace BeatCounter
             DigitalSCTips.Enabled = true;
             AnalogSCTips.Enabled = true;
 
-            if (Properties.Settings.Default.PlayMode == 0)
+            var playmode = int.Parse(_xml.XPathSelectElement("//PlayMode").Value);
+
+            if (playmode == 0)
             {
                 AnalogSCTips.Checked = true;
                 DigitalSCTips.Checked = false;
@@ -1829,10 +1878,10 @@ namespace BeatCounter
                 DigitalSCTips.Checked = true;
             }
 
-            Properties.Settings.Default.Controller = 0;
-            Properties.Settings.Default.Save();
+            var element = _xml.Root.Elements().FirstOrDefault(x => x.Attribute("id")?.Value == "Controller");
+            element.SetValue(0);
 
-            Initialize();
+            DirectXInit();
         }
 
         /// <summary>
@@ -1855,10 +1904,10 @@ namespace BeatCounter
             DigitalSCTips.Checked = true;
             AnalogSCTips.Checked = false;
 
-            Properties.Settings.Default.Controller = 1;
-            Properties.Settings.Default.Save();
+            var element = _xml.Root.Elements().FirstOrDefault(x => x.Attribute("id")?.Value == "Controller");
+            element.SetValue(1);
 
-            Initialize();
+            DirectXInit();
         }
 
         /// <summary>
@@ -1881,10 +1930,10 @@ namespace BeatCounter
             AnalogSCTips.Enabled = false;
             AnalogSCTips.Checked = true;
 
-            Properties.Settings.Default.Controller = 2;
-            Properties.Settings.Default.Save();
+            var element = _xml.Root.Elements().FirstOrDefault(x => x.Attribute("id")?.Value == "Controller");
+            element.SetValue(2);
 
-            Initialize();
+            DirectXInit();
         }
 
         /// <summary>
@@ -1907,13 +1956,18 @@ namespace BeatCounter
             AnalogSCTips.Enabled = false;
             AnalogSCTips.Checked = false;
 
-            Properties.Settings.Default.Controller = 3;
-            Properties.Settings.Default.Save();
+            var element = _xml.Root.Elements().FirstOrDefault(x => x.Attribute("id")?.Value == "Controller");
+            element.SetValue(3);
 
-            KeyConfig keyconf = new KeyConfig();
-            keyconf.Show();
+            KeyConfig keyconf = new KeyConfig(_xml, _cls);
+            DialogResult dr = keyconf.ShowDialog();
+            if (dr == DialogResult.OK)
+            {
+                _xml = keyconf._keyConfxml;
+            }
+            SettingInit();
 
-            Initialize();
+            DirectXInit();
         }
 
         /// <summary>
@@ -1936,11 +1990,16 @@ namespace BeatCounter
             AnalogSCTips.Enabled = false;
             AnalogSCTips.Checked = false;
 
-            Properties.Settings.Default.Controller = 4;
-            Properties.Settings.Default.Save();
+            var element = _xml.Root.Elements().FirstOrDefault(x => x.Attribute("id")?.Value == "Controller");
+            element.SetValue(4);
 
-            KeyBoardConfig keyconf = new KeyBoardConfig();
-            keyconf.Show();
+            KeyBoardConfig keyconf = new KeyBoardConfig(_xml, _cls);
+            DialogResult dr = keyconf.ShowDialog();
+            if (dr == DialogResult.OK)
+            {
+                _xml = keyconf._keyboardConfxml;
+            }
+            SettingInit();
 
             this.KeyPreview = true;
         }
@@ -1952,8 +2011,13 @@ namespace BeatCounter
         /// <param name="e"></param>
         private void SChangeTips_Click(object sender, EventArgs e)
         {
-            Config conf = new Config();
-            conf.Show();
+            Config conf = new Config(_xml, _cls);
+            DialogResult dr = conf.ShowDialog();
+            if (dr == DialogResult.OK)
+            {
+                _xml = conf._confxml;
+            }
+            SettingInit();
         }
 
         /// <summary>
@@ -1992,6 +2056,7 @@ namespace BeatCounter
                 SChangeTips.Enabled = false;
                 BackColorTips.Enabled = false;
                 ResetTips.Enabled = false;
+                TotalTips.Enabled = false;
 
                 // Labelを画面から非表示にする。
                 foreach (Label Lab in Keys)
@@ -2101,6 +2166,7 @@ namespace BeatCounter
                 SChangeTips.Enabled = true;
                 BackColorTips.Enabled = true;
                 ResetTips.Enabled = true;
+                TotalTips.Enabled = true;
 
                 // 各LabelのVisibleをTrueにする。
                 foreach (Label Lab in Keys)
@@ -2136,8 +2202,9 @@ namespace BeatCounter
             BlackTips.Checked = false;
             ClearWTips.Checked = false;
 
-            Properties.Settings.Default.BackColor = 0;
-            Properties.Settings.Default.Save();
+            var element = _xml.Root.Elements().FirstOrDefault(x => x.Attribute("id")?.Value == "BackColor");
+            element.SetValue(0);
+
 
             ChangeColorInit(SystemColors.Info);
         }
@@ -2158,8 +2225,8 @@ namespace BeatCounter
             BlackTips.Checked = !BlackTips.Checked;
             ClearWTips.Checked = false;
 
-            Properties.Settings.Default.BackColor = 1;
-            Properties.Settings.Default.Save();
+            var element = _xml.Root.Elements().FirstOrDefault(x => x.Attribute("id").Value == "BackColor");
+            element.SetValue(1);
 
             ChangeColorInit(SystemColors.Info);
         }
@@ -2180,8 +2247,8 @@ namespace BeatCounter
             BlackTips.Checked = false;
             ClearWTips.Checked = !ClearWTips.Checked;
 
-            Properties.Settings.Default.BackColor = 2;
-            Properties.Settings.Default.Save();
+            var element = _xml.Root.Elements().FirstOrDefault(x => x.Attribute("id").Value == "BackColor");
+            element.SetValue(2);
 
             ChangeColorInit(Color.LightSteelBlue);
         }
@@ -2198,7 +2265,7 @@ namespace BeatCounter
 
             if (res == DialogResult.Yes)
             {
-                TodayInit();
+                TodayInit(true);
             }
         }
 
@@ -2224,7 +2291,7 @@ namespace BeatCounter
         /// <param name="e"></param>
         private void TodayShortTips_Click(object sender, EventArgs e)
         {
-            TodayInit();
+            TodayInit(true);
         }
 
         /// <summary>
@@ -2236,24 +2303,35 @@ namespace BeatCounter
         {
             if (Total1_Load.Checked)
             {
+
                 // 全期間の合計値を保存する。
-                Properties.Settings.Default.SaveAllDayKey1 = _alldaynum;
-                Properties.Settings.Default.SaveCounter = 1;
+                var element1 = _xml.Root.Elements().FirstOrDefault(x => x.Attribute("id")?.Value == "Counter1");
+                element1.SetValue(_alldaynum);
+
+                // カウンタの番号を保存して、次回起動時に初期設定されるようにする。
+                var element2 = _xml.Root.Elements().FirstOrDefault(x => x.Attribute("id")?.Value == "SaveCounter");
+                element2.SetValue(1);
             }
             else if (Total2_Load.Checked)
             {
-                // 全期間の合計値を保存する。
-                Properties.Settings.Default.SaveAllDayKey2 = _alldaynum;
-                Properties.Settings.Default.SaveCounter = 2;
+                var element1 = _xml.Root.Elements().FirstOrDefault(x => x.Attribute("id")?.Value == "Counter2");
+                element1.SetValue(_alldaynum);
+
+                var element2 = _xml.Root.Elements().FirstOrDefault(x => x.Attribute("id")?.Value == "SaveCounter");
+                element2.SetValue(2);
             }
             else if (Total3_Load.Checked)
             {
-                // 全期間の合計値を保存する。
-                Properties.Settings.Default.SaveAllDayKey3 = _alldaynum;
-                Properties.Settings.Default.SaveCounter = 3;
+                var element1 = _xml.Root.Elements().FirstOrDefault(x => x.Attribute("id")?.Value == "Counter3");
+                element1.SetValue(_alldaynum);
+
+                var element2 = _xml.Root.Elements().FirstOrDefault(x => x.Attribute("id")?.Value == "SaveCounter");
+                element2.SetValue(3);
             }
 
-            Properties.Settings.Default.Save();
+            _xml.Save("Config.xml");
+
+            Application.Exit();
         }
 
         public void GetStateOfKeyLocked(System.Windows.Forms.Keys Key_Value)
@@ -2261,87 +2339,86 @@ namespace BeatCounter
             // WindowsAPIで押下判定
             bool Key_State = (GetAsyncKeyState((int)Key_Value) & 0x8000) != 0;
 
-            if (Key_State == true && Key_Value.ToString() == Properties.Settings.Default.K_Key1 && _joy1b == false)
+            if (Key_State == true && Key_Value.ToString() == _list[0] && _joy1b == false)
             {
                 Push1Key(true);
             }
-            else if (Key_State == false && Key_Value.ToString() == Properties.Settings.Default.K_Key1)
+            else if (Key_State == false && Key_Value.ToString() == _list[0])
             {
                 Push1Key(false);
             }
 
-            if (Key_State == true && Key_Value.ToString() == Properties.Settings.Default.K_Key2 && _joy2b == false)
+            if (Key_State == true && Key_Value.ToString() == _list[1] && _joy2b == false)
             {
                 Push2Key(true);
             }
-            else if (Key_State == false && Key_Value.ToString() == Properties.Settings.Default.K_Key2)
+            else if (Key_State == false && Key_Value.ToString() == _list[1])
             {
                 Push2Key(false);
             }
 
-            if (Key_State == true && Key_Value.ToString() == Properties.Settings.Default.K_Key3 && _joy3b == false)
+            if (Key_State == true && Key_Value.ToString() == _list[2] && _joy3b == false)
             {
                 Push3Key(true);
             }
-            else if (Key_State == false && Key_Value.ToString() == Properties.Settings.Default.K_Key3)
+            else if (Key_State == false && Key_Value.ToString() == _list[2])
             {
                 Push3Key(false);
             }
 
-            if (Key_State == true && Key_Value.ToString() == Properties.Settings.Default.K_Key4 && _joy4b == false)
+            if (Key_State == true && Key_Value.ToString() == _list[3] && _joy4b == false)
             {
                 Push4Key(true);
             }
-            else if (Key_State == false && Key_Value.ToString() == Properties.Settings.Default.K_Key4)
+            else if (Key_State == false && Key_Value.ToString() == _list[3])
             {
                 Push4Key(false);
             }
 
-            if (Key_State == true && Key_Value.ToString() == Properties.Settings.Default.K_Key5 && _joy5b == false)
+            if (Key_State == true && Key_Value.ToString() == _list[4] && _joy5b == false)
             {
                 Push5Key(true);
             }
-            else if (Key_State == false && Key_Value.ToString() == Properties.Settings.Default.K_Key5)
+            else if (Key_State == false && Key_Value.ToString() == _list[4])
             {
                 Push5Key(false);
             }
 
-            if (Key_State == true && Key_Value.ToString() == Properties.Settings.Default.K_Key6 && _joy6b == false)
+            if (Key_State == true && Key_Value.ToString() == _list[5] && _joy6b == false)
             {
                 Push6Key(true);
             }
-            else if (Key_State == false && Key_Value.ToString() == Properties.Settings.Default.K_Key6)
+            else if (Key_State == false && Key_Value.ToString() == _list[5])
             {
                 Push6Key(false);
             }
 
-            if (Key_State == true && Key_Value.ToString() == Properties.Settings.Default.K_Key7 && _joy7b == false)
+            if (Key_State == true && Key_Value.ToString() == _list[6] && _joy7b == false)
             {
                 Push7Key(true);
             }
-            else if (Key_State == false && Key_Value.ToString() == Properties.Settings.Default.K_Key7)
+            else if (Key_State == false && Key_Value.ToString() == _list[6])
             {
                 Push7Key(false);
             }
 
-            if (Key_State == true && Key_Value.ToString() == Properties.Settings.Default.K_S_Up && _joyUp == false)
+            if (Key_State == true && Key_Value.ToString() == _list[7] && _joyUp == false)
             {
                 PushUpKey(true);
             }
-            else if (Key_State == false && Key_Value.ToString() == Properties.Settings.Default.K_S_Up)
+            else if (Key_State == false && Key_Value.ToString() == _list[7])
             {
                 PushUpKey(false);
             }
 
-            if (Key_State == true && Key_Value.ToString() == Properties.Settings.Default.K_S_Down && _joyDown == false)
+            if (Key_State == true && Key_Value.ToString() == _list[8] && _joyDown == false)
             {
                 PushDownKey(true);
             }
-            else if (Key_State == false && Key_Value.ToString() == Properties.Settings.Default.K_S_Down)
+            else if (Key_State == false && Key_Value.ToString() == _list[8])
             {
                 PushDownKey(false);
             }
-
         }
 
         /// <summary>
@@ -2357,18 +2434,22 @@ namespace BeatCounter
             }
             else if (Total2_Load.Checked)
             {
-                Properties.Settings.Default.SaveAllDayKey2 = _alldaynum;
+                var element = _xml.Root.Elements().FirstOrDefault(x => x.Attribute("id")?.Value == "Counter2");
+                element.SetValue(_alldaynum);
+
                 Total2_Load.Checked = false;
             }
             else if (Total3_Load.Checked)
             {
-                Properties.Settings.Default.SaveAllDayKey3 = _alldaynum;
+                var element = _xml.Root.Elements().FirstOrDefault(x => x.Attribute("id")?.Value == "Counter3");
+                element.SetValue(_alldaynum);
+
                 Total3_Load.Checked = false;
             }
 
             Total1_Load.Checked = true;
-            _alldaynum = Properties.Settings.Default.SaveAllDayKey1;
-            Properties.Settings.Default.Save();
+            _alldaynum = long.Parse(_xml.XPathSelectElement("//Counter1").Value);
+            SettingInit();
         }
 
         /// <summary>
@@ -2384,18 +2465,23 @@ namespace BeatCounter
             }
             else if (Total1_Load.Checked)
             {
-                Properties.Settings.Default.SaveAllDayKey1 = _alldaynum;
+                var element = _xml.Root.Elements().FirstOrDefault(x => x.Attribute("id")?.Value == "Counter1");
+                element.SetValue(_alldaynum);
+
                 Total1_Load.Checked = false;
             }
             else if (Total3_Load.Checked)
             {
-                Properties.Settings.Default.SaveAllDayKey3 = _alldaynum;
+                var element = _xml.Root.Elements().FirstOrDefault(x => x.Attribute("id")?.Value == "Counter3");
+                element.SetValue(_alldaynum);
+
                 Total3_Load.Checked = false;
             }
 
             Total2_Load.Checked = true;
-            _alldaynum = Properties.Settings.Default.SaveAllDayKey2;
-            Properties.Settings.Default.Save();
+            _alldaynum = long.Parse(_xml.XPathSelectElement("//Counter2").Value);
+
+            SettingInit();
         }
 
         /// <summary>
@@ -2411,18 +2497,22 @@ namespace BeatCounter
             }
             else if (Total1_Load.Checked)
             {
-                Properties.Settings.Default.SaveAllDayKey1 = _alldaynum;
+                var element = _xml.Root.Elements().FirstOrDefault(x => x.Attribute("id")?.Value == "Counter1");
+                element.SetValue(_alldaynum);
+
                 Total1_Load.Checked = false;
             }
             else if (Total2_Load.Checked)
             {
-                Properties.Settings.Default.SaveAllDayKey2 = _alldaynum;
+                var element = _xml.Root.Elements().FirstOrDefault(x => x.Attribute("id")?.Value == "Counter2");
+                element.SetValue(_alldaynum);
+
                 Total2_Load.Checked = false;
             }
 
             Total3_Load.Checked = true;
-            _alldaynum = Properties.Settings.Default.SaveAllDayKey3;
-            Properties.Settings.Default.Save();
+            _alldaynum = long.Parse(_xml.XPathSelectElement("//Counter3").Value);
+            SettingInit();
         }
 
         #endregion
@@ -2612,6 +2702,7 @@ namespace BeatCounter
                 LeftSideTips.Checked = true;
             }
 
+            // 表示板の位置を1Pサイドに適したものにする。
             L_S_Up.Left = 9;
             L_S_Down.Left = 9;
             S_Up.Left = 32;
@@ -2624,6 +2715,7 @@ namespace BeatCounter
             Key6.Left = 374;
             Key7.Left = 421;
 
+            // 編集モードも上記と同様。
             T_S_Up.Left = 32;
             T_S_Down.Left = 32;
             T_Key1.Left = 133;
@@ -2634,8 +2726,8 @@ namespace BeatCounter
             T_Key6.Left = 374;
             T_Key7.Left = 421;
 
-            Properties.Settings.Default.PlaySide = 1;
-            Properties.Settings.Default.Save();
+            var element = _xml.Root.Elements().FirstOrDefault(x => x.Attribute("id").Value == "PlaySide");
+            element.SetValue(1);
         }
 
         /// <summary>
@@ -2655,6 +2747,7 @@ namespace BeatCounter
                 RightSideTips.Checked = true;
             }
 
+            // 表示板の位置を2Pサイドに適したものにする。
             L_S_Up.Left = 498;
             L_S_Down.Left = 498;
             S_Up.Left = 401;
@@ -2667,6 +2760,7 @@ namespace BeatCounter
             Key6.Left = 257;
             Key7.Left = 300;
 
+            // 編集モードも上記と同様。
             T_S_Up.Left = 401;
             T_S_Down.Left = 401;
             T_Key1.Left = 12;
@@ -2677,8 +2771,8 @@ namespace BeatCounter
             T_Key6.Left = 257;
             T_Key7.Left = 300;
 
-            Properties.Settings.Default.PlaySide = 2;
-            Properties.Settings.Default.Save();
+            var element = _xml.Root.Elements().FirstOrDefault(x => x.Attribute("id")?.Value == "PlaySide");
+            element.SetValue(2);
         }
 
         /// <summary>
